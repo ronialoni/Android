@@ -5,6 +5,7 @@ package il.ac.tau.team3.shareaprayer;
 import java.util.ArrayList;
 import java.util.List;
 
+import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.User;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ extends MapActivity
 	private ArrayItemizedOverlay otherUsersOverlay;
 	private ArrayItemizedOverlay publicPlaceOverlay;
 	private ArrayCircleOverlay circleOverlay;
+	private User user;
 	
 	public void drawUserOnMap(User user)	
 	{
@@ -60,6 +62,7 @@ extends MapActivity
 	
 	public void drawOtherUserOnMap(GeneralUser otheruser)	
 	{
+		
 		// create an OverlayItem with title and description
         OverlayItem other = new OverlayItem(SPUtils.toGeoPoint(otheruser.getSpGeoPoint()), otheruser.getName(), otheruser.getStatus());
 
@@ -81,15 +84,16 @@ extends MapActivity
         // add the ArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(circleOverlay);
         
+              
         return;
     }
 	
-	public void drawPublicPlaceOnMap(PublicPlace place)	
+	public void drawPublicPlaceOnMap(GeneralPlace place)	
 	{
 		// create an OverlayItem with title and description
-		String description = place.getNumOfPeople() + " Currently registered prayers";
-		String name = place.getType() + ": " + place.getName();
-        OverlayItem synagouge = new OverlayItem(place.getLocation(), name, description);
+		String description = "8 Currently registered prayers";
+		String name = place.getName();
+        OverlayItem synagouge = new OverlayItem(SPUtils.toGeoPoint(place.getSpGeoPoint()), name, description);
 
         // add the OverlayItem to the ArrayItemizedOverlay
         publicPlaceOverlay.addItem(synagouge);
@@ -177,21 +181,32 @@ extends MapActivity
     	    	// create a GeoPoint with the latitude and longitude coordinates
     	    	GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
     	    	DrawPointOnMap(mapView, geoPoint);
-    	    	
+    	    	user.setSpGeoPoint(SPUtils.toSPGeoPoint(geoPoint));
+    	    	drawUserOnMap(user);
     	    	
     	    	
     	    	
     	    	//System.out.println(user.getName());
     	    	
     	    	//int numServerUsers = resource.getNumUsers();
-    	    	int numServerUsers = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy", Integer.class);
+    	    	int numServerUsers = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/user", Integer.class);
+    	    	int numServerPlaces = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/place", Integer.class);
         		for (int i = 0; i < numServerUsers; i++)	{ 
         			/*GeneralUser gUser = resource.retrieve(i);
         			if (null != gUser)	{
         				drawOtherUserOnMap(gUser);
         			}*/
-        			GeneralUser gUser =restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/{a}", GeneralUser.class, i);
+        			GeneralUser gUser =restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/user/{a}", GeneralUser.class, i);
         			drawOtherUserOnMap(gUser);
+        		}
+        		
+        		for (int i = 0; i < numServerPlaces; i++)	{ 
+        			/*GeneralUser gUser = resource.retrieve(i);
+        			if (null != gUser)	{
+        				drawOtherUserOnMap(gUser);
+        			}*/
+        			GeneralPlace place =restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/place/{a}", GeneralPlace.class, i);
+        			drawPublicPlaceOnMap(place);
         		}
     	    	
     	    }
@@ -211,13 +226,13 @@ extends MapActivity
 	        GeoPoint geoPoint2 = new GeoPoint(loc.getLatitude()+0.017, loc.getLongitude()+0.013);
 	        GeoPoint geoPoint3 = new GeoPoint(loc.getLatitude()+0.01, loc.getLongitude()-0.014);
 	        GeoPoint geoPointSynagouge = new GeoPoint(loc.getLatitude()-0.005, loc.getLongitude()+0.01);
-	        User user = new User("Tomer (user)", SPUtils.toSPGeoPoint(geoPoint), "An orthodax extremest");
+	        user = new User("Tomer (user)", SPUtils.toSPGeoPoint(geoPoint), "An orthodax extremest");
 	        GeneralUser otheruser1 = new GeneralUser("Aviad", SPUtils.toSPGeoPoint(geoPoint1), "Looking for Minyan") ;
 	        GeneralUser otheruser2 = new GeneralUser("Roni", SPUtils.toSPGeoPoint(geoPoint2), "Looking for something to cook...") ;
 	        GeneralUser otheruser3 = new GeneralUser("Matan", SPUtils.toSPGeoPoint(geoPoint3), "Looking for Minyan") ;
-	        PublicPlace synagogue = new PublicPlace(geoPointSynagouge, "Bet Ya'akov", "Synagogue");
-	        synagogue.setNumOfPeople(8);
+	        GeneralPlace synagogue = new GeneralPlace("My minyan place", "10 Sokolov st, Tel Aviv", SPUtils.toSPGeoPoint(geoPointSynagouge));
 	        
+	                
 	        DrawPointOnMap(mapView, geoPoint);
 	        drawUserOnMap(user);
 	        drawOtherUserOnMap(otheruser1);

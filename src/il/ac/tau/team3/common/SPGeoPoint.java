@@ -32,4 +32,11 @@ public class SPGeoPoint implements Serializable {
 		LongtitudeE6 = longtitudeE6;
 	}
 	
+	public double getLatitudeInDegrees(){
+		return (double)this.LatitudeE6/1000000;
+	}
+	public double getLongitudeInDegrees(){
+		return (double)this.LongtitudeE6/1000000;
+	}
+	
 }

@@ -57,7 +57,7 @@ extends MapActivity
 	private ArrayItemizedOverlay publicPlaceOverlay;
 	private ArrayCircleOverlay circleOverlay;
 	
-	public void drawUserOnMap(User user)	
+	public void drawUserOnMap(GeneralUser user)	
 	{
         //Clears the last location
 		userOverlay.clear();
@@ -287,8 +287,8 @@ extends MapActivity
 				
 				updateMap(point);
 				DrawPointOnMap(mapView, point);
-				
-    	    	//System.out.println(user.getName());
+					
+    	    	
     	    	
     	    	//int numServerUsers = resource.getNumUsers();
     	    	int numServerUsers = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy", Integer.class);

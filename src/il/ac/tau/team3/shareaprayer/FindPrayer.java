@@ -1,4 +1,5 @@
 
+
 package il.ac.tau.team3.shareaprayer;
 
 
@@ -15,7 +16,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import org.mapsforge.android.maps.ArrayCircleOverlay;
-import org.mapsforge.android.maps.ArrayItemizedOverlay;
+import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapView;
@@ -46,9 +47,9 @@ extends MapActivity
 	private Drawable userDefaultMarker;
 	private Drawable othersDefaultMarker;
 	private Drawable synagougeMarker;
-	private ArrayItemizedOverlay userOverlay;
-	private ArrayItemizedOverlay otherUsersOverlay;
-	private ArrayItemizedOverlay publicPlaceOverlay;
+	private PrayerArrayItemizedOverlay userOverlay;
+	private PrayerArrayItemizedOverlay otherUsersOverlay;
+	private PlaceArrayItemizedOverlay publicPlaceOverlay;
 	private ArrayCircleOverlay circleOverlay;
 	
 	public void drawUserOnMap(GeneralUser user)	
@@ -59,7 +60,7 @@ extends MapActivity
 		// create an OverlayItem with title and description
         OverlayItem item = new OverlayItem(SPUtils.toGeoPoint(user.getSpGeoPoint()), user.getName(), user.getStatus());
 
-        // add the OverlayItem to the ArrayItemizedOverlay
+        // add the OverlayItem to the PrayerArrayItemizedOverlay
         userOverlay.addItem(item);
 	}
 	
@@ -68,7 +69,7 @@ extends MapActivity
 		// create an OverlayItem with title and description
         OverlayItem other = new OverlayItem(SPUtils.toGeoPoint(otheruser.getSpGeoPoint()), otheruser.getName(), otheruser.getStatus());
 
-        // add the OverlayItem to the ArrayItemizedOverlay
+        // add the OverlayItem to the PrayerArrayItemizedOverlay
         otherUsersOverlay.addItem(other);
 	}
 	
@@ -85,7 +86,7 @@ extends MapActivity
         
         circleOverlay.addCircle(circle);
 
-        // add the ArrayItemizedOverlay to the MapView
+        // add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(circleOverlay);
         
         return;
@@ -96,9 +97,9 @@ extends MapActivity
 		// create an OverlayItem with title and description
 		String address = place.getAddress();
 		String name = place.getName();
-        OverlayItem synagouge = new OverlayItem(SPUtils.toGeoPoint(place.getSpGeoPoint()), name, address);
+        PlaceOverlayItem synagouge = new PlaceOverlayItem(place, name, address);
 
-        // add the OverlayItem to the ArrayItemizedOverlay
+        // add the OverlayItem to the PrayerArrayItemizedOverlay
         publicPlaceOverlay.addItem(synagouge);
         return;
     }
@@ -115,33 +116,12 @@ extends MapActivity
 		}
 	}
 		
-	private ServiceConnection svcConn=new ServiceConnection() {
-		
-
-		public void onServiceDisconnected(ComponentName className) {
-			service=null;
-		}
-
-		public void onServiceConnected(ComponentName arg0, IBinder arg1) {
-			service=(ILocationSvc)arg1;
-			
-
-    		try {
-    			service.RegisterListner(locationListener);
-    			SPGeoPoint gp = service.getLocation();
-    			updateMap(gp);
-    			
-    		}
-    		catch (Throwable t) {
-    			Log.e("ShareAPrayer", "Exception in call to registerListner()", t);
-    		}
-
-			
-		}
-
-	};
+	
 	
 	public static double EARTH_RADIUS_KM = 6384;// km
+
+
+	
 
 	public static double calculateDistanceMeters(double aLong, double aLat,
 	         double bLong, double bLat) {
@@ -213,7 +193,7 @@ extends MapActivity
 		}
 	}
 	
-	public void createDialog(String message, final SPGeoPoint point)
+	public void createNewPlaceDialog(String message, final SPGeoPoint point)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(message);
@@ -223,7 +203,10 @@ extends MapActivity
 			public void onClick(DialogInterface dialog, int id) 
 			{
 				GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
-	        	restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, String.class);
+
+				restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, String.class);
+				newMinyan.addJoiner(service.getUser().getName());
+
 				// create in server
 				/*drawPublicPlaceOnMap(newMinyan);*/
 	        	updateMap(point);
@@ -238,6 +221,8 @@ extends MapActivity
 		
 		alert.show();
 	} 
+	
+	
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) 	
@@ -264,9 +249,9 @@ extends MapActivity
          */
         //Creates the user's map-icon
         userDefaultMarker = this.getResources().getDrawable(R.drawable.user_kipa_pin);
-        // create an ArrayItemizedOverlay for the user
-		userOverlay = new ArrayItemizedOverlay(userDefaultMarker, this);
-		 // add the ArrayItemizedOverlay to the MapView
+        // create an PrayerArrayItemizedOverlay for the user
+		userOverlay = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
+		 // add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(userOverlay);
         
         /*
@@ -274,9 +259,9 @@ extends MapActivity
          */
         //Creates the Synagouge's map-icon
         synagougeMarker = this.getResources().getDrawable(R.drawable.synagouge2);
-        // create an ArrayItemizedOverlay for the user
-        publicPlaceOverlay = new ArrayItemizedOverlay(synagougeMarker, this);
-		 // add the ArrayItemizedOverlay to the MapView
+        // create an PrayerArrayItemizedOverlay for the user
+        publicPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeMarker, this);
+		 // add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(publicPlaceOverlay);
         
         /*
@@ -284,9 +269,9 @@ extends MapActivity
          */
 		//Creates the otherUser's map-icon
 		othersDefaultMarker = this.getResources().getDrawable(R.drawable.others_kipa_pin);
-        // create an ArrayItemizedOverlay for the others
-		otherUsersOverlay = new ArrayItemizedOverlay(othersDefaultMarker, this);
-		// add the ArrayItemizedOverlay to the MapView
+        // create an PrayerArrayItemizedOverlay for the others
+		otherUsersOverlay = new PrayerArrayItemizedOverlay(othersDefaultMarker, this);
+		// add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(otherUsersOverlay);	 
         
         /*
@@ -345,13 +330,19 @@ extends MapActivity
         		try {
         			service.RegisterListner(locationListener);
         			SPGeoPoint gp = service.getLocation();
+        			publicPlaceOverlay.setThisUser(service.getUser());
         			updateMap(gp);
+        			//send the user to places overlay
+        			
         			
         		}
         		catch (Throwable t) {
         			Log.e("ShareAPrayer", "Exception in call to registerListner()", t);
         		}
-    		}	
+
+    			
+    		}
+
     	};
     	
     	bindService(new Intent(LocServ.ACTION_SERVICE), svcConn,

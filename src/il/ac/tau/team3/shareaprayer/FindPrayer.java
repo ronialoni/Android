@@ -3,12 +3,16 @@ package il.ac.tau.team3.shareaprayer;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
+import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.User;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 
 import org.mapsforge.android.maps.ArrayCircleOverlay;
 import org.mapsforge.android.maps.ArrayItemizedOverlay;
@@ -24,7 +28,10 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -46,7 +53,6 @@ extends MapActivity
 	private ArrayItemizedOverlay otherUsersOverlay;
 	private ArrayItemizedOverlay publicPlaceOverlay;
 	private ArrayCircleOverlay circleOverlay;
-	private User user;
 	
 	public void drawUserOnMap(User user)	
 	{
@@ -62,7 +68,6 @@ extends MapActivity
 	
 	public void drawOtherUserOnMap(GeneralUser otheruser)	
 	{
-		
 		// create an OverlayItem with title and description
         OverlayItem other = new OverlayItem(SPUtils.toGeoPoint(otheruser.getSpGeoPoint()), otheruser.getName(), otheruser.getStatus());
 
@@ -70,43 +75,119 @@ extends MapActivity
         otherUsersOverlay.addItem(other);
 	}
 	
-	public void DrawPointOnMap(final MapView mapView, final GeoPoint geoPoint)	
+	public void DrawPointOnMap(final MapView mapView, final SPGeoPoint a_point)	
 	{
 		//removes previous location from the map
 		circleOverlay.clear();
 		
+		GeoPoint point = SPUtils.toGeoPoint(a_point);
+		
 		// set center
-		mapView.getController().setCenter(geoPoint);
-        OverlayCircle circle = new OverlayCircle(geoPoint, 16, "My Location");
+		mapView.getController().setCenter(point);
+        OverlayCircle circle = new OverlayCircle(point, 16, "My Location");
         
         circleOverlay.addCircle(circle);
 
         // add the ArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(circleOverlay);
         
-              
         return;
     }
 	
-	public void drawPublicPlaceOnMap(GeneralPlace place)	
+	public void drawPublicPlaceOnMap(PublicPlace place)	
 	{
 		// create an OverlayItem with title and description
-		String description = "8 Currently registered prayers";
-		String name = place.getName();
-        OverlayItem synagouge = new OverlayItem(SPUtils.toGeoPoint(place.getSpGeoPoint()), name, description);
+		String description = place.getNumOfPeople() + " Currently registered prayers";
+		String name = place.getType() + ": " + place.getName();
+        OverlayItem synagouge = new OverlayItem(place.getLocation(), name, description);
 
         // add the OverlayItem to the ArrayItemizedOverlay
         publicPlaceOverlay.addItem(synagouge);
         return;
     }
 	
-	private RestTemplate restTemplate;   
+	private RestTemplate restTemplate;
+	
+	private ILocationSvc service = null;
+	private ILocationProv locationListener;
+	
+	@Override
+	public void onDestroy()	{
+		if (null != service)	{
+			service.UnRegisterListner(locationListener);
+		}
+	}
+		
+	private ServiceConnection svcConn=new ServiceConnection() {
+		
+
+		public void onServiceDisconnected(ComponentName className) {
+			service=null;
+		}
+
+		public void onServiceConnected(ComponentName arg0, IBinder arg1) {
+			service=(ILocationSvc)arg1;
+			
+
+    		try {
+    			service.RegisterListner(locationListener);
+    			SPGeoPoint gp = service.getLocation();
+    			updateMap(gp);
+    			
+    		}
+    		catch (Throwable t) {
+    			Log.e("ShareAPrayer", "Exception in call to registerListner()", t);
+    		}
+
+			
+		}
+
+	};
+	
+	private MapView mapView;
+	private final static int EARTH_RADIUS_KM = 6371;
+	
+	private void updateMap(SPGeoPoint center)	{
+		if (center == null)	{
+			return;
+		}
+		
+		GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+		if (screenEdge == null)	{
+			return;
+		}
+		
+		double lat1Rad = Math.toRadians(center.getLatitudeInDegrees());
+		double lat2Rad = Math.toRadians(screenEdge.getLatitude());
+		double deltaLonRad = Math.toRadians(Math.abs(center.getLongitudeInDegrees() - screenEdge.getLongitude()));
+		double distance = Math.acos(Math.sin(lat1Rad)*Math.sin(lat2Rad) + Math.cos(lat2Rad)*Math.cos(lat2Rad)*
+			Math.acos(deltaLonRad))/EARTH_RADIUS_KM;
+		int distancemeters = (int)(distance * 1000);
+		
+		
+		
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("latitude", new Double(center.getLatitudeInDegrees()).toString());
+		parameters.put("longitude", new Double(center.getLongitudeInDegrees()).toString());
+		parameters.put("radius", new Integer(distancemeters).toString());
+		
+		List<GeneralUser> users = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/users?latitude={latitude}&longitude={longitude}&radius={radius}", List.class, parameters);
+		
+		
+		if (null != users)
+		{
+			for (GeneralUser user : users)	{
+				drawOtherUserOnMap(user);
+			}
+		}
+	}
+
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) 	
 	{		
 		super.onCreate(savedInstanceState);
-        final MapView mapView = new MapView(this);
+		mapView = new MapView(this);
         mapView.setClickable(true);
         mapView.setBuiltInZoomControls(true);
         mapView.setMapViewMode(MapViewMode.MAPNIK_TILE_DOWNLOAD);
@@ -173,74 +254,58 @@ extends MapActivity
     	LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
     	
         // Define a listener that responds to location updates
-    	LocationListener locationListener = new LocationListener() 
+    	locationListener = new ILocationProv() 
     	{
 	    	// Called when a new location is found by the network location provider.
-    		public void onLocationChanged(Location location) 
-    	    { 	
-    	    	// create a GeoPoint with the latitude and longitude coordinates
-    	    	GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-    	    	DrawPointOnMap(mapView, geoPoint);
-    	    	user.setSpGeoPoint(SPUtils.toSPGeoPoint(geoPoint));
-    	    	drawUserOnMap(user);
-    	    	
-    	    	
-    	    	
+			public void LocationChanged(SPGeoPoint point) {
+				
+				updateMap(point);
+				DrawPointOnMap(mapView, point);
+				
     	    	//System.out.println(user.getName());
     	    	
     	    	//int numServerUsers = resource.getNumUsers();
-    	    	int numServerUsers = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/user", Integer.class);
-    	    	int numServerPlaces = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/place", Integer.class);
+    	    	int numServerUsers = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy", Integer.class);
         		for (int i = 0; i < numServerUsers; i++)	{ 
         			/*GeneralUser gUser = resource.retrieve(i);
         			if (null != gUser)	{
         				drawOtherUserOnMap(gUser);
         			}*/
-        			GeneralUser gUser =restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/user/{a}", GeneralUser.class, i);
+        			GeneralUser gUser =restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/{a}", GeneralUser.class, i);
         			drawOtherUserOnMap(gUser);
-        		}
-        		
-        		for (int i = 0; i < numServerPlaces; i++)	{ 
-        			/*GeneralUser gUser = resource.retrieve(i);
-        			if (null != gUser)	{
-        				drawOtherUserOnMap(gUser);
-        			}*/
-        			GeneralPlace place =restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/place/{a}", GeneralPlace.class, i);
-        			drawPublicPlaceOnMap(place);
         		}
     	    	
     	    }
-
-    	    public void onStatusChanged(String provider, int status, Bundle extras) {}
-    	    public void onProviderEnabled(String provider) {}
-    	    public void onProviderDisabled(String provider) {}
     	};
 
-    	// Register the listener with the Location Manager to receive location updates
-    	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER , 0, 0, locationListener);
-        Location loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER );
-        if (null != loc)	
-        {
-	        GeoPoint geoPoint = new GeoPoint(loc.getLatitude(), loc.getLongitude());
-	        GeoPoint geoPoint1 = new GeoPoint(loc.getLatitude()-0.005 , loc.getLongitude()-0.012);
-	        GeoPoint geoPoint2 = new GeoPoint(loc.getLatitude()+0.017, loc.getLongitude()+0.013);
-	        GeoPoint geoPoint3 = new GeoPoint(loc.getLatitude()+0.01, loc.getLongitude()-0.014);
-	        GeoPoint geoPointSynagouge = new GeoPoint(loc.getLatitude()-0.005, loc.getLongitude()+0.01);
-	        user = new User("Tomer (user)", SPUtils.toSPGeoPoint(geoPoint), "An orthodax extremest");
-	        GeneralUser otheruser1 = new GeneralUser("Aviad", SPUtils.toSPGeoPoint(geoPoint1), "Looking for Minyan") ;
-	        GeneralUser otheruser2 = new GeneralUser("Roni", SPUtils.toSPGeoPoint(geoPoint2), "Looking for something to cook...") ;
-	        GeneralUser otheruser3 = new GeneralUser("Matan", SPUtils.toSPGeoPoint(geoPoint3), "Looking for Minyan") ;
-	        GeneralPlace synagogue = new GeneralPlace("My minyan place", "10 Sokolov st, Tel Aviv", SPUtils.toSPGeoPoint(geoPointSynagouge));
-	        
-	                
-	        DrawPointOnMap(mapView, geoPoint);
-	        drawUserOnMap(user);
-	        drawOtherUserOnMap(otheruser1);
-	        drawOtherUserOnMap(otheruser2);
-	        drawOtherUserOnMap(otheruser3);
-	        drawPublicPlaceOnMap(synagogue);
-	   }
-        
+    	ServiceConnection svcConn=new ServiceConnection() {
+    		
+
+    		public void onServiceDisconnected(ComponentName className) {
+    			service=null;
+    		}
+
+    		public void onServiceConnected(ComponentName arg0, IBinder arg1) {
+    			service=(ILocationSvc)arg1;
+    			
+
+        		try {
+        			service.RegisterListner(locationListener);
+        			SPGeoPoint gp = service.getLocation();
+        			updateMap(gp);
+        			
+        		}
+        		catch (Throwable t) {
+        			Log.e("ShareAPrayer", "Exception in call to registerListner()", t);
+        		}
+    		}	
+    	};
+    	
+    	bindService(new Intent(LocServ.ACTION_SERVICE), svcConn,
+    			BIND_AUTO_CREATE);
+    	
+
+
 	}
 }
 

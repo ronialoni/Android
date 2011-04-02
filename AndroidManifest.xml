@@ -9,9 +9,10 @@
 	<uses-permission android:name = "android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name = "android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name = "android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name = "android.permission.ACCESS_MOCK_LOCATION" />
 	<uses-permission android:name = "android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name = "android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-sdk android:minSdkVersion = "5" />
+	<uses-sdk android:minSdkVersion = "8" />
 
     <application 
     	android:icon  = "@drawable/icon" 
@@ -30,6 +31,21 @@
             </intent-filter>
         
         </activity>
+        
+        <service android:name=".LocServ">
+            <intent-filter>
+                <action android:name="il.ac.tau.team3.shareaprayer.MAIN"/>
+                <!-- action android:name="android.intent.action.LOCATION_CHANGED"/-->
+            </intent-filter>
+        </service>
+        <receiver android:name=".StartupReceiver"
+                  android:enabled="true"
+                  android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        
     
     </application>
 

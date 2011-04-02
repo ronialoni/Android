@@ -10,7 +10,6 @@ import java.util.Map;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
-import il.ac.tau.team3.common.User;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;

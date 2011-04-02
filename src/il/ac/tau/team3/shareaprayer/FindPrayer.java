@@ -154,6 +154,13 @@ extends MapActivity
 			return;
 		}
 		
+		if (service != null)	{
+			GeneralUser user = service.getUser();
+			if (null != user)	{
+				drawUserOnMap(user);
+			}
+		}
+		
 		GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
 		if (screenEdge == null)	{
 			return;

@@ -30,17 +30,12 @@ import org.springframework.web.client.RestTemplate;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-
 
 
 public class FindPrayer 
@@ -146,13 +141,32 @@ extends MapActivity
 
 	};
 	
+	public static double EARTH_RADIUS_KM = 6384;// km
+
+	public static double calculateDistanceMeters(double aLong, double aLat,
+	         double bLong, double bLat) {
+
+	      double d2r = (Math.PI / 180);
+
+	      double dLat = (bLat - aLat) * d2r;
+	      double dLon = (bLong - aLong) * d2r;
+	      double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+	            + Math.cos(aLat * d2r) * Math.cos(bLat * d2r)
+	            * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	      double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+	      return EARTH_RADIUS_KM * c * 1000;
+
+	};
+	
 	private SPMapView mapView;
-	private final static int EARTH_RADIUS_KM = 6371;
 	
 	private void updateMap(SPGeoPoint center)	{
 		if (center == null)	{
 			return;
 		}
+		
+		mapView.getController().setCenter(SPUtils.toGeoPoint(center));
 		
 		if (service != null)	{
 			GeneralUser user = service.getUser();
@@ -166,12 +180,10 @@ extends MapActivity
 			return;
 		}
 		
-		double lat1Rad = Math.toRadians(center.getLatitudeInDegrees());
-		double lat2Rad = Math.toRadians(screenEdge.getLatitude());
-		double deltaLonRad = Math.toRadians(Math.abs(center.getLongitudeInDegrees() - screenEdge.getLongitude()));
-		double distance = Math.acos(Math.sin(lat1Rad)*Math.sin(lat2Rad) + Math.cos(lat2Rad)*Math.cos(lat2Rad)*
-			Math.acos(deltaLonRad))/EARTH_RADIUS_KM;
-		int distancemeters = (int)(distance * 1000);
+		double distance = calculateDistanceMeters(center.getLongitudeInDegrees(), center.getLatitudeInDegrees(), screenEdge.getLongitude(), screenEdge.getLatitude());
+		
+		int distancemeters = (int)Math.ceil(distance)*10;
+		
 		
 		
 		
@@ -180,13 +192,23 @@ extends MapActivity
 		parameters.put("longitude", new Double(center.getLongitudeInDegrees()).toString());
 		parameters.put("radius", new Integer(distancemeters).toString());
 		
-		List<GeneralUser> users = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/users?latitude={latitude}&longitude={longitude}&radius={radius}", List.class, parameters);
+		GeneralUser[] users = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/users?latitude={latitude}&longitude={longitude}&radius={radius}", GeneralUser[].class, parameters);
 		
 		
 		if (null != users)
 		{
 			for (GeneralUser user : users)	{
 				drawOtherUserOnMap(user);
+			}
+		}
+		
+		GeneralPlace[] places = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/places?latitude={latitude}&longitude={longitude}&radius={radius}", GeneralPlace[].class, parameters);
+		
+			
+		if (null != places)
+		{
+			for (GeneralPlace place : places)	{
+				drawPublicPlaceOnMap(place);
 			}
 		}
 	}
@@ -201,8 +223,10 @@ extends MapActivity
 			public void onClick(DialogInterface dialog, int id) 
 			{
 				GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
+	        	restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, String.class);
 				// create in server
-				drawPublicPlaceOnMap(newMinyan);
+				/*drawPublicPlaceOnMap(newMinyan);*/
+	        	updateMap(point);
 			}
 		});
 		builder.setNegativeButton("No", new DialogInterface.OnClickListener() 
@@ -281,9 +305,6 @@ extends MapActivity
         circleDefaultPaintOutline.setStrokeWidth(3);
         
         circleOverlay = new ArrayCircleOverlay(circleDefaultPaintFill, circleDefaultPaintOutline, this);
-
-        // Acquire a reference to the system Location Manager
-    	LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
     	
         // Define a listener that responds to location updates
     	locationListener = new ILocationProv() 

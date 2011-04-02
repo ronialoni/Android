@@ -2,7 +2,6 @@ package il.ac.tau.team3.shareaprayer;
 
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;

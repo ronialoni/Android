@@ -2,6 +2,9 @@ package il.ac.tau.team3.common;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class SPGeoPoint implements Serializable {
 	/**
 	 * 

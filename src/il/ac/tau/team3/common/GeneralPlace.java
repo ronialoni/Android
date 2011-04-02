@@ -37,4 +37,7 @@ public class GeneralPlace extends GeneralLocation{
 		return;
 	}
 	
+	public List<String> getAllJoiners(){
+		return this.minyanJoiners;
+	}
 }

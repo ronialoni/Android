@@ -50,11 +50,6 @@ import android.content.DialogInterface;
 import android.view.MotionEvent;
 
 
-
-
-
-
-
 public class SPMapView
 extends MapView
 {
@@ -107,7 +102,7 @@ extends MapView
 				GeoPoint p = this.getProjection().fromPixels((int) startPosX, (int) startPosY);
 				SPGeoPoint eventPoint = new SPGeoPoint(p.getLatitudeE6(),p.getLongitudeE6());
 				//createDialog("Do you want to create a public praying place?");
-				this.mapActivity.createDialog("Do you want to create a public praying place?", eventPoint);
+				this.mapActivity.createNewPlaceDialog("Do you want to create a public praying place?", eventPoint);
 				
 			}
 		} 
@@ -116,11 +111,6 @@ extends MapView
 		
 	}
 			
-	
-	
-	
-	
-	
 	
 	
 	

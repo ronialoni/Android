@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.User;
@@ -28,8 +29,10 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -94,12 +97,12 @@ extends MapActivity
         return;
     }
 	
-	public void drawPublicPlaceOnMap(PublicPlace place)	
+	public void drawPublicPlaceOnMap(GeneralPlace place)	
 	{
 		// create an OverlayItem with title and description
-		String description = place.getNumOfPeople() + " Currently registered prayers";
-		String name = place.getType() + ": " + place.getName();
-        OverlayItem synagouge = new OverlayItem(place.getLocation(), name, description);
+		String address = place.getAddress();
+		String name = place.getName();
+        OverlayItem synagouge = new OverlayItem(SPUtils.toGeoPoint(place.getSpGeoPoint()), name, address);
 
         // add the OverlayItem to the ArrayItemizedOverlay
         publicPlaceOverlay.addItem(synagouge);
@@ -144,7 +147,7 @@ extends MapActivity
 
 	};
 	
-	private MapView mapView;
+	private SPMapView mapView;
 	private final static int EARTH_RADIUS_KM = 6371;
 	
 	private void updateMap(SPGeoPoint center)	{
@@ -181,13 +184,36 @@ extends MapActivity
 			}
 		}
 	}
-
+	
+	public void createDialog(String message, final SPGeoPoint point)
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(message);
+		builder.setCancelable(false);
+		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface dialog, int id) 
+			{
+				GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
+				// create in server
+				drawPublicPlaceOnMap(newMinyan);
+			}
+		});
+		builder.setNegativeButton("No", new DialogInterface.OnClickListener() 
+		{
+			public void onClick(DialogInterface dialog, int id) {}
+		});
+		
+		AlertDialog alert = builder.create();
+		
+		alert.show();
+	} 
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) 	
 	{		
 		super.onCreate(savedInstanceState);
-		mapView = new MapView(this);
+		mapView = new SPMapView(this);
         mapView.setClickable(true);
         mapView.setBuiltInZoomControls(true);
         mapView.setMapViewMode(MapViewMode.MAPNIK_TILE_DOWNLOAD);

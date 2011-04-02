@@ -4,8 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mapsforge.android.maps.GeoPoint;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
+import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.common.User;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +32,9 @@ public class LocServ extends Service {
 	private final IBinder mBinder = new LocalBinder();
 	private SPGeoPoint curr_loc = null;
 	List<ILocationProv>	locationProvs = new ArrayList<ILocationProv>();
+	private GeneralUser user;
+	private String userId;
+	private RestTemplate restTemplate; 
 	
 	public static final String ACTION_SERVICE = "il.ac.tau.team3.shareaprayer.MAIN";
 
@@ -47,6 +59,10 @@ public class LocServ extends Service {
 		public void UnRegisterListner(ILocationProv a_prov)	{
 			locationProvs.remove(a_prov);
 		}
+
+		public GeneralUser getUser() {
+			return user;
+		}
     }
 	
 	@Override
@@ -62,8 +78,13 @@ public class LocServ extends Service {
 	
 	private void queryCurrentLocation()	{
 		Location loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER );
-        if (null != loc)	
+		if (null != loc)	{	
         	curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
+        	user = new GeneralUser(userId, curr_loc, "bla");
+        	restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, String.class);
+        	
+        	
+		}
 	}
 	
 	
@@ -80,6 +101,19 @@ public class LocServ extends Service {
 		iFilter.addAction(LocationManager.GPS_PROVIDER);
 		iFilter.addAction(LocationManager.NETWORK_PROVIDER);
 		
+		Account[] accounts = AccountManager.get(this).getAccounts();
+		userId = accounts[0].name;
+
+		restTemplate = new RestTemplate();
+    	restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        List<HttpMessageConverter<?>> mc = restTemplate.getMessageConverters();
+        MappingJacksonHttpMessageConverter json = new MappingJacksonHttpMessageConverter();
+ 
+        List<MediaType> supportedMediaTypes = new ArrayList<MediaType>();
+        supportedMediaTypes.add(new MediaType("text", "javascript"));
+        json.setSupportedMediaTypes(supportedMediaTypes);
+        mc.add(json);
+        restTemplate.setMessageConverters(mc);
 		
 		
 		LocationListener locationListener = new LocationListener() 
@@ -89,6 +123,8 @@ public class LocServ extends Service {
     	    { 	
     	    	// create a GeoPoint with the latitude and longitude coordinates
     			curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
+    			user = new GeneralUser(userId, curr_loc, "bla");
+    			restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, String.class);
     			
     			try	{
     				for (ILocationProv locProv : locationProvs)	{

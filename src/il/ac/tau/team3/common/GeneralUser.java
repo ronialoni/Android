@@ -9,7 +9,7 @@ public class GeneralUser extends GeneralLocation implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8100017600787664519L;
-		private String name;
+		
 		private String status;
 		
 		public GeneralUser()	{

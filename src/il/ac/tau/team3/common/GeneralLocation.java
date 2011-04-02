@@ -2,13 +2,25 @@ package il.ac.tau.team3.common;
 
 public class GeneralLocation {
 
-	
+	private Long id;
 	private SPGeoPoint spGeoPoint;
 	private String name;
 	
 	public GeneralLocation(){
 	
 	}
+	
+	
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
 	public GeneralLocation(SPGeoPoint spGeoPoint, String name) {
 		this.spGeoPoint = spGeoPoint;
 		this.name = name;

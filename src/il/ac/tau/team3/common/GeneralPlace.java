@@ -7,7 +7,7 @@ public class GeneralPlace extends GeneralLocation{
 	
 	private String address;
 	private List<String> minyanJoiners;
-	
+		
 	
 	public GeneralPlace(){
 		super();
@@ -25,6 +25,16 @@ public class GeneralPlace extends GeneralLocation{
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	
+	public void addJoiner(String name){
+		minyanJoiners.add(name);
+		return;
+	}
+	
+	public void removeJoiner(String name){
+		minyanJoiners.remove(name);
+		return;
 	}
 	
 }

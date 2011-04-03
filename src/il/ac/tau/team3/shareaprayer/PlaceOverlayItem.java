@@ -20,6 +20,7 @@ public class PlaceOverlayItem extends OverlayItem{
 	}
 	public void setPlace(GeneralPlace place) {
 		this.place = place;
+		this.setPoint(SPUtils.toGeoPoint(place.getSpGeoPoint()));
 	}
 
 }

@@ -21,6 +21,7 @@ public class UserOverlayItem extends OverlayItem{
 	}
 	public void setUser(GeneralUser user) {
 		this.user = user;
+		this.setPoint(SPUtils.toGeoPoint(user.getSpGeoPoint()));
 	}
 
 }

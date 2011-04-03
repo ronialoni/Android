@@ -103,7 +103,9 @@ extends MapActivity
 		for ( OverlayItem item : publicPlaceOverlay.getOverlayItems()){
 			PlaceOverlayItem placeItem = (PlaceOverlayItem) item;
 			if (place.getId().equals(((GeneralPlace)placeItem.getPlace()).getId()))	{
+				publicPlaceOverlay.removeItem(item);
 				placeItem.setPlace(place);
+				publicPlaceOverlay.addItem(item);
 				found = true;
 				break;
 			}
@@ -119,10 +121,14 @@ extends MapActivity
 
 	public void updateUser(GeneralUser user, GeneralUser thisUser)	{
 		boolean found = false;
-		for ( OverlayItem item : userOverlay.getOverlayItems()){
+		for ( OverlayItem item : otherUsersOverlay.getOverlayItems()){
 			UserOverlayItem userItem = (UserOverlayItem) item;
-			if (user.getId().equals(((GeneralUser)userItem.getUser()).getId()))	{
+			if ((user.getId().equals(((GeneralUser)userItem.getUser()).getId()))	&&
+				 ((thisUser == null) || (!thisUser.getId().equals(userItem.getUser().getId()))))	{
+				
+				otherUsersOverlay.removeItem(item);
 				userItem.setUser(user);
+				otherUsersOverlay.addItem(item);
 				found = true;
 				break;
 			}
@@ -216,7 +222,7 @@ extends MapActivity
 		
 		double distance = calculateDistanceMeters(center.getLongitudeInDegrees(), center.getLatitudeInDegrees(), screenEdge.getLongitude(), screenEdge.getLatitude());
 		
-		int distancemeters = (int)Math.ceil(distance)*1000;
+		int distancemeters = (int)Math.ceil(distance)*100;
 		
 		
 		
@@ -379,15 +385,26 @@ extends MapActivity
     	    }
     	};
     	
-//    	final Timer     timer = new Timer();
-//    	final TimerTask task = new TimerTask() {
-//			
-//			@Override
-//			public void run() {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//		}; 
+
+   	final Timer     timer = new Timer();
+   	final TimerTask task = new TimerTask() {
+			
+   		@Override
+   		public void run() {
+   			if(service.getLocation()!=null){
+   				mapView.post(new Runnable()	{
+
+
+
+   					public void run() {
+   						// TODO Auto-generated method stub
+   						updateMap(service.getLocation());
+   					}
+   				});
+
+   			}
+   		}
+   	}; 
     	
     	ServiceConnection svcConn=new ServiceConnection() {
     		
@@ -425,7 +442,7 @@ extends MapActivity
 //        			}
 //        		}
 //        		};
-//        		timer.schedule(task, 1, 10000);
+        		timer.schedule(task, 1, 10000);
         		     
         		
     			

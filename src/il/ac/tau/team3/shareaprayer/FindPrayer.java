@@ -228,11 +228,18 @@ extends MapActivity
 	public void onCreate(Bundle savedInstanceState) 	
 	{		
 		super.onCreate(savedInstanceState);
-		mapView = new SPMapView(this);
-        mapView.setClickable(true);
-        mapView.setBuiltInZoomControls(true);
-        mapView.setMapViewMode(MapViewMode.MAPNIK_TILE_DOWNLOAD);
-        setContentView(mapView); 
+		setContentView(R.layout.main);
+		//mapView = new SPMapView(this);
+		mapView = (SPMapView)findViewById(R.id.view1);
+		
+        mapView.RegisterTapListener(new IMapTapDetect()	{
+
+			public void onTouchEvent(SPGeoPoint sp) {
+				createDialog("Do you want to create a public praying place?", sp);
+				
+			}
+        	
+        });
      
         restTemplate = new RestTemplate();
     	restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());

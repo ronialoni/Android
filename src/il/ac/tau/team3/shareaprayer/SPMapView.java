@@ -4,6 +4,8 @@ package il.ac.tau.team3.shareaprayer;
 /** @import java.util.*;  */
 import il.ac.tau.team3.common.SPGeoPoint;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -46,35 +48,64 @@ import org.mapsforge.android.maps.OverlayCircle;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+
+
+
+
 
 
 public class SPMapView
 extends MapView
-{
-		
-	/*** @fields ***/
-	
-	private FindPrayer mapActivity;
-	
-	
+{	
+	private List<IMapTapDetect> tapListeners;
 	/*** @constructor ***/
 	
-	public SPMapView(FindPrayer mapActivity)
-	{
-		super(mapActivity);
-		
-		this.setClickable(true);
+	
+	
+	
+	public SPMapView(Context context)
+    {
+        super(context);
+        initFields();
+    }
+	
+	public SPMapView(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+        initFields();
+        
+    }
+    public SPMapView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs);
+        initFields();
+        
+    }
+    
+    private void initFields()	{
+    	this.setClickable(true);
         this.setBuiltInZoomControls(true);
         this.setMapViewMode(MapViewMode.MAPNIK_TILE_DOWNLOAD);
-        mapActivity.setContentView(this);
+        tapListeners = new ArrayList<IMapTapDetect>();
                 
-        this.mapActivity = mapActivity;
+    }
+	
+	public void RegisterTapListener(IMapTapDetect tapListen)	{
+		synchronized(this)	{
+			tapListeners.add(tapListen);
+		}
 		
 	}
 	
-	
+	public void UnregisterTapListener(IMapTapDetect tapListen)	{
+		synchronized(this)	{
+			tapListeners.remove(tapListen);
+		}
+	}
 
 
 	private long startTime;
@@ -102,7 +133,10 @@ extends MapView
 				GeoPoint p = this.getProjection().fromPixels((int) startPosX, (int) startPosY);
 				SPGeoPoint eventPoint = new SPGeoPoint(p.getLatitudeE6(),p.getLongitudeE6());
 				//createDialog("Do you want to create a public praying place?");
-				this.mapActivity.createNewPlaceDialog("Do you want to create a public praying place?", eventPoint);
+				for (IMapTapDetect tap : tapListeners)	{
+					tap.onTouchEvent(eventPoint);
+					//this.mapActivity.createDialog("Do you want to create a public praying place?", eventPoint);
+				}
 				
 			}
 		} 
@@ -111,6 +145,11 @@ extends MapView
 		
 	}
 			
+	
+	
+	
+	
+	
 	
 	
 	

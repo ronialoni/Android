@@ -101,7 +101,11 @@ public class LocServ extends Service {
 		iFilter.addAction(LocationManager.NETWORK_PROVIDER);
 		
 		Account[] accounts = AccountManager.get(this).getAccounts();
-		userId = accounts[0].name;
+		if (accounts.length != 0)	{	
+			userId = accounts[0].name;
+		} else	{
+			userId = "NoGmailAccount@gmail.com";
+		}
 
 		restTemplate = new RestTemplate();
     	restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());

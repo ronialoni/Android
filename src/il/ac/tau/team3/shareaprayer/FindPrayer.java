@@ -235,7 +235,7 @@ extends MapActivity
         mapView.RegisterTapListener(new IMapTapDetect()	{
 
 			public void onTouchEvent(SPGeoPoint sp) {
-				createDialog("Do you want to create a public praying place?", sp);
+				createNewPlaceDialog("Do you want to create a public praying place?", sp);
 				
 			}
         	

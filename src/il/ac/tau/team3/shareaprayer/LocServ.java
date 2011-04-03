@@ -1,8 +1,12 @@
 package il.ac.tau.team3.shareaprayer;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.MappingJsonFactory;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.mapsforge.android.maps.GeoPoint;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -80,8 +84,10 @@ public class LocServ extends Service {
 		if (null != loc)	{	
         	curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
         	user = new GeneralUser(userId, curr_loc, "bla");
-        	restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, String.class);
-        	
+        	Long id = restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, Long.class);
+        	if (id != null)	{
+        		user.setId(id);
+        	}
         	
 		}
 	}
@@ -127,7 +133,20 @@ public class LocServ extends Service {
     	    	// create a GeoPoint with the latitude and longitude coordinates
     			curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
     			user = new GeneralUser(userId, curr_loc, "bla");
-    			restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, String.class);
+    			StringWriter sw = new StringWriter();
+				ObjectMapper mapper = new ObjectMapper();
+				MappingJsonFactory jsonFactory = new MappingJsonFactory();
+				try	{
+					JsonGenerator jsonGenerator = jsonFactory.createJsonGenerator(sw);
+					mapper.writeValue(jsonGenerator, user);
+					sw.close();
+				} catch (Throwable T)	{
+					
+				}
+				
+				Log.e("post message", sw.getBuffer().toString());
+    			Long id = restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, Long.class);
+    			user.setId(id);
     			
     			try	{
     				for (ILocationProv locProv : locationProvs)	{

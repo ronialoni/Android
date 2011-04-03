@@ -1,7 +1,13 @@
 package il.ac.tau.team3.common;
 
-public class GeneralLocation {
+import java.io.Serializable;
 
+public class GeneralLocation implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6359704904127673323L;
 	private Long id;
 	private SPGeoPoint spGeoPoint;
 	private String name;

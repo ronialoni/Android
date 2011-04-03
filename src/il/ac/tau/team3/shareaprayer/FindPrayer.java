@@ -3,10 +3,13 @@
 package il.ac.tau.team3.shareaprayer;
 
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
@@ -15,6 +18,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.MappingJsonFactory;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.mapsforge.android.maps.ArrayCircleOverlay;
 import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
 import org.mapsforge.android.maps.GeoPoint;
@@ -58,7 +64,7 @@ extends MapActivity
 		userOverlay.clear();
 		
 		// create an OverlayItem with title and description
-        OverlayItem item = new OverlayItem(SPUtils.toGeoPoint(user.getSpGeoPoint()), user.getName(), user.getStatus());
+        UserOverlayItem item = new UserOverlayItem(user, user.getName(), user.getStatus());
 
         // add the OverlayItem to the PrayerArrayItemizedOverlay
         userOverlay.addItem(item);
@@ -67,7 +73,7 @@ extends MapActivity
 	public void drawOtherUserOnMap(GeneralUser otheruser)	
 	{
 		// create an OverlayItem with title and description
-        OverlayItem other = new OverlayItem(SPUtils.toGeoPoint(otheruser.getSpGeoPoint()), otheruser.getName(), otheruser.getStatus());
+		UserOverlayItem other = new UserOverlayItem(otheruser, otheruser.getName(), otheruser.getStatus());
 
         // add the OverlayItem to the PrayerArrayItemizedOverlay
         otherUsersOverlay.addItem(other);
@@ -91,6 +97,44 @@ extends MapActivity
         
         return;
     }
+
+	public void updatePublicPlace(GeneralPlace place)	{
+		boolean found = false;
+		for ( OverlayItem item : publicPlaceOverlay.getOverlayItems()){
+			PlaceOverlayItem placeItem = (PlaceOverlayItem) item;
+			if (place.getId().equals(((GeneralPlace)placeItem.getPlace()).getId()))	{
+				placeItem.setPlace(place);
+				found = true;
+				break;
+			}
+			
+
+		}
+		if (!found)	{
+			drawPublicPlaceOnMap(place);
+
+		}
+	}
+
+
+	public void updateUser(GeneralUser user, GeneralUser thisUser)	{
+		boolean found = false;
+		for ( OverlayItem item : userOverlay.getOverlayItems()){
+			UserOverlayItem userItem = (UserOverlayItem) item;
+			if (user.getId().equals(((GeneralUser)userItem.getUser()).getId()))	{
+				userItem.setUser(user);
+				found = true;
+				break;
+			}
+		}
+		if (!found)	{
+			if ((thisUser == null) || (!thisUser.getId().equals(user.getId())))	{ 
+				drawOtherUserOnMap(user);
+			}
+		}
+
+	}
+
 	
 	public void drawPublicPlaceOnMap(GeneralPlace place)	
 	{
@@ -106,6 +150,14 @@ extends MapActivity
 	
 	private RestTemplate restTemplate;
 	
+	public RestTemplate getRestTemplate() {
+		return restTemplate;
+	}
+
+	public void setRestTemplate(RestTemplate restTemplate) {
+		this.restTemplate = restTemplate;
+	}
+
 	private ILocationSvc service = null;
 	private ILocationProv locationListener;
 	
@@ -148,10 +200,12 @@ extends MapActivity
 		
 		mapView.getController().setCenter(SPUtils.toGeoPoint(center));
 		
+		GeneralUser thisUser = null;
+		
 		if (service != null)	{
-			GeneralUser user = service.getUser();
-			if (null != user)	{
-				drawUserOnMap(user);
+			thisUser = service.getUser();
+			if (null != thisUser)	{
+				drawUserOnMap(thisUser);
 			}
 		}
 		
@@ -162,7 +216,7 @@ extends MapActivity
 		
 		double distance = calculateDistanceMeters(center.getLongitudeInDegrees(), center.getLatitudeInDegrees(), screenEdge.getLongitude(), screenEdge.getLatitude());
 		
-		int distancemeters = (int)Math.ceil(distance)*10;
+		int distancemeters = (int)Math.ceil(distance)*1000;
 		
 		
 		
@@ -178,7 +232,8 @@ extends MapActivity
 		if (null != users)
 		{
 			for (GeneralUser user : users)	{
-				drawOtherUserOnMap(user);
+				updateUser(user, thisUser);
+				
 			}
 		}
 		
@@ -188,7 +243,8 @@ extends MapActivity
 		if (null != places)
 		{
 			for (GeneralPlace place : places)	{
-				drawPublicPlaceOnMap(place);
+				updatePublicPlace(place);
+				
 			}
 		}
 	}
@@ -203,9 +259,21 @@ extends MapActivity
 			public void onClick(DialogInterface dialog, int id) 
 			{
 				GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
-
-				restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, String.class);
 				newMinyan.addJoiner(service.getUser().getName());
+				StringWriter sw = new StringWriter();
+				ObjectMapper mapper = new ObjectMapper();
+				MappingJsonFactory jsonFactory = new MappingJsonFactory();
+				try	{
+					JsonGenerator jsonGenerator = jsonFactory.createJsonGenerator(sw);
+					mapper.writeValue(jsonGenerator, newMinyan);
+					sw.close();
+				} catch (Throwable T)	{
+					
+				}
+				
+				Log.e("post message", sw.getBuffer().toString());
+				restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, Long.class);
+				
 
 				// create in server
 				/*drawPublicPlaceOnMap(newMinyan);*/
@@ -306,24 +374,23 @@ extends MapActivity
 				
 				updateMap(point);
 				DrawPointOnMap(mapView, point);
-					
-    	    	
-    	    	
-    	    	//int numServerUsers = resource.getNumUsers();
-    	    	int numServerUsers = restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy", Integer.class);
-        		for (int i = 0; i < numServerUsers; i++)	{ 
-        			/*GeneralUser gUser = resource.retrieve(i);
-        			if (null != gUser)	{
-        				drawOtherUserOnMap(gUser);
-        			}*/
-        			GeneralUser gUser =restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/{a}", GeneralUser.class, i);
-        			drawOtherUserOnMap(gUser);
-        		}
+				
     	    	
     	    }
     	};
-
+    	
+//    	final Timer     timer = new Timer();
+//    	final TimerTask task = new TimerTask() {
+//			
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//		}; 
+    	
     	ServiceConnection svcConn=new ServiceConnection() {
+    		
     		
 
     		public void onServiceDisconnected(ComponentName className) {
@@ -346,7 +413,21 @@ extends MapActivity
         		catch (Throwable t) {
         			Log.e("ShareAPrayer", "Exception in call to registerListner()", t);
         		}
-
+//        		
+//        		timer = new Timer();
+//        		task  = new TimerTask()
+//        		{
+//        		@Override
+//        		public void run()
+//        		{
+//        			if(service.getLocation()!=null){
+//        				updateMap(service.getLocation());
+//        			}
+//        		}
+//        		};
+//        		timer.schedule(task, 1, 10000);
+        		     
+        		
     			
     		}
 

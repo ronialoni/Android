@@ -28,6 +28,16 @@ public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay
 	}
 
 
+	public FindPrayer getActivity() {
+		return activity;
+	}
+
+
+	public void setActivity(FindPrayer activity) {
+		this.activity = activity;
+	}
+
+
 	public void setThisUser(GeneralUser thisUser) {
 		this.thisUser = thisUser;
 	}
@@ -48,7 +58,7 @@ public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay
 	}
 
 
-	private void createRegisterDialog(String message, final GeneralPlace place)
+	private void createRegisterDialog(String message, final GeneralPlace place, final PlaceArrayItemizedOverlay p)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setMessage(message);
@@ -58,6 +68,9 @@ public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay
 			public void onClick(DialogInterface dialog, int id) 
 			{
 				place.addJoiner(thisUser.getName());
+				p.getActivity().getRestTemplate().postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/addjoiner", place, String.class);
+				
+				//restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/addjoiner", place, String.class);
 				
 			}
 		});
@@ -96,12 +109,17 @@ public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay
 		PlaceOverlayItem placeItem = (PlaceOverlayItem)this.getOverlayItems().get(index);
 		String msg; 
 		List<String> joiners = placeItem.getPlace().getAllJoiners();
-		msg = (joiners == null ? "No prayers listed" : "Prayer listed are:\n");
-		for(String joiner : joiners){
-			msg = msg + joiner + "\n";
-			
+		if(joiners == null){
+			msg = "No prayers listed.\n"; 
 		}
-		this.createRegisterDialog(msg + "Would you like to register to this place?", placeItem.getPlace());
+		else{
+			msg = "Prayer listed are:\n";
+			for(String joiner : joiners){
+				msg = msg + joiner + "\n";
+			
+			}
+		}
+		this.createRegisterDialog(msg + "Would you like to register to this place?", placeItem.getPlace(),this);
 		
 	    return true;
 	}

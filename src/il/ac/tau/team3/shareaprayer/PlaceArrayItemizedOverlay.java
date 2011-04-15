@@ -1,6 +1,7 @@
 package il.ac.tau.team3.shareaprayer;
 
 
+
 import java.util.List;
 
 import il.ac.tau.team3.common.GeneralPlace;
@@ -11,53 +12,66 @@ import org.mapsforge.android.maps.MapView;
 import org.mapsforge.android.maps.OverlayItem;
 import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
 
-
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 
-public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay 
+
+
+
+
+public class PlaceArrayItemizedOverlay
+extends PrayerArrayItemizedOverlay 
 {
-	FindPrayer activity;
+	
+    
+    FindPrayer activity;
 	GeneralUser thisUser;
 
-	public GeneralUser getThisUser() {
-		return thisUser;
-	}
+	
+	
+    public GeneralUser getThisUser()
+    {
+        return thisUser;
+    }
+    
+    public FindPrayer getActivity()
+    {
+        return activity;
+    }
+    
+    public void setActivity(FindPrayer activity)
+    {
+        this.activity = activity;
+    }
+    
+    public void setThisUser(GeneralUser thisUser)
+    {
+        this.thisUser = thisUser;
+    }
 
-
-	public FindPrayer getActivity() {
-		return activity;
-	}
-
-
-	public void setActivity(FindPrayer activity) {
-		this.activity = activity;
-	}
-
-
-	public void setThisUser(GeneralUser thisUser) {
-		this.thisUser = thisUser;
-	}
-
-
-	public PlaceArrayItemizedOverlay(Drawable defaultMarker, Context context, FindPrayer activity) {
+	
+	
+	public PlaceArrayItemizedOverlay(Drawable defaultMarker, Context context, FindPrayer activity)
+	{
 		super(defaultMarker, context);
 		// TODO Auto-generated constructor stub
 		this.activity = activity;
 	}
 	
 
-	public PlaceArrayItemizedOverlay(Drawable synagougeMarker,
-			FindPrayer findPrayer) {
+	public PlaceArrayItemizedOverlay(Drawable synagougeMarker, FindPrayer findPrayer)
+	{
 		super(synagougeMarker,findPrayer);
 		// TODO Auto-generated constructor stub
 		this.activity = findPrayer;
 	}
 
-
+	
+	
+	
+	
 	private void createRegisterDialog(String message, final GeneralPlace place, final PlaceArrayItemizedOverlay p)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -105,21 +119,26 @@ public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay
 	
 	
 	@Override
-	protected boolean onTap(int index) {
-		PlaceOverlayItem placeItem = (PlaceOverlayItem)this.getOverlayItems().get(index);
+	protected boolean onTap(int index)
+	{
+	    
+		PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
 		String msg; 
 		List<String> joiners = placeItem.getPlace().getAllJoiners();
-		if(joiners == null){
+		if(joiners == null)
+		{
 			msg = "No prayers listed.\n"; 
 		}
-		else{
+		else
+		{
 			msg = "Prayer listed are:\n";
-			for(String joiner : joiners){
-				msg = msg + joiner + "\n";
-			
+			for(String joiner : joiners)
+			{
+				msg = msg + joiner + "\n";			
 			}
 		}
-		this.createRegisterDialog(msg + "Would you like to register to this place?", placeItem.getPlace(),this);
+		
+		this.createRegisterDialog(msg + "Would you like to register to this place?", placeItem.getPlace(), this);
 		
 	    return true;
 	}

@@ -1,5 +1,7 @@
 package il.ac.tau.team3.shareaprayer;
 
+
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,26 +32,39 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-public class LocServ extends Service {
+
+
+public class LocServ 
+extends Service 
+{
 	
-	private final IBinder mBinder = new LocalBinder();
-	private SPGeoPoint curr_loc = null;
-	List<ILocationProv>	locationProvs = new ArrayList<ILocationProv>();
-	private GeneralUser user;
-	private String userId;
-	private RestTemplate restTemplate; 
+	private final IBinder mBinder       = new LocalBinder();
+	
+	private SPGeoPoint    curr_loc      = null;
+	List<ILocationProv>	  locationProvs = new ArrayList<ILocationProv>();
+	
+	private GeneralUser   user;
+	private String        userId;
+	private RestTemplate  restTemplate; 
+	
 	
 	public static final String ACTION_SERVICE = "il.ac.tau.team3.shareaprayer.MAIN";
 
 	
 	private LocationManager locMgr;
 	
-	public class LocalBinder extends Binder implements ILocationSvc {
+	
+	
+	public class LocalBinder 
+	extends Binder 
+	implements ILocationSvc 
+	{
 		public LocServ getService() {
             return LocServ.this;
         }
 		
-		public SPGeoPoint getLocation()	{
+		public SPGeoPoint getLocation()
+		{
 			if (curr_loc == null)
 				queryCurrentLocation();
 			return curr_loc;
@@ -68,8 +83,12 @@ public class LocServ extends Service {
 		}
     }
 	
+	
+	
+	
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	public int onStartCommand(Intent intent, int flags, int startId) 
+	{
 		Log.i("LocSrv", "Received start id " + startId + ": " + intent);
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
@@ -79,51 +98,59 @@ public class LocServ extends Service {
 		return START_STICKY;
 	}
 	
-	private void queryCurrentLocation()	{
+	
+	private void queryCurrentLocation()	
+	{
 		Location loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER );
-		if (null != loc)	{	
+		if (null != loc)	
+		{	
         	curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
         	user = new GeneralUser(userId, curr_loc, "bla");
         	Long id = restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, Long.class);
-        	if (id != null)	{
+        	if (id != null)	
+        	{
         		user.setId(id);
-        	}
-        	
-		}
+        	}        	
+		}		
 	}
 	
 	
 
 
-
 	@Override
-	public void onCreate()	{
+	public void onCreate()
+	{
 		super.onCreate();
 		
-		locMgr = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		
 		IntentFilter iFilter = new IntentFilter();
 		iFilter.addAction(LocationManager.GPS_PROVIDER);
 		iFilter.addAction(LocationManager.NETWORK_PROVIDER);
 		
 		Account[] accounts = AccountManager.get(this).getAccounts();
-		if (accounts.length != 0)	{	
+		if (accounts.length != 0)	
+		{	
 			userId = accounts[0].name;
-		} else	{
+		} 
+		else
+		{
 			userId = "NoGmailAccount@gmail.com";
 		}
 
 		restTemplate = new RestTemplate();
     	restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        List<HttpMessageConverter<?>> mc = restTemplate.getMessageConverters();
+        
+    	List<HttpMessageConverter<?>>      mc   = restTemplate.getMessageConverters();
         MappingJacksonHttpMessageConverter json = new MappingJacksonHttpMessageConverter();
- 
-        List<MediaType> supportedMediaTypes = new ArrayList<MediaType>();
+        List<MediaType>     supportedMediaTypes = new ArrayList<MediaType>();
         supportedMediaTypes.add(new MediaType("text", "javascript"));
         json.setSupportedMediaTypes(supportedMediaTypes);
         mc.add(json);
+
         restTemplate.setMessageConverters(mc);
 		
+        
 		
 		LocationListener locationListener = new LocationListener() 
     	{
@@ -136,11 +163,14 @@ public class LocServ extends Service {
     			StringWriter sw = new StringWriter();
 				ObjectMapper mapper = new ObjectMapper();
 				MappingJsonFactory jsonFactory = new MappingJsonFactory();
-				try	{
+				try
+				{
 					JsonGenerator jsonGenerator = jsonFactory.createJsonGenerator(sw);
 					mapper.writeValue(jsonGenerator, user);
 					sw.close();
-				} catch (Throwable T)	{
+				} 
+				catch (Throwable T)
+				{
 					
 				}
 				
@@ -148,12 +178,15 @@ public class LocServ extends Service {
     			Long id = restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, Long.class);
     			user.setId(id);
     			
-    			try	{
-    				for (ILocationProv locProv : locationProvs)	{
+    			try	
+    			{
+    				for (ILocationProv locProv : locationProvs)
+    				{
     					locProv.LocationChanged(curr_loc);
-    					
     				}
-    			} catch	(Exception e)	{
+    			} 
+    			catch (Exception e)
+    			{
     				Log.e("bind service", e.getMessage());
     				// Do nothing
     			}
@@ -182,7 +215,8 @@ public class LocServ extends Service {
 	}
 	
 	@Override
-	public IBinder onBind(Intent intent) {
+	public IBinder onBind(Intent intent) 
+	{
 		return mBinder;
 	}
 

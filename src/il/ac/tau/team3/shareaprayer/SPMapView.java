@@ -62,12 +62,13 @@ import android.view.MotionEvent;
 public class SPMapView
 extends MapView
 {	
-	private List<IMapTapDetect> tapListeners;
-	/*** @constructor ***/
+	
+    
+    private List<IMapTapDetect> tapListeners;
 	
 	
-	
-	
+	/*** @constructors ***/
+		
 	public SPMapView(Context context)
     {
         super(context);
@@ -80,13 +81,16 @@ extends MapView
         initFields();
         
     }
-    public SPMapView(Context context, AttributeSet attrs, int defStyle) {
+    public SPMapView(Context context, AttributeSet attrs, int defStyle)
+    {
         super(context, attrs);
         initFields();
-        
     }
     
-    private void initFields()	{
+        
+    
+    private void initFields()	
+    {
     	this.setClickable(true);
         this.setBuiltInZoomControls(true);
         this.setMapViewMode(MapViewMode.MAPNIK_TILE_DOWNLOAD);
@@ -94,46 +98,57 @@ extends MapView
                 
     }
 	
-	public void RegisterTapListener(IMapTapDetect tapListen)	{
-		synchronized(this)	{
+	public void registerTapListener(IMapTapDetect tapListen)	
+	{
+		synchronized(this)
+		{
 			tapListeners.add(tapListen);
 		}
 		
 	}
 	
-	public void UnregisterTapListener(IMapTapDetect tapListen)	{
-		synchronized(this)	{
+	public void unregisterTapListener(IMapTapDetect tapListen)
+	{
+		synchronized(this)	
+		{
 			tapListeners.remove(tapListen);
 		}
 	}
 
 
+	
+	
 	private long startTime;
 	private long timeElapsed;
 	
 	private float startPosX;
 	private float startPosY;
 	
+	
+	
 	/*** @Override ***/
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) 
 	{
+	    
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
 			startTime = event.getEventTime(); 
 			startPosX = event.getX();
             startPosY = event.getY(); 
 		}
+		
 		if ((event.getX() == startPosX) && (event.getY() == startPosY))
 		{          
 			timeElapsed = event.getEventTime() - startTime;
 			if (timeElapsed > 800) 
 			{
-				GeoPoint p = this.getProjection().fromPixels((int) startPosX, (int) startPosY);
+				GeoPoint   p          = this.getProjection().fromPixels((int) startPosX, (int) startPosY);
 				SPGeoPoint eventPoint = new SPGeoPoint(p.getLatitudeE6(),p.getLongitudeE6());
 				//createDialog("Do you want to create a public praying place?");
-				for (IMapTapDetect tap : tapListeners)	{
+				for (IMapTapDetect tap : tapListeners)	
+				{
 					tap.onTouchEvent(eventPoint);
 					//this.mapActivity.createDialog("Do you want to create a public praying place?", eventPoint);
 				}
@@ -141,8 +156,7 @@ extends MapView
 			}
 		} 
 		
-		return super.onTouchEvent(event);
-		
+		return super.onTouchEvent(event);		
 	}
 			
 	

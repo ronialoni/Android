@@ -36,10 +36,10 @@ public class SPGeoPoint implements Serializable {
 	}
 	
 	public double getLatitudeInDegrees(){
-		return (double)this.LatitudeE6/1000000;
+		return this.LatitudeE6/(double)1000000;
 	}
 	public double getLongitudeInDegrees(){
-		return (double)this.LongtitudeE6/1000000;
+		return this.LongtitudeE6/(double)1000000;
 	}
 	
 }

@@ -19,6 +19,7 @@ import android.util.Log;
 
 import org.mapsforge.android.maps.MapActivity;
 //import org.mapsforge.android.maps.MapViewMode;
+import org.mapsforge.android.maps.IOverlayChange;
 import org.mapsforge.android.maps.OverlayItem;
 import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
 import org.mapsforge.android.maps.GeoPoint;
@@ -168,7 +169,7 @@ extends MapActivity
                 center.getLongitudeInDegrees(), center.getLatitudeInDegrees(),
                 screenEdge.getLongitude(), screenEdge.getLatitude());
         
-        int distancemeters = (int) Math.ceil(distance) * 100;
+        int distancemeters = (int) Math.ceil(distance)*100;
         
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("latitude", new Double(center.getLatitudeInDegrees()).toString());
@@ -302,6 +303,28 @@ extends MapActivity
 		
 	private SPMapView mapView;
 	
+	private Thread refreshTask  = new Thread() 
+   	{
+   		@Override
+   		public void run() 
+   		{
+   			while (!isInterrupted())	{
+	   			try {
+	   				synchronized (this)	{
+	   					wait(10000);
+	   				}
+					if(service.getLocation()!= null)
+		   			{
+		   				updateMap(service.getLocation());
+		   			}
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+	   			
+   			}
+   		}
+   		
+   	};
 	
 	
 
@@ -322,7 +345,9 @@ extends MapActivity
         				
         				restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, Long.class);
                 		
-                		updateMap(service.getLocation());
+        				synchronized(refreshTask)	{
+        					refreshTask.notify();
+        				}
            			}
                 };
                 t.run();
@@ -411,6 +436,9 @@ extends MapActivity
 		othersDefaultMarker = this.getResources().getDrawable(R.drawable.others_kipa_pin);
         // create an PrayerArrayItemizedOverlay for the others
 		otherUsersOverlay   = new PrayerArrayItemizedOverlay(othersDefaultMarker, this);
+		
+		
+		
 		// add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(otherUsersOverlay);	 
         
@@ -426,13 +454,9 @@ extends MapActivity
 			public void LocationChanged(SPGeoPoint point) {
 				mapView.getController().setCenter(SPUtils.toGeoPoint(point));
 				
-				Thread t = new Thread()	{
-                	@Override
-					public void run()	{
-                		updateMap(service.getLocation());
-           			}
-                };
-                t.run();
+				synchronized(refreshTask)	{
+					refreshTask.notify();
+				}
 				//drawPointOnMap(mapView, point);
 				
     	    	
@@ -440,19 +464,9 @@ extends MapActivity
     	};
     	
 
-   	final Timer     timer = new Timer();
-   	final TimerTask task  = new TimerTask() 
-   	{
-   		@Override
-   		public void run() 
-   		{
-   			if(service.getLocation()!= null)
-   			{
-   				updateMap(service.getLocation());
-   			}
-   		}
-   		
-   	}; 
+/*   	final Timer     timer = new Timer();*/
+   	
+   	refreshTask.start();
     	
    	
    	
@@ -502,8 +516,46 @@ extends MapActivity
                 // }
                 // }
                 // };
-                timer.schedule(task, 1, 10000);
+                /*timer.schedule(new TimerTask() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						synchronized (refreshTask)	{
+							refreshTask.notify();
+						}
+					}
+                	
+                }, 1, 100000);
+*/                
+                otherUsersOverlay.RegisterListner( new IOverlayChange() {
+                	class TimerRefreshTask	extends TimerTask	{
+
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							synchronized (refreshTask)	{
+								refreshTask.notify();
+							}
+						}
+                		
+                	};
+                	
+                	private Timer t = new Timer();
+                	private TimerTask ts = new TimerRefreshTask();
+                	
+        			public void OverlayChangeCenterZoom() {
+        				ts.cancel();
+        				t.purge();
+        				ts = new TimerRefreshTask();
+        				t.schedule(ts, 1000);
+        				
+        			}
+        			
+        		});
             }
+            
+            
             
         };
         

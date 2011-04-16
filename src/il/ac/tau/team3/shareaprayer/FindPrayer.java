@@ -2,7 +2,6 @@ package il.ac.tau.team3.shareaprayer;
 
 
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,16 +16,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.MappingJsonFactory;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import org.mapsforge.android.maps.MapActivity;
-import org.mapsforge.android.maps.MapView;
 //import org.mapsforge.android.maps.MapViewMode;
-import org.mapsforge.android.maps.OverlayCircle;
 import org.mapsforge.android.maps.OverlayItem;
-import org.mapsforge.android.maps.ArrayCircleOverlay;
 import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 
@@ -42,8 +34,6 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
 
@@ -54,10 +44,7 @@ public class FindPrayer
 extends MapActivity 
 {
     
-    
-	private Paint circleDefaultPaintFill;
-	private Paint circleDefaultPaintOutline;
-	
+    	
 	private Drawable userDefaultMarker;
 	private Drawable othersDefaultMarker;
 	private Drawable synagougeMarker;
@@ -65,7 +52,6 @@ extends MapActivity
 	private PrayerArrayItemizedOverlay userOverlay;
 	private PrayerArrayItemizedOverlay otherUsersOverlay;
 	private PlaceArrayItemizedOverlay publicPlaceOverlay;
-	private ArrayCircleOverlay circleOverlay;
 	
 	
 	
@@ -93,23 +79,6 @@ extends MapActivity
 	}
 	
 	
-	public void drawPointOnMap(final MapView mapView, final SPGeoPoint a_point)	
-	{
-		//removes previous location from the map
-		circleOverlay.clear();
-		
-		GeoPoint point = SPUtils.toGeoPoint(a_point);
-		
-		// set center
-		mapView.getController().setCenter(point);
-        OverlayCircle circle = new OverlayCircle(point, 16, "My Location");
-        
-        circleOverlay.addCircle(circle);
-
-        // add the PrayerArrayItemizedOverlay to the MapView
-        mapView.getOverlays().add(circleOverlay);
-	}
-
 	
 
     public void drawPublicPlaceOnMap(GeneralPlace place)    
@@ -180,16 +149,88 @@ extends MapActivity
 		}
 
 	}
-
 	
-    private void updateMap(SPGeoPoint center)
+	private  Map<String, String> getParameters(SPGeoPoint center)	{
+		
+		if (center == null)
+        {
+            return null;
+        }
+		
+		GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+        if (screenEdge == null)
+        {
+            return null;
+        }
+		
+		double distance = SPUtils.calculateDistanceMeters(
+                center.getLongitudeInDegrees(), center.getLatitudeInDegrees(),
+                screenEdge.getLongitude(), screenEdge.getLatitude());
+        
+        int distancemeters = (int) Math.ceil(distance) * 100;
+        
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("latitude", new Double(center.getLatitudeInDegrees()).toString());
+        parameters.put("longitude", new Double(center.getLongitudeInDegrees()).toString());
+        parameters.put("radius", new Integer(distancemeters).toString());
+        
+        return parameters;
+	}
+	
+	private GeneralUser[] getUsers(SPGeoPoint center)	{ 
+		Map<String, String> parameters = getParameters(center);
+		
+		if (null == parameters)	{
+			return null;
+		}
+		
+		return restTemplate.getForObject(
+                "http://share-a-prayer.appspot.com/resources/prayerjersy/users?latitude={latitude}&longitude={longitude}&radius={radius}",
+                GeneralUser[].class, parameters);
+	}
+	
+	private GeneralPlace[] getPlaces(SPGeoPoint center)	{ 
+		Map<String, String> parameters = getParameters(center);
+		
+		if (null == parameters)	{
+			return null;
+		}
+		
+		return restTemplate
+        .getForObject(
+                "http://share-a-prayer.appspot.com/resources/prayerjersy/places?latitude={latitude}&longitude={longitude}&radius={radius}",
+                GeneralPlace[].class, parameters);
+	}
+
+
+	private void updateMap(SPGeoPoint center)	{
+	
+		final GeneralUser[] users = getUsers(center);
+		if (null == users)	{
+			return;
+		}
+		final GeneralPlace[] places = getPlaces(center);
+		if (null == places)	{
+			return;
+		}
+        
+		mapView.post(new Runnable()	
+		{
+			public void run() 
+			{
+				updateMap(service.getLocation(), users, places);
+			}
+		});
+        
+	}
+	
+    private void updateMap(SPGeoPoint center, GeneralUser[] users, GeneralPlace[] places)
     {
         if (center == null)
         {
             return;
         }
         
-        mapView.getController().setCenter(SPUtils.toGeoPoint(center));
         
         GeneralUser thisUser = null;
         
@@ -202,26 +243,9 @@ extends MapActivity
             }
         }
         
-        GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
-        if (screenEdge == null)
-        {
-            return;
-        }
         
-        double distance = SPUtils.calculateDistanceMeters(
-                center.getLongitudeInDegrees(), center.getLatitudeInDegrees(),
-                screenEdge.getLongitude(), screenEdge.getLatitude());
         
-        int distancemeters = (int) Math.ceil(distance) * 100;
         
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("latitude", new Double(center.getLatitudeInDegrees()).toString());
-        parameters.put("longitude", new Double(center.getLongitudeInDegrees()).toString());
-        parameters.put("radius", new Integer(distancemeters).toString());
-        
-        GeneralUser[] users = restTemplate.getForObject(
-                        "http://share-a-prayer.appspot.com/resources/prayerjersy/users?latitude={latitude}&longitude={longitude}&radius={radius}",
-                        GeneralUser[].class, parameters);
         
         if (null != users)
         {
@@ -231,10 +255,7 @@ extends MapActivity
             }
         }
         
-        GeneralPlace[] places = restTemplate
-                .getForObject(
-                        "http://share-a-prayer.appspot.com/resources/prayerjersy/places?latitude={latitude}&longitude={longitude}&radius={radius}",
-                        GeneralPlace[].class, parameters);
+        
         
         if (null != places)
         {
@@ -286,26 +307,19 @@ extends MapActivity
 		{
 			public void onClick(DialogInterface dialog, int id) 
 			{
-				GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
-				newMinyan.addJoiner(service.getUser().getName());
-				StringWriter sw = new StringWriter();
-				ObjectMapper mapper = new ObjectMapper();
-				MappingJsonFactory jsonFactory = new MappingJsonFactory();
-				try	{
-					JsonGenerator jsonGenerator = jsonFactory.createJsonGenerator(sw);
-					mapper.writeValue(jsonGenerator, newMinyan);
-					sw.close();
-				} catch (Throwable T)	{
-					
-				}
-				
-				Log.e("post message", sw.getBuffer().toString());
-				restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, Long.class);
-				
+				Thread t = new Thread()	{
+                	@Override
+					public void run()	{
+                		GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
+        				newMinyan.addJoiner(service.getUser().getName());
+        				
+        				restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, Long.class);
+                		
+                		updateMap(service.getLocation());
+           			}
+                };
+                t.run();
 
-				// create in server
-				/*drawPublicPlaceOnMap(newMinyan);*/
-	        	updateMap(point);
 			}
 		});
 		builder.setNegativeButton("No", new DialogInterface.OnClickListener() 
@@ -397,27 +411,22 @@ extends MapActivity
          * Circle overlay:
          */
         // create the default paint objects for overlay circles
-    	circleDefaultPaintFill = new Paint(Paint.ANTI_ALIAS_FLAG);
-        circleDefaultPaintFill.setStyle(Paint.Style.FILL);
-        circleDefaultPaintFill.setColor(Color.BLUE);
-        circleDefaultPaintFill.setAlpha(64);
-        
-        circleDefaultPaintOutline = new Paint(Paint.ANTI_ALIAS_FLAG);
-        circleDefaultPaintOutline.setStyle(Paint.Style.STROKE);
-        circleDefaultPaintOutline.setColor(Color.BLUE);
-        circleDefaultPaintOutline.setAlpha(128);
-        circleDefaultPaintOutline.setStrokeWidth(3);
-        
-        circleOverlay = new ArrayCircleOverlay(circleDefaultPaintFill, circleDefaultPaintOutline, this);
     	
         // Define a listener that responds to location updates
     	locationListener = new ILocationProv() 
     	{
 	    	// Called when a new location is found by the network location provider.
 			public void LocationChanged(SPGeoPoint point) {
+				mapView.getController().setCenter(SPUtils.toGeoPoint(point));
 				
-				updateMap(point);
-				drawPointOnMap(mapView, point);
+				Thread t = new Thread()	{
+                	@Override
+					public void run()	{
+                		updateMap(service.getLocation());
+           			}
+                };
+                t.run();
+				//drawPointOnMap(mapView, point);
 				
     	    	
     	    }
@@ -432,13 +441,7 @@ extends MapActivity
    		{
    			if(service.getLocation()!= null)
    			{
-   				mapView.post(new Runnable()	
-   				{
-   					public void run() 
-   					{
-   						updateMap(service.getLocation());
-   					}
-   				});
+   				updateMap(service.getLocation());
    			}
    		}
    		
@@ -463,7 +466,17 @@ extends MapActivity
                     service.RegisterListner(locationListener);
                     SPGeoPoint gp = service.getLocation();
                     publicPlaceOverlay.setThisUser(service.getUser());
-                    updateMap(gp);
+                    mapView.getController().setCenter(SPUtils.toGeoPoint(gp));
+                    if (gp == null)	{
+                    	return;
+                    }
+                    Thread t = new Thread()	{
+                    	@Override
+						public void run()	{
+                    		updateMap(service.getLocation());
+               			}
+                    };
+                    t.run();
                     // send the user to places overlay
                 }
                 catch (Throwable t)

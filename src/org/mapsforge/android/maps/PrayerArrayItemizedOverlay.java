@@ -20,6 +20,8 @@ package org.mapsforge.android.maps;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.mapsforge.android.maps.ItemizedOverlay;
 import org.mapsforge.android.maps.MapView.TextField;
@@ -28,6 +30,8 @@ import org.mapsforge.android.maps.OverlayItem;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 
 
@@ -48,9 +52,33 @@ public class PrayerArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 
 	private final Context context;
 	private final ArrayList<OverlayItem> overlayItems;
+	private final List<IOverlayChange> overlayListeners;
 
 	public ArrayList<OverlayItem> getOverlayItems() {
 		return overlayItems;
+	}
+	
+	public void RegisterListner(IOverlayChange overlayChange)	{
+		synchronized(this.overlayListeners)	{
+			overlayListeners.add(overlayChange);
+		}
+	}
+	
+	public void UnregisterListner(IOverlayChange overlayChange)	{
+		synchronized(this.overlayListeners)	{
+			overlayListeners.remove(overlayChange);
+		}
+	}
+	
+	@Override
+	protected void drawOverlayBitmap(Canvas canvas, Point drawPosition, Projection projection,
+			byte drawZoomLevel) {
+		synchronized(this.overlayListeners)	{
+			for (IOverlayChange listner : overlayListeners)
+				listner.OverlayChangeCenterZoom();
+		}
+		
+		super.drawOverlayBitmap(canvas, drawPosition, projection, drawZoomLevel);
 	}
 
 	/**
@@ -66,6 +94,7 @@ public class PrayerArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		super(defaultMarker == null ? null : boundCenterBottom(defaultMarker));
 		this.context = context;
 		this.overlayItems = new ArrayList<OverlayItem>(ARRAY_LIST_INITIAL_CAPACITY);
+		this.overlayListeners = new LinkedList<IOverlayChange>();
 	}
 
 	/**
@@ -93,6 +122,15 @@ public class PrayerArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		synchronized (this.overlayItems) {
 			this.overlayItems.addAll(c);
 		}
+		populate();
+	}
+	
+	public void changeItems(Collection<? extends OverlayItem> c)	{
+		synchronized (this.overlayItems) {
+			this.overlayItems.clear();
+			this.overlayItems.addAll(c);
+		}
+		
 		populate();
 	}
 

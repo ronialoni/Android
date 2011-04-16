@@ -4,6 +4,7 @@ package il.ac.tau.team3.shareaprayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -249,20 +250,26 @@ extends MapActivity
         
         if (null != users)
         {
+        	List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(users.length);
             for (GeneralUser user : users)
             {
-                updateUser(user, thisUser);
+            	if ((thisUser == null) || (!thisUser.getId().equals(user.getId())))	{
+            		usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
+            	}
             }
+            otherUsersOverlay.changeItems(usersOverlayList);
         }
         
         
         
         if (null != places)
         {
+        	List<PlaceOverlayItem> placesOverlayList = new ArrayList<PlaceOverlayItem>(places.length);
             for (GeneralPlace place : places)
             {
-                updatePublicPlace(place);
+            	placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress()));
             }
+            publicPlaceOverlay.changeItems(placesOverlayList);
         }
     }
 	

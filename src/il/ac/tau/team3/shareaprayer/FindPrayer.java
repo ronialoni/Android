@@ -169,7 +169,7 @@ extends MapActivity
                 center.getLongitudeInDegrees(), center.getLatitudeInDegrees(),
                 screenEdge.getLongitude(), screenEdge.getLatitude());
         
-        int distancemeters = (int) Math.ceil(distance)*100;
+        int distancemeters = (int) Math.ceil(distance);
         
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("latitude", new Double(center.getLatitudeInDegrees()).toString());

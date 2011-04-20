@@ -26,8 +26,8 @@ extends PrayerArrayItemizedOverlay
 {
 	
     
-    FindPrayer activity;
-	GeneralUser thisUser;
+    private FindPrayer  activity;
+	private GeneralUser thisUser;
 
 	
 	
@@ -53,10 +53,10 @@ extends PrayerArrayItemizedOverlay
 
 	
 	
+    
 	public PlaceArrayItemizedOverlay(Drawable defaultMarker, Context context, FindPrayer activity)
 	{
 		super(defaultMarker, context);
-		// TODO Auto-generated constructor stub
 		this.activity = activity;
 	}
 	
@@ -64,7 +64,6 @@ extends PrayerArrayItemizedOverlay
 	public PlaceArrayItemizedOverlay(Drawable synagougeMarker, FindPrayer findPrayer)
 	{
 		super(synagougeMarker,findPrayer);
-		// TODO Auto-generated constructor stub
 		this.activity = findPrayer;
 	}
 

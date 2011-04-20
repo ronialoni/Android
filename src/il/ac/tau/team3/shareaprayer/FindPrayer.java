@@ -107,7 +107,7 @@ extends MapActivity
 		for (OverlayItem item : publicPlaceOverlay.getOverlayItems())
 		{
 			PlaceOverlayItem placeItem = (PlaceOverlayItem) item;
-			if (place.getId().equals(((GeneralPlace)placeItem.getPlace()).getId()))
+			if (place.getId().equals(((GeneralPlace) placeItem.getPlace()).getId()))
 			{
 				publicPlaceOverlay.removeItem(item);
 				placeItem.setPlace(place);
@@ -152,7 +152,8 @@ extends MapActivity
 
 	}
 	
-	private  Map<String, String> getParameters(SPGeoPoint center)	{
+	private  Map<String, String> getParameters(SPGeoPoint center)	
+	{
 		
 		if (center == null)
         {
@@ -165,9 +166,8 @@ extends MapActivity
             return null;
         }
 		
-		double distance = SPUtils.calculateDistanceMeters(
-                center.getLongitudeInDegrees(), center.getLatitudeInDegrees(),
-                screenEdge.getLongitude(), screenEdge.getLatitude());
+		double distance = SPUtils.calculateDistanceMeters(center.getLongitudeInDegrees(), center.getLatitudeInDegrees(),
+                                                          screenEdge.getLongitude()     , screenEdge.getLatitude());
         
         int distancemeters = (int) Math.ceil(distance);
         
@@ -179,53 +179,64 @@ extends MapActivity
         return parameters;
 	}
 	
-	private GeneralUser[] getUsers(SPGeoPoint center)	{ 
-		Map<String, String> parameters = getParameters(center);
-		
-		if (null == parameters)	{
-			return null;
-		}
-		
-		return restTemplate.getForObject(
-                "http://share-a-prayer.appspot.com/resources/prayerjersy/users?latitude={latitude}&longitude={longitude}&radius={radius}",
-                GeneralUser[].class, parameters);
-	}
 	
-	private GeneralPlace[] getPlaces(SPGeoPoint center)	{ 
-		Map<String, String> parameters = getParameters(center);
-		
-		if (null == parameters)	{
-			return null;
-		}
-		
-		return restTemplate
-        .getForObject(
-                "http://share-a-prayer.appspot.com/resources/prayerjersy/places?latitude={latitude}&longitude={longitude}&radius={radius}",
-                GeneralPlace[].class, parameters);
-	}
-
-
-	private void updateMap(SPGeoPoint center)	{
 	
-		final GeneralUser[] users = getUsers(center);
-		if (null == users)	{
-			return;
-		}
-		final GeneralPlace[] places = getPlaces(center);
-		if (null == places)	{
-			return;
-		}
+    private GeneralUser[] getUsers(SPGeoPoint center)
+    {
+        Map<String, String> parameters = getParameters(center);
         
-		mapView.post(new Runnable()	
-		{
-			public void run() 
-			{
-				updateMap(service.getLocation(), users, places);
-			}
-		});
+        if (null == parameters)
+        {
+            return null;
+        }
         
-	}
+        return restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/users?latitude={latitude}&longitude={longitude}&radius={radius}",
+                        GeneralUser[].class, parameters);
+    }
+    
+    
+    private GeneralPlace[] getPlaces(SPGeoPoint center)
+    {
+        Map<String, String> parameters = getParameters(center);
+        
+        if (null == parameters)
+        {
+            return null;
+        }
+        
+        return restTemplate.getForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/places?latitude={latitude}&longitude={longitude}&radius={radius}",
+                        GeneralPlace[].class, parameters);
+    }
+    
+    
+    
+    private void updateMap(SPGeoPoint center)
+    {
+        
+        final GeneralUser[] users = getUsers(center);
+        if (null == users)
+        {
+            return;
+        }
+        
+        final GeneralPlace[] places = getPlaces(center);
+        if (null == places)
+        {
+            return;
+        }
+        
+        mapView.post(new Runnable()
+        {
+            
+            public void run()
+            {
+                updateMap(service.getLocation(), users, places);
+            }
+        });
+        
+    }
 	
+    
     private void updateMap(SPGeoPoint center, GeneralUser[] users, GeneralPlace[] places)
     {
         if (center == null)
@@ -243,8 +254,7 @@ extends MapActivity
             {
                 drawUserOnMap(thisUser);
             }
-        }
-        
+        }    
         
         
         
@@ -254,7 +264,8 @@ extends MapActivity
         	List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(users.length);
             for (GeneralUser user : users)
             {
-            	if ((thisUser == null) || (!thisUser.getId().equals(user.getId())))	{
+            	if ((thisUser == null) || (! thisUser.getId().equals(user.getId())))	
+            	{
             		usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
             	}
             }
@@ -303,61 +314,76 @@ extends MapActivity
 		
 	private SPMapView mapView;
 	
-	private Thread refreshTask  = new Thread() 
-   	{
-   		@Override
-   		public void run() 
-   		{
-   			while (!isInterrupted())	{
-	   			try {
-	   				synchronized (this)	{
-	   					wait(10000);
-	   				}
-					if(service.getLocation()!= null)
-		   			{
-		   				updateMap(service.getLocation());
-		   			}
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
-				}
-	   			
-   			}
-   		}
-   		
-   	};
+	
+	
+    private Thread    refreshTask = new Thread()
+                                      {
+                                          
+                                          @Override
+                                          public void run()
+                                          {
+                                              while (! isInterrupted())
+                                              {
+                                                  try
+                                                  {
+                                                      synchronized (this)
+                                                      {
+                                                          wait(10000);
+                                                      }
+                                                      if (service.getLocation() != null)
+                                                      {
+                                                          updateMap(service.getLocation());
+                                                      }
+                                                  }
+                                                  catch (InterruptedException e)
+                                                  {
+                                                      Thread.currentThread().interrupt();
+                                                  }                                                  
+                                              }
+                                          }
+                                          
+                                      };
 	
 	
 
-	public void createNewPlaceDialog(String message, final SPGeoPoint point)
-	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(message);
-		builder.setCancelable(false);
-		builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int id) 
-			{
-				Thread t = new Thread()	{
-                	@Override
-					public void run()	{
-                		GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
-        				newMinyan.addJoiner(service.getUser().getName());
-        				
-        				restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, Long.class);
-                		
-        				synchronized(refreshTask)	{
-        					refreshTask.notify();
-        				}
-           			}
+    public void createNewPlaceDialog(String message, final SPGeoPoint point)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+        {
+            
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Thread t = new Thread()
+                {
+                    
+                    @Override
+                    public void run()
+                    {
+                        GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
+                        newMinyan.addJoiner(service.getUser().getName());
+                        
+                        restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateplacebylocation", newMinyan, Long.class);
+                        
+                        synchronized (refreshTask)
+                        {
+                            refreshTask.notify();
+                        }
+                    }
                 };
                 t.run();
-
-			}
-		});
-		builder.setNegativeButton("No", new DialogInterface.OnClickListener() 
-		{
-			public void onClick(DialogInterface dialog, int id) {}
-		});
+                
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener()
+        {
+            
+            public void onClick(DialogInterface dialog, int id)
+            {
+            }
+        });
 		
 		AlertDialog alert = builder.create();
 		
@@ -388,7 +414,7 @@ extends MapActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		//mapView = new SPMapView(this);
-		mapView = (SPMapView)findViewById(R.id.view1);
+		mapView = (SPMapView) findViewById(R.id.view1);
 		
         mapView.registerTapListener(new IMapTapDetect()	
         {
@@ -409,6 +435,8 @@ extends MapActivity
         mc.add(json);
         restTemplate.setMessageConverters(mc);
         
+        
+        
         /*
          * User overlay and icon:
          */
@@ -422,51 +450,41 @@ extends MapActivity
         /*
          * Synagouge overlay
          */
-        //Creates the Synagouge's map-icon
         synagougeMarker    = this.getResources().getDrawable(R.drawable.synagouge2);
-        // create an PrayerArrayItemizedOverlay for the user
         publicPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeMarker, this);
-		 // add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(publicPlaceOverlay);
         
         /*
          * Other users overlay and icons:
          */
-		//Creates the otherUser's map-icon
 		othersDefaultMarker = this.getResources().getDrawable(R.drawable.others_kipa_pin);
-        // create an PrayerArrayItemizedOverlay for the others
 		otherUsersOverlay   = new PrayerArrayItemizedOverlay(othersDefaultMarker, this);
-		
-		
-		
-		// add the PrayerArrayItemizedOverlay to the MapView
-        mapView.getOverlays().add(otherUsersOverlay);	 
+		mapView.getOverlays().add(otherUsersOverlay);	 
         
-        /*
-         * Circle overlay:
-         */
-        // create the default paint objects for overlay circles
-    	
+        
+		
+		
         // Define a listener that responds to location updates
     	locationListener = new ILocationProv() 
     	{
 	    	// Called when a new location is found by the network location provider.
-			public void LocationChanged(SPGeoPoint point) {
+			public void LocationChanged(SPGeoPoint point) 
+			{
 				mapView.getController().setCenter(SPUtils.toGeoPoint(point));
 				
-				synchronized(refreshTask)	{
+				synchronized(refreshTask)	
+				{
 					refreshTask.notify();
 				}
-				//drawPointOnMap(mapView, point);
-				
-    	    	
+				//drawPointOnMap(mapView, point);    	    	
     	    }
     	};
     	
 
 /*   	final Timer     timer = new Timer();*/
    	
-   	refreshTask.start();
+   	
+    	refreshTask.start();
     	
    	
    	
@@ -488,14 +506,18 @@ extends MapActivity
                     SPGeoPoint gp = service.getLocation();
                     publicPlaceOverlay.setThisUser(service.getUser());
                     mapView.getController().setCenter(SPUtils.toGeoPoint(gp));
-                    if (gp == null)	{
-                    	return;
+                    if (gp == null)
+                    {
+                        return;
                     }
-                    Thread t = new Thread()	{
-                    	@Override
-						public void run()	{
-                    		updateMap(service.getLocation());
-               			}
+                    Thread t = new Thread()
+                    {
+                        
+                        @Override
+                        public void run()
+                        {
+                            updateMap(service.getLocation());
+                        }
                     };
                     t.run();
                     // send the user to places overlay
@@ -520,7 +542,6 @@ extends MapActivity
 
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
 						synchronized (refreshTask)	{
 							refreshTask.notify();
 						}
@@ -528,31 +549,38 @@ extends MapActivity
                 	
                 }, 1, 100000);
 */                
-                otherUsersOverlay.RegisterListner( new IOverlayChange() {
-                	class TimerRefreshTask	extends TimerTask	{
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							synchronized (refreshTask)	{
-								refreshTask.notify();
-							}
-						}
-                		
-                	};
-                	
-                	private Timer t = new Timer();
-                	private TimerTask ts = new TimerRefreshTask();
-                	
-        			public void OverlayChangeCenterZoom() {
-        				ts.cancel();
-        				t.purge();
-        				ts = new TimerRefreshTask();
-        				t.schedule(ts, 1000);
-        				
-        			}
-        			
-        		});
+                otherUsersOverlay.RegisterListner(new IOverlayChange()
+                {
+                    
+                    class TimerRefreshTask 
+                    extends TimerTask
+                    {
+                        
+                        @Override
+                        public void run()
+                        {
+                            synchronized (refreshTask)
+                            {
+                                refreshTask.notify();
+                            }
+                        }
+                        
+                    };
+                    
+                    private Timer     t  = new Timer();                    
+                    private TimerTask ts = new TimerRefreshTask();
+                    
+                    @Override
+                    public void OverlayChangeCenterZoom()
+                    {
+                        ts.cancel();
+                        t.purge();
+                        ts = new TimerRefreshTask();
+                        t.schedule(ts, 1000);
+                        
+                    }
+                    
+                });
             }
             
             

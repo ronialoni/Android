@@ -64,8 +64,12 @@ extends MapView
 {	
 	
     
+    
     private List<IMapTapDetect> tapListeners;
 	
+    
+    
+    
 	
 	/*** @constructors ***/
 		
@@ -98,6 +102,9 @@ extends MapView
                 
     }
 	
+    
+    
+    
 	public void registerTapListener(IMapTapDetect tapListen)	
 	{
 		synchronized(this)
@@ -139,6 +146,10 @@ extends MapView
             startPosY = event.getY(); 
 		}
 		
+		
+		/*
+		 * 
+		 */
 		if ((event.getX() == startPosX) && (event.getY() == startPosY))
 		{          
 			timeElapsed = event.getEventTime() - startTime;

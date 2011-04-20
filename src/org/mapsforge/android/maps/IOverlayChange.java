@@ -1,5 +1,7 @@
 package org.mapsforge.android.maps;
 
-public interface IOverlayChange {
-	void OverlayChangeCenterZoom();
+
+public abstract class IOverlayChange 
+{
+    abstract public void OverlayChangeCenterZoom();
 }

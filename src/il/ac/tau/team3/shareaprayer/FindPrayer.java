@@ -50,10 +50,12 @@ extends MapActivity
 	private Drawable userDefaultMarker;
 	private Drawable othersDefaultMarker;
 	private Drawable synagougeMarker;
+	private Drawable synagougeClosestMarker;
 	
 	private PrayerArrayItemizedOverlay userOverlay;
 	private PrayerArrayItemizedOverlay otherUsersOverlay;
 	private PlaceArrayItemizedOverlay publicPlaceOverlay;
+	private PlaceArrayItemizedOverlay closestPlaceOverlay;
 	
 	private RestTemplateFacade restTemplateFacade;
 	
@@ -110,6 +112,25 @@ extends MapActivity
         return parameters;
 	}
 	
+	
+	private GeneralPlace determineClosestPlace(GeneralPlace[] places){
+		
+		GeneralPlace closestPlace = null;
+		double userLat = service.getUser().getSpGeoPoint().getLatitudeInDegrees();
+		double userLong = service.getUser().getSpGeoPoint().getLongitudeInDegrees();
+		double distance = 100000000000000000000000000000000000000000.0;
+		double tmp = 0;
+		for (GeneralPlace place : places){
+			tmp = SPUtils.calculateDistanceMeters(userLong, userLat,
+                    place.getSpGeoPoint().getLongitudeInDegrees() , place.getSpGeoPoint().getLatitudeInDegrees());
+			if(tmp < distance){
+				distance = tmp;
+				closestPlace = place;
+			}
+		}
+		return closestPlace;
+		
+	}
 	
 	
     private GeneralUser[] getUsers(SPGeoPoint center)
@@ -206,14 +227,21 @@ extends MapActivity
             otherUsersOverlay.changeItems(usersOverlayList);
         }
         
-        
+        GeneralPlace closestPlace = determineClosestPlace(places);
+        if(closestPlace!=null){
+        	List<PlaceOverlayItem> closestPlacesOverlayList = new ArrayList<PlaceOverlayItem>();
+        	closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress()));
+        	closestPlaceOverlay.changeItems(closestPlacesOverlayList);
+        }
         
         if (null != places)
         {
         	List<PlaceOverlayItem> placesOverlayList = new ArrayList<PlaceOverlayItem>(places.length);
             for (GeneralPlace place : places)
             {
-            	placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress()));
+            	if(!(place.getId().equals(closestPlace.getId()))){
+            		placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress()));
+            	}
             }
             publicPlaceOverlay.changeItems(placesOverlayList);
         }
@@ -330,6 +358,10 @@ extends MapActivity
         synagougeMarker    = this.getResources().getDrawable(R.drawable.synagouge2);
         publicPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeMarker, this);
         mapView.getOverlays().add(publicPlaceOverlay);
+        
+        synagougeClosestMarker    = this.getResources().getDrawable(R.drawable.synagouge_closest);
+        closestPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeClosestMarker, this);
+        mapView.getOverlays().add(closestPlaceOverlay);
         
         /*
          * Other users overlay and icons:

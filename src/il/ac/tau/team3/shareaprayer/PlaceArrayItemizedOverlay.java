@@ -71,50 +71,45 @@ extends PrayerArrayItemizedOverlay
 	
 	
 	
-	private void createRegisterDialog(String message, final GeneralPlace place, final PlaceArrayItemizedOverlay p)
-	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-		builder.setMessage(message);
-		builder.setCancelable(true);
-		builder.setPositiveButton("Register", new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int id) 
-			{
-				place.addJoiner(thisUser.getName());
-				p.getActivity().getRestTemplate().postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/addjoiner", place, String.class);
-				
-				//restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/addjoiner", place, String.class);
-				
-			}
-		});
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() 
-		{
-			public void onClick(DialogInterface dialog, int id) {}
-		});
-		
-		AlertDialog alert = builder.create();
-		
-		alert.show();
-	}
-	
-	
-	
-//	public boolean onTap (final GeoPoint p, final MapView mapView)
+//	private void createRegisterDialog(String message, final GeneralPlace place, final PlaceArrayItemizedOverlay p)
 //	{
-//	    boolean tapped = super.onTap(p, mapView);
-//	    if (tapped)
-//	    {            
-//	    	createRegisterDialog("Would you like to register to this place?", p);         
-//	    }           
-//	    else
-//	    {
-//	    	// Note: no action needed, Activity handles
-//	    }     
-//	    
-//	    return true;
+//		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+//		builder.setMessage(message);
+//		builder.setCancelable(true);
+//		builder.setPositiveButton("Register", new DialogInterface.OnClickListener()
+//		{
+//			public void onClick(DialogInterface dialog, int id) 
+//			{
+//				
+//				if(!place.IsJoinerSigned(thisUser.getName())){
+//					p.getActivity().getRestTemplateFacade().AddJoiner(place, thisUser);
+//				}else{
+//					AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+//					builder.setMessage("You are already registered to this place.");
+//					builder.setCancelable(true);
+//					builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() 
+//					{
+//						public void onClick(DialogInterface dialog, int id) {}
+//					});
+//					AlertDialog alert = builder.create();
+//					alert.show();
+//				}
+//				
+//				
+//				
+//			}
+//		});
+//		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() 
+//		{
+//			public void onClick(DialogInterface dialog, int id) {}
+//		});
+//		
+//		AlertDialog alert = builder.create();
+//		
+//		alert.show();
 //	}
-
 	
+
 	
 	
 	@Override
@@ -137,7 +132,7 @@ extends PrayerArrayItemizedOverlay
 			}
 		}
 		
-		this.createRegisterDialog(msg + "Would you like to register to this place?", placeItem.getPlace(), this);
+		UIUtils.createRegisterDialog(msg, placeItem.getPlace(), this);
 		
 	    return true;
 	}

@@ -85,4 +85,8 @@ implements Serializable
     {
         this.minyanJoiners = joiners;
     }
+    
+    public boolean IsJoinerSigned(String joiner){
+    	return (this.minyanJoiners.contains(joiner));
+    }
 }

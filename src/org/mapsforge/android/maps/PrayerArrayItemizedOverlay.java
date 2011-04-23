@@ -71,7 +71,7 @@ public class PrayerArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 	
 	@Override
-	protected void drawOverlayBitmap(Canvas canvas, Point drawPosition, Projection projection,
+	public void drawOverlayBitmap(Canvas canvas, Point drawPosition, Projection projection,
 			byte drawZoomLevel) {
 		synchronized(this.overlayListeners)	{
 			for (IOverlayChange listner : overlayListeners)

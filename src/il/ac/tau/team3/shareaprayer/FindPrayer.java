@@ -16,6 +16,7 @@ import il.ac.tau.team3.common.SPGeoPoint;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.ImageView;
 
 import org.mapsforge.android.maps.MapActivity;
 //import org.mapsforge.android.maps.MapViewMode;
@@ -36,6 +37,12 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
 
@@ -197,6 +204,29 @@ extends MapActivity
         }
         
         
+      
+        
+        GeneralPlace closestPlace = determineClosestPlace(places);
+        if(closestPlace!=null){
+        	List<PlaceOverlayItem> closestPlacesOverlayList = new ArrayList<PlaceOverlayItem>();
+        	closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress()));
+        	closestPlaceOverlay.changeItems(closestPlacesOverlayList);
+        }
+        
+        if (null != places)
+        {
+        	List<PlaceOverlayItem> placesOverlayList = new ArrayList<PlaceOverlayItem>(places.length);
+            for (GeneralPlace place : places)
+            {
+            	if(!(place.getId().equals(closestPlace.getId()))){
+            		placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress()));
+            	}
+            }
+            
+            publicPlaceOverlay.changeItems(placesOverlayList);
+           
+        }
+        
         GeneralUser thisUser = null;
         
         if (service != null)
@@ -225,25 +255,6 @@ extends MapActivity
             	}
             }
             otherUsersOverlay.changeItems(usersOverlayList);
-        }
-        
-        GeneralPlace closestPlace = determineClosestPlace(places);
-        if(closestPlace!=null){
-        	List<PlaceOverlayItem> closestPlacesOverlayList = new ArrayList<PlaceOverlayItem>();
-        	closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress()));
-        	closestPlaceOverlay.changeItems(closestPlacesOverlayList);
-        }
-        
-        if (null != places)
-        {
-        	List<PlaceOverlayItem> placesOverlayList = new ArrayList<PlaceOverlayItem>(places.length);
-            for (GeneralPlace place : places)
-            {
-            	if(!(place.getId().equals(closestPlace.getId()))){
-            		placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress()));
-            	}
-            }
-            publicPlaceOverlay.changeItems(placesOverlayList);
         }
     }
 	
@@ -356,8 +367,10 @@ extends MapActivity
          * Synagouge overlay
          */
         synagougeMarker    = this.getResources().getDrawable(R.drawable.synagouge2);
+      
         publicPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeMarker, this);
         mapView.getOverlays().add(publicPlaceOverlay);
+       
         
         synagougeClosestMarker    = this.getResources().getDrawable(R.drawable.synagouge_closest);
         closestPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeClosestMarker, this);

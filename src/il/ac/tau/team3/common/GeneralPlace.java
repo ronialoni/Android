@@ -89,4 +89,8 @@ implements Serializable
     public boolean IsJoinerSigned(String joiner){
     	return (this.minyanJoiners.contains(joiner));
     }
+    
+    public int getNumberOfPrayers(){
+    	return this.minyanJoiners.size();
+    }
 }

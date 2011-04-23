@@ -118,7 +118,7 @@ extends MapActivity
 		GeneralPlace closestPlace = null;
 		double userLat = service.getUser().getSpGeoPoint().getLatitudeInDegrees();
 		double userLong = service.getUser().getSpGeoPoint().getLongitudeInDegrees();
-		double distance = 100000000000000000000000000000000000000000.0;
+		double distance = SPUtils.INFINITY;
 		double tmp = 0;
 		for (GeneralPlace place : places){
 			tmp = SPUtils.calculateDistanceMeters(userLong, userLat,

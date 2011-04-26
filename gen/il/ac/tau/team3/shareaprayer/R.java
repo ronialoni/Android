@@ -15,8 +15,9 @@ public final class R {
         public static final int others_kipa_pin=0x7f020001;
         public static final int synagouge=0x7f020002;
         public static final int synagouge2=0x7f020003;
-        public static final int user_kipa_pin=0x7f020004;
-        public static final int userpin=0x7f020005;
+        public static final int synagouge_closest=0x7f020004;
+        public static final int user_kipa_pin=0x7f020005;
+        public static final int userpin=0x7f020006;
     }
     public static final class id {
         public static final int view1=0x7f050000;

@@ -28,8 +28,8 @@ public class SPUtils
     
     
     
-    
-    
+    public static double INFINITY = 1000000000000000000000000000000.0 ;
+        
     public static final double EARTH_RADIUS_KM = 6384; // km
     
     

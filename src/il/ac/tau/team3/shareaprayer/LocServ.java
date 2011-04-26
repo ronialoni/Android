@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.common.SPUtils;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Service;
@@ -203,8 +204,7 @@ extends Service
 				
 			}
 
-			public void onStatusChanged(String provider, int status,
-					Bundle extras) {
+			public void onStatusChanged(String provider, int status, Bundle extras) {
 				// TODO Auto-generated method stub
 				
 			}

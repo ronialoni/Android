@@ -2,22 +2,28 @@ package il.ac.tau.team3.shareaprayer;
 
 
 
-import il.ac.tau.team3.common.GeneralPlace;
-
-import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.OverlayItem;
 
-import android.graphics.drawable.Drawable;
+import il.ac.tau.team3.common.GeneralPlace;
+import il.ac.tau.team3.common.SPUtils;
 
 
 
-public class PlaceOverlayItem extends OverlayItem
+/**
+ * 
+ * @author Team3
+ *              Adding a reference to a GeneralPlace.
+ *              Allowing the use of SPGeoPoint instead of GeoPoint.
+ *
+ */
+public class PlaceOverlayItem 
+extends OverlayItem
 {
-    
-    
+        
     private GeneralPlace place;
+        
     
-    
+    /*** @constructor ***/
     
     public PlaceOverlayItem(GeneralPlace place, String title, String snippet)
     {
@@ -27,10 +33,13 @@ public class PlaceOverlayItem extends OverlayItem
     
     
     
+    
+    
     public GeneralPlace getPlace()
     {
         return place;
     }
+    
     
     public void setPlace(GeneralPlace place)
     {
@@ -38,6 +47,9 @@ public class PlaceOverlayItem extends OverlayItem
         this.setPoint(SPUtils.toGeoPoint(place.getSpGeoPoint()));
     }
     
+    
+    
+    // TODO Override methods like setPoint so the GeneralUser will update too & write a "setSPGeoPoint".
     
     
 }

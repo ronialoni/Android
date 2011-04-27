@@ -25,7 +25,7 @@ public class UIUtils {
 			{
 				
 				if(!place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-					placeOverlay.getActivity().getRestTemplateFacade().AddJoiner(place, placeOverlay.getThisUser());//placeOverlay.getActivity().getSPCommunicationManager().requestPostRegister(place);//
+					placeOverlay.getActivity().getSPCommunicationManager().requestPostRegister(place);//placeOverlay.getActivity().getRestTemplateFacade().AddJoiner(place, placeOverlay.getThisUser());//
 				}else{
 					createAlertDialog(_sAlreadyRegisterAlertMsg, placeOverlay.getActivity());
 				}
@@ -75,7 +75,7 @@ public class UIUtils {
 	                        GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
 	                        newMinyan.addJoiner(user.getName());
 	                        
-	                        activity.getRestTemplateFacade();//getSPCommunicationManager().requestPostNewPlace(newMinyan);//getRestTemplateFacade().UpdatePlace(newMinyan);
+	                        activity.getSPCommunicationManager().requestPostNewPlace(newMinyan);//getRestTemplateFacade().UpdatePlace(newMinyan);
 	                                                
 	                        synchronized (activity.getRefreshTask())
 	                        {

@@ -58,22 +58,34 @@ public class PrayerArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		return overlayItems;
 	}
 	
-	public void RegisterListner(IOverlayChange overlayChange)	{
+	public void RegisterListner(IOverlayChange overlayChange)	{////
 		synchronized(this.overlayListeners)	{
 			overlayListeners.add(overlayChange);
 		}
 	}
 	
-	public void UnregisterListner(IOverlayChange overlayChange)	{
+	public void UnregisterListner(IOverlayChange overlayChange)	{////
 		synchronized(this.overlayListeners)	{
 			overlayListeners.remove(overlayChange);
+		}
+	}
+	
+	public void cancelAllListeners()////
+	{
+		synchronized (this.overlayListeners) 
+		{
+			for (IOverlayChange listener : this.overlayListeners)
+			{
+				listener.onDestroy();
+				this.overlayListeners.remove(listener);
+			}
 		}
 	}
 	
 	@Override
 	public void drawOverlayBitmap(Canvas canvas, Point drawPosition, Projection projection,
 			byte drawZoomLevel) {
-		synchronized(this.overlayListeners)	{
+		synchronized(this.overlayListeners)	{////
 			for (IOverlayChange listner : overlayListeners)
 				listner.OverlayChangeCenterZoom();
 		}
@@ -94,7 +106,7 @@ public class PrayerArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		super(defaultMarker == null ? null : boundCenterBottom(defaultMarker));
 		this.context = context;
 		this.overlayItems = new ArrayList<OverlayItem>(ARRAY_LIST_INITIAL_CAPACITY);
-		this.overlayListeners = new LinkedList<IOverlayChange>();
+		this.overlayListeners = new LinkedList<IOverlayChange>();////
 	}
 
 	/**
@@ -125,7 +137,7 @@ public class PrayerArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		populate();
 	}
 	
-	public void changeItems(Collection<? extends OverlayItem> c)	{
+	public void changeItems(Collection<? extends OverlayItem> c)	{////
 		synchronized (this.overlayItems) {
 			this.overlayItems.clear();
 			this.overlayItems.addAll(c);

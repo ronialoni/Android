@@ -2,11 +2,12 @@ package il.ac.tau.team3.shareaprayer;
 
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+//import java.util.LinkedList;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,30 +15,30 @@ import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
+
+import il.ac.tau.team3.shareaprayer.SPCommunicationManager.ISPCommunicationClient;
+
+
 import android.os.Bundle;
 import android.os.IBinder;
+
+
 import android.util.Log;
 import android.widget.ImageView;
+
 
 import org.mapsforge.android.maps.MapActivity;
 //import org.mapsforge.android.maps.MapViewMode;
 import org.mapsforge.android.maps.IOverlayChange;
-import org.mapsforge.android.maps.OverlayItem;
+//import org.mapsforge.android.maps.OverlayItem;
 import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 
 
-import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -51,7 +52,8 @@ import android.graphics.drawable.Drawable;
 
 
 public class FindPrayer 
-extends MapActivity 
+extends    MapActivity 
+implements ISPCommunicationClient
 {
     
     	
@@ -62,172 +64,285 @@ extends MapActivity
 	
 	private PrayerArrayItemizedOverlay userOverlay;
 	private PrayerArrayItemizedOverlay otherUsersOverlay;
-	private PlaceArrayItemizedOverlay publicPlaceOverlay;
-	private PlaceArrayItemizedOverlay closestPlaceOverlay;
+	private PlaceArrayItemizedOverlay  publicPlaceOverlay;
+	private PlaceArrayItemizedOverlay  closestPlaceOverlay;
+    
 	
-	private RestTemplateFacade restTemplateFacade;
+	/*----------------------------------------------------------------------------------------------------------*/
 	
 	
 	
-	public RestTemplateFacade getRestTemplateFacade() {
-		return restTemplateFacade;
+	private GeneralPlace determineClosestPlace(GeneralPlace[] places)
+    {        
+        GeneralPlace closestPlace = null;
+        double userLat = service.getUser().getSpGeoPoint().getLatitudeInDegrees();
+        double userLong = service.getUser().getSpGeoPoint().getLongitudeInDegrees();
+        double distance = SPUtils.INFINITY;
+        double tmp = 0;
+        for (GeneralPlace place : places)
+        {
+            tmp = SPUtils.calculateDistanceMeters(userLong, userLat, place.getSpGeoPoint().getLongitudeInDegrees(), place.getSpGeoPoint().getLatitudeInDegrees());
+            if (tmp < distance)
+            {
+                distance = tmp;
+                closestPlace = place;
+            }
+        }
+
+        return closestPlace;
+    }
+
+	
+	//private RestTemplateFacade restTemplateFacade;
+	
+//	private  Map<String, String> calculateLocationParameters(SPGeoPoint center)	
+//	{
+//		
+//		if (center == null)
+//        {
+//            return null;
+//        }
+//		
+//		GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+//        if (screenEdge == null)
+//        {
+//            return null;
+//        }
+//		
+//		double distance = SPUtils.calculateDistanceMeters(center.getLongitudeInDegrees(), center.getLatitudeInDegrees(),
+//                                                          screenEdge.getLongitude()     , screenEdge.getLatitude());
+//        
+//        int distancemeters = (int) Math.ceil(distance);
+//        
+//        Map<String, String> parameters = new HashMap<String, String>();
+//        parameters.put("latitude", new Double(center.getLatitudeInDegrees()).toString());
+//        parameters.put("longitude", new Double(center.getLongitudeInDegrees()).toString());
+//        parameters.put("radius", new Integer(distancemeters).toString());
+//        
+//        return parameters;
+//	}
+
+	
+	
+	
+	/*----------------------------------------------------------------------------------------------------------*/
+    
+	
+	
+	/**
+	 * @draw
+	 * 
+	 * 
+	 */
+	
+
+	
+	public void drawUserOnMap(GeneralUser user)	
+	{
+	    SPUtils.debug("<draw user> FindPrayer.drawUserOnMap(...)");
+        
+        //Clears the last location
+		userOverlay.clear();
+		
+		// create an OverlayItem with title and description
+        UserOverlayItem item = new UserOverlayItem(user, user.getName(), user.getStatus());
+
+        // add the OverlayItem to the PrayerArrayItemizedOverlay
+        userOverlay.addItem(item);
+
 	}
+
+	
+	
+	/*----------------------------------------------------------------------------------------------------------*/
+    
+	
+	/*
+	private void drawOtherUserOnMap(GeneralUser otheruser) //p	
+	{
+	    SPUtils.debug("<draw other> FindPrayer.drawOtherUserOnMap(...)");
+        	    
+		UserOverlayItem other = new UserOverlayItem(otheruser, otheruser.getName(), otheruser.getStatus());
+=======
+>>>>>>> .r75
+<<<<<<< .mine
+        otherUsersOverlay.addItem(other);
+=======
 
 	public void setRestTemplateFacade(RestTemplateFacade restTemplateFacade) {
 		this.restTemplateFacade = restTemplateFacade;
+>>>>>>> .r75
 	}
+<<<<<<< .mine
 
-	/*** @draw ***/
+    private void drawPublicPlaceOnMap(GeneralPlace place) //p
+    {
+        SPUtils.debug("<draw place> FindPrayer.drawPublicPlaceOnMap(...)");
+                
+        // create an OverlayItem with title and description
+        String address = place.getAddress();
+        String name    = place.getName();
+        PlaceOverlayItem synagouge = new PlaceOverlayItem(place, name, address);
+=======
+>>>>>>> .r75
+
+<<<<<<< .mine
+        publicPlaceOverlay.addItem(synagouge);
+    }
+    */
+    
 	
-//	public void drawUserOnMap(GeneralUser user)	
-//	{
-//        //Clears the last location
-//		userOverlay.clear();
-//		
-//		// create an OverlayItem with title and description
-//        UserOverlayItem item = new UserOverlayItem(user, user.getName(), user.getStatus());
-//
-//        // add the OverlayItem to the PrayerArrayItemizedOverlay
-//        userOverlay.addItem(item);
-//	}
-//	
+//  private GeneralUser[] getUsers(SPGeoPoint center)
+//  {
+//      Map<String, String> locationMapping = calculateLocationParameters(center);
+//      
+//      if (null == locationMapping)
+//      {
+//          return null;
+//      }
+//      
+//      return restTemplateFacade.GetAllUsers(locationMapping);
+//      
+//      
+//  }
+
+
 
 	
-	private  Map<String, String> calculateLocationParameters(SPGeoPoint center)	
+	
+    /*----------------------------------------------------------------------------------------------------------*/
+    
+    
+	
+	/**
+	 * @update
+	 * 
+	 *  
+	 *  
+	 */
+    
+    
+	/*
+	private void updatePublicPlace(GeneralPlace place) //p	
 	{
+	    SPUtils.debug("<update place> FindPrayer.updatePublicPlace(...)");
+        	    
+		boolean found = false;
 		
-		if (center == null)
-        {
-            return null;
-        }
-		
-		GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
-        if (screenEdge == null)
-        {
-            return null;
-        }
-		
-		double distance = SPUtils.calculateDistanceMeters(center.getLongitudeInDegrees(), center.getLatitudeInDegrees(),
-                                                          screenEdge.getLongitude()     , screenEdge.getLatitude());
-        
-        int distancemeters = (int) Math.ceil(distance);
-        
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("latitude", new Double(center.getLatitudeInDegrees()).toString());
-        parameters.put("longitude", new Double(center.getLongitudeInDegrees()).toString());
-        parameters.put("radius", new Integer(distancemeters).toString());
-        
-        return parameters;
-	}
-	
-	
-	private GeneralPlace determineClosestPlace(GeneralPlace[] places){
-		
-		GeneralPlace closestPlace = null;
-		double userLat = service.getUser().getSpGeoPoint().getLatitudeInDegrees();
-		double userLong = service.getUser().getSpGeoPoint().getLongitudeInDegrees();
-		double distance = SPUtils.INFINITY;
-		double tmp = 0;
-		for (GeneralPlace place : places){
-			tmp = SPUtils.calculateDistanceMeters(userLong, userLat,
-                    place.getSpGeoPoint().getLongitudeInDegrees() , place.getSpGeoPoint().getLatitudeInDegrees());
-			if(tmp < distance){
-				distance = tmp;
-				closestPlace = place;
+		PlaceOverlayItem placeItem;
+		for (OverlayItem item : publicPlaceOverlay.getOverlayItems())
+		{
+		    placeItem = (PlaceOverlayItem) item;
+			if (place.getId().equals(((GeneralPlace) placeItem.getPlace()).getId()))
+			{
+				publicPlaceOverlay.removeItem(item);
+				placeItem.setPlace(place);
+				publicPlaceOverlay.addItem(item);
+				found = true;
+				break;
 			}
 		}
-		return closestPlace;
-		
+		if (!found)
+		{
+			drawPublicPlaceOnMap(place);
+		}
 	}
+	private void updateUser(GeneralUser user, GeneralUser thisUser) //p	
+	{
+	    SPUtils.debug("<update user> FindPrayer.updateUser(...)");
+	    
+		boolean found = false;
+		for (OverlayItem item : otherUsersOverlay.getOverlayItems())
+		{
+			UserOverlayItem userItem = (UserOverlayItem) item;
+			if ( (user.getId().equals(((GeneralUser) userItem.getUser()).getId()))	&&
+				 ((thisUser == null) || (!thisUser.getId().equals(userItem.getUser().getId()))) )	
+			{				
+				otherUsersOverlay.removeItem(item);
+				userItem.setUser(user);
+				otherUsersOverlay.addItem(item);
+				found = true;
+				break;
+			}
+		}
+		
+		if (!found)	
+		{
+			if ((thisUser == null) || (!thisUser.getId().equals(user.getId())))	
+			{ 
+				drawOtherUserOnMap(user);
+			}
+		}
+	}	
 	
+	/*----------------------------------------------------------------------------------------------------------*/
+    // COMMENTED-BLOCK was here !!!
+	/*----------------------------------------------------------------------------------------------------------*/
+    
+    
+    /**
+     * @communication ...
+     * 
+     * ...
+     * 
+     */
+    
 	
-    private GeneralUser[] getUsers(SPGeoPoint center)
+
+    private SPCommunicationManager commManager;
+    
+    
+    /**
+     * Needed (only) in PlaceArrayItemizedOverlay.
+     * 
+     * @return
+     */
+    public SPCommunicationManager getSPCommunicationManager()
     {
-        Map<String, String> locationMapping = calculateLocationParameters(center);
-        
-        if (null == locationMapping)
-        {
-            return null;
-        }
-        
-        return restTemplateFacade.GetAllUsers(locationMapping);
-        
-        
-    }
+        return this.commManager;
+    }  
+
     
     
-    private GeneralPlace[] getPlaces(SPGeoPoint center)
+    
+    //@Override
+    public <T> void recieveResponse(final T response)
     {
-        Map<String, String> locationMapping = calculateLocationParameters(center);
+        SPUtils.debug("<recive T> FindPrayer.recieveResponse(" + response + ")");
         
-        if (null == locationMapping)
-        {
-            return null;
-        }
-        
-        return restTemplateFacade.GetAllPlaces(locationMapping);
-    }
-    
-    
-    
-    private void updateMap(SPGeoPoint center)
-    {
-        
-        final GeneralUser[] users = getUsers(center);
-        if (null == users)
-        {
-            return;
-        }
-        
-        final GeneralPlace[] places = getPlaces(center);
-        if (null == places)
-        {
-            return;
-        }
+        /**
+         * @imp I think I can just call the function (dynamic type overload), but I'm not taking the chance.
+         */        
         
         mapView.post(new Runnable()
-        {
-            
+        {            
             public void run()
             {
-                updateMap(service.getLocation(), users, places);
+                if (response instanceof GeneralUser[])
+                {
+                    recieveUsersUpdate((GeneralUser[]) response);       
+                }
+                
+                else if (response instanceof GeneralPlace[])
+                {
+                    recievePlacesUpdate((GeneralPlace[]) response);
+                }
+                
+                else
+                {
+                    SPUtils.error(response, "recieveResponse got an unknown type");
+                }
             }
         });
-        
-    }
-	
+    }   
     
-    private void updateMap(SPGeoPoint center, GeneralUser[] users, GeneralPlace[] places)
+    
+	
+    public void recieveUsersUpdate(GeneralUser[] users)
     {
-        if (center == null)
-        {
-            return;
-        }
+        SPUtils.debug("<recive GeneralUser[]> FindPrayer.recieveUsersUpdate(" + users + ")");
         
-        
-      
-        
-        GeneralPlace closestPlace = determineClosestPlace(places);
-        if(closestPlace!=null){
-        	List<PlaceOverlayItem> closestPlacesOverlayList = new ArrayList<PlaceOverlayItem>();
-        	closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress()));
-        	closestPlaceOverlay.changeItems(closestPlacesOverlayList);
-        }
-        
-        if (null != places)
-        {
-        	List<PlaceOverlayItem> placesOverlayList = new ArrayList<PlaceOverlayItem>(places.length);
-            for (GeneralPlace place : places)
-            {
-            	if(!(place.getId().equals(closestPlace.getId()))){
-            		placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress()));
-            	}
-            }
             
-            publicPlaceOverlay.changeItems(placesOverlayList);
-           
-        }
-        
         GeneralUser thisUser = null;
         
         if (service != null)
@@ -238,28 +353,149 @@ extends MapActivity
             	List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
             	userOverlayList.add(new UserOverlayItem(thisUser, thisUser.getName(), thisUser.getStatus()));
             	userOverlay.changeItems(userOverlayList);
-            
-            }
-        }    
-        
-        
-        
-        
+            }    
+        }
         if (null != users)
         {
-        	List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(users.length);
+            List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(users.length);
             for (GeneralUser user : users)
             {
-            	if ((thisUser == null) || (! thisUser.getId().equals(user.getId())))	
-            	{
-            		usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
-            	}
+                if ((thisUser == null) || (! thisUser.getId().equals(user.getId())))    
+                {
+                    usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
+                }
             }
             otherUsersOverlay.changeItems(usersOverlayList);
         }
     }
-	
-	
+    
+    
+        
+    public void recievePlacesUpdate(GeneralPlace[] places)
+    {
+        SPUtils.debug("<recive GeneralPlace[]> FindPrayer.recievePlacesUpdate(" + places + ")");
+        
+        /**
+         * @imp I think the `if` should be in the communication manager.  
+         */
+        if (null != places)
+        {
+            List<PlaceOverlayItem> placesOverlayList = new ArrayList<PlaceOverlayItem>(places.length);
+            for (GeneralPlace place : places)
+            {
+                placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress()));
+            }
+            publicPlaceOverlay.changeItems(placesOverlayList);
+        }
+
+        
+        GeneralPlace closestPlace = determineClosestPlace(places);
+        if (closestPlace != null)
+        {
+            List<PlaceOverlayItem> closestPlacesOverlayList = new ArrayList<PlaceOverlayItem>();
+            closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress()));
+            closestPlaceOverlay.changeItems(closestPlacesOverlayList);
+        }
+    }
+    
+    
+
+    
+    private void requestUpdate(SPGeoPoint center)
+    {     
+        GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+        if (null == screenEdge || null == center)  //// ugly!  &  I added the center null check.
+        {
+            return;
+        } 
+        
+        double distance  = SPUtils.calculateDistanceMeters(center.getLongitudeInDegrees(), center.getLatitudeInDegrees(), screenEdge.getLongitude(), screenEdge.getLatitude());
+        
+        int    radius    = (int) Math.ceil(distance);        
+        double latitude  =  center.getLatitudeInDegrees();
+        double longitude = center.getLongitudeInDegrees();
+        
+        
+        
+        this.commManager.requestGetPlaces(latitude, longitude, radius);
+        this.commManager.requestGetUsers(latitude, longitude, radius);
+    }
+        
+        
+ 
+    private Thread refreshTask = new Thread()
+    {   
+        /**
+         * Send Get requests every 10 seconds.
+         */
+        @Override
+        public void run()
+        {
+            // Set to null as default.
+            SPGeoPoint center = null;
+            
+            while (!isInterrupted())
+            {
+                SPUtils.debug("refreshTask.run()");
+                
+                // First, wait.
+                try
+                {
+                    synchronized (this)
+                    {
+                        wait(30000);
+                    }
+                }
+                catch (InterruptedException e)
+                {
+                    Thread.currentThread().interrupt();
+                }
+                
+                SPUtils.debug(service);
+                
+                // Then, try getting the service.
+                if (null != service)
+                {                    
+                    SPUtils.debug("SOF-SOF: service != null");
+                    
+                    // Then, try getting the center.
+                    center = service.getLocation();
+                    if (null != center)
+                    {
+                        // Then, send the request.
+                        ////////////////////////////updateMap(service.getLocation());
+                        FindPrayer.this.requestUpdate(center);
+                        
+                        // And, set the center back to default (null).
+                        center = null;
+                    }
+                    
+                    /*
+                    // else 
+                    continue; // Retry.
+                    */
+                    
+                    /*
+                    // Then, send the request.
+                    ////////////////////////////updateMap(service.getLocation());
+                    FindPrayer.this.requestUpdate(center);
+                    */
+                }
+            }
+            
+            
+        }
+    };
+                                      
+
+
+    public Thread getRefreshTask()
+    {
+        return this.refreshTask;
+    }
+
+   
+    /*----------------------------------------------------------------------------------------------------------*/
     
     
 	
@@ -275,68 +511,115 @@ extends MapActivity
 	
 	
 	
-    private Thread    refreshTask = new Thread()
-                                      {
-                                          
-                                          @Override
-                                          public void run()
-                                          {
-                                              while (! isInterrupted())
-                                              {
-                                                  try
-                                                  {
-                                                      synchronized (this)
-                                                      {
-                                                          wait(10000);
-                                                      }
-                                                      if (service.getLocation() != null)
-                                                      {
-                                                          updateMap(service.getLocation());
-                                                      }
-                                                  }
-                                                  catch (InterruptedException e)
-                                                  {
-                                                      Thread.currentThread().interrupt();
-                                                  }                                                  
-                                              }
-                                          }
-                                          
-                                      };
-	
-	
-
-    public Thread getRefreshTask() {
-		return refreshTask;
-	}
+    
+    
+                                      
+                                      
+//    public void createNewPlaceDialog(String message, final SPGeoPoint point)
+//    {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setMessage(message);
+//        builder.setCancelable(false);
+//        
+//        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+//        {
+//            public void onClick(DialogInterface dialog, int id)
+//            {
+//                Thread t = new Thread()
+//                {                    
+//                    @Override
+//                    public void run()
+//                    {
+//                        // Create the place and add the user as the first joiner, locally, to inform the server.
+//                        GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
+//                        newMinyan.addJoiner(service.getUser().getName());
+//                        
+//                        FindPrayer.this.commManager.requestPostNewPlace(newMinyan);
+//                        
+//                        // The Task should get us the information back from the server.
+//                        synchronized (refreshTask)
+//                        {
+//                            refreshTask.notify();
+//                        }
+//                    }
+//                };
+//                t.run();                
+//            }
+//        });
+//               
+//        builder.setNegativeButton("No", new DialogInterface.OnClickListener()
+//        {            
+//            public void onClick(DialogInterface dialog, int id) {}            
+//        });
+//		
+//		AlertDialog alert = builder.create();
+//		
+//		alert.show();
+//	} 
 
 	
 
 	
     
-    private void NewPlaceCall(SPGeoPoint point){
+    private void NewPlaceCall(SPGeoPoint point)
+    {
     	UIUtils.createNewPlaceDialog( point, this , service.getUser());
     }
 	
 	
+	private ServiceConnection svcConn; ////onDestroy
+	
+
+
 	
 	
-	/*** @Override ***/	
-	
+	/*----------------------------------------------------------------------------------------------------------*/
+    
+    
+	/**
+	 * @destructor 
+	 * 
+	 * @imp Calling super.onDestroy() at the END.
+	 * 
+	 * @post Unregistering locationListener.
+	 * @post(super.onDestroy()).
+	 */
 	@Override
     public void onDestroy()
     {
-        if (null != service)
+	    if (null != service)
         {
             service.UnRegisterListner(locationListener);
         }
+        
+	    this.unbindService(svcConn);
+	    
+	    this.otherUsersOverlay.cancelAllListeners(); //TODO This doesn't work. figure out how to stop the timer task.
+	    
+	    
+	    super.onDestroy();
     }
         
     	
-		
+	
+	/*----------------------------------------------------------------------------------------------------------*/
+    
+	
+        
+	/**
+	 * @constructor
+	 * 
+	 * 
+	 */
 	@Override
-	public void onCreate(Bundle savedInstanceState) 	
+    public void onCreate(Bundle savedInstanceState) 	
 	{		
 		super.onCreate(savedInstanceState);
+		
+		
+        this.commManager = new SPCommunicationManager(this);
+        
+		
 		setContentView(R.layout.main);
 		//mapView = new SPMapView(this);
 		mapView = (SPMapView) findViewById(R.id.view1);
@@ -346,13 +629,16 @@ extends MapActivity
         {
 			public void onTouchEvent(SPGeoPoint sp) 
 			{
-				NewPlaceCall(sp);
+			    NewPlaceCall(sp);
+				//NewPlaceCall(sp);
 			}
         });
      
-        restTemplateFacade = new RestTemplateFacade();
+      
+        //restTemplateFacade = new RestTemplateFacade();
     	
        
+                
         
         /*
          * User overlay and icon:
@@ -361,20 +647,19 @@ extends MapActivity
         userDefaultMarker = this.getResources().getDrawable(R.drawable.user_kipa_pin);
         // create an PrayerArrayItemizedOverlay for the user
 		userOverlay       = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
-		 // add the PrayerArrayItemizedOverlay to the MapView
+		// add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(userOverlay);
         
         /*
-         * Synagouge overlay
+         * Synagogue overlay
          */
         synagougeMarker    = this.getResources().getDrawable(R.drawable.synagouge2);
-      
         publicPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeMarker, this);
         mapView.getOverlays().add(publicPlaceOverlay);
-       
+
         
-        synagougeClosestMarker    = this.getResources().getDrawable(R.drawable.synagouge_closest);
-        closestPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeClosestMarker, this);
+        synagougeClosestMarker = this.getResources().getDrawable(R.drawable.synagouge_closest);
+        closestPlaceOverlay    = new PlaceArrayItemizedOverlay(synagougeClosestMarker, this);
         mapView.getOverlays().add(closestPlaceOverlay);
         
         /*
@@ -399,21 +684,19 @@ extends MapActivity
 				{
 					refreshTask.notify();
 				}
-			    	
     	    }
     	};
     	
 
 
-   	
-   	
+    	
     	refreshTask.start();
     	
    	
+    	
    	
-        ServiceConnection svcConn = new ServiceConnection()
-        {
-            
+        /*ServiceConnection*/ svcConn = new ServiceConnection() ////onDestroy
+        {            
             public void onServiceDisconnected(ComponentName className)
             {
                 service = null;
@@ -428,77 +711,196 @@ extends MapActivity
                     service.RegisterListner(locationListener);
                     SPGeoPoint gp = service.getLocation();
                     publicPlaceOverlay.setThisUser(service.getUser());
-                    mapView.getController().setCenter(SPUtils.toGeoPoint(gp));
+                    //mapView.getController().setCenter(SPUtils.toGeoPoint(gp));
                     if (gp == null)
                     {
+                        SPUtils.debug("gp = null");
                         return;
                     }
+                    mapView.getController().setCenter(SPUtils.toGeoPoint(gp));
+                    
                     Thread t = new Thread()
-                    {
-                        
+                    {                        
                         @Override
                         public void run()
                         {
-                            updateMap(service.getLocation());
+                            synchronized (FindPrayer.this)
+                            {
+                                FindPrayer.this.requestUpdate(service.getLocation());
+                            }
                         }
                     };
+                    
                     t.run();
-                    // send the user to places overlay
                 }
                 catch (Throwable t)
                 {
                     Log.e("ShareAPrayer", "Exception in call to registerListner()", t);
-                }
-   
-                
-                otherUsersOverlay.RegisterListner(new IOverlayChange()
-                {
-                    
-                    class TimerRefreshTask 
-                    extends TimerTask
-                    {
-                        
-                        @Override
-                        public void run()
-                        {
-                            synchronized (refreshTask)
-                            {
-                                refreshTask.notify();
-                            }
-                        }
-                        
-                    };
-                    
-                    private Timer     t  = new Timer();                    
-                    private TimerTask ts = new TimerRefreshTask();
-                    
-                    //@Override
-                    public void OverlayChangeCenterZoom()
-                    {
-                        ts.cancel();
-                        t.purge();
-                        ts = new TimerRefreshTask();
-                        t.schedule(ts, 1000);
-                        
-                    }
-
-					public void onDestroy() {
-						// TODO Auto-generated method stub
-						
-					}
-                    
-                });
-            }
-            
-            
-            
+                }               
+            }               
         };
         
         bindService(new Intent(LocServ.ACTION_SERVICE), svcConn, BIND_AUTO_CREATE);
         
-    }
-	
-	
+        
+        
+        
+        
+        
+        /*
+         * Loading a listener to otherUsersOverlay.
+         * It contains a Timer & TimmerTask that just notify() the refreshTask Thread.
+         * On call, it cancels the last Timer & TimmerTask, and sets new ones.
+         */
+        otherUsersOverlay.RegisterListner(new IOverlayChange()
+        {                    
+            class TimerRefreshTask 
+            extends TimerTask
+            {                        
+                @Override
+                public void run()
+                {           
+                    synchronized (refreshTask)
+                    {
+                        refreshTask.notify();
+                    }
+                }                        
+            };
+            
+            
+            private Timer     t  = new Timer();                    
+            private TimerTask ts = new TimerRefreshTask();
+            
+            
+            //@Override
+            public void OverlayChangeCenterZoom()
+            {
+                ts.cancel();
+                t.purge();
+                ts = new TimerRefreshTask();
+                t.schedule(ts, 30000);
+            }
+            
+            
+            //@Override
+            public void onDestroy()
+            {
+                ts.cancel();
+                t.purge();
+            }
+        });
+        
+    } // END: onCreate();
+
+
+
+
 	
 }
+
+
+
+
+
+
+/////////////////////
+// COMMENTED-BLOCK //
+//////////////////////////////////////////////////////////////////////////////////////////////
+//private void/*GeneralUser[]*/ getUsers(double latitude, double longitude, int radius)
+//{         
+//  if (center == null)
+//  {
+//      return /*null*/;
+//  }
+//  
+//  GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+//  if (screenEdge == null)
+//  {
+//      return /*null*/;
+//  }        
+//  double distance       = SPUtils.calculateDistanceMeters(center.getLongitudeInDegrees(), center.getLatitudeInDegrees(), screenEdge.getLongitude(), screenEdge.getLatitude());
+//  int    distancemeters = (int) Math.ceil(distance);
+//          
+//  /*return*/ this.commManager.requestGetUsers(latitude, longitude, radius, this);       
+//}
+//
+//
+//private void/*GeneralPlace[]*/ getPlaces(double latitude, double longitude, int radius)
+//{
+//  if (center == null)
+//  {
+//      return null;
+//  }
+//  
+//  GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
+//  if (screenEdge == null)
+//  {
+//      return null;
+//  }        
+//  double distance       = SPUtils.calculateDistanceMeters(center.getLongitudeInDegrees(), center.getLatitudeInDegrees(), screenEdge.getLongitude(), screenEdge.getLatitude());
+//  int    distancemeters = (int) Math.ceil(distance);
+//  
+//  /*return*/ this.commManager.requestGetPlaces(latitude, longitude, radius);          
+//}
+
+
+
+     
+  
+//  mapView.post(new Runnable()
+//  {
+//      
+//      public void run()
+//      {
+//          updateMap(service.getLocation(), users, places);
+//      }
+//  });
+  
+
+
+
+//private void updateMap(SPGeoPoint center, GeneralUser[] users, GeneralPlace[] places)
+//{
+//  if (center == null)
+//  {
+//      return;
+//  }     
+//  
+//  GeneralUser thisUser = null;
+//  
+//  if (service != null)
+//  {
+//      thisUser = service.getUser();
+//      if (null != thisUser)
+//      {
+//          drawUserOnMap(thisUser);
+//      }
+//  }               
+//  
+//  if (null != users)
+//  {
+//    List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(users.length);
+//      for (GeneralUser user : users)
+//      {
+//        if ((thisUser == null) || (! thisUser.getId().equals(user.getId())))    
+//        {
+//            usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
+//        }
+//      }
+//      otherUsersOverlay.changeItems(usersOverlayList);
+//  }               
+//  
+//  if (null != places)
+//  {
+//    List<PlaceOverlayItem> placesOverlayList = new ArrayList<PlaceOverlayItem>(places.length);
+//      for (GeneralPlace place : places)
+//      {
+//        placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress()));
+//      }
+//      publicPlaceOverlay.changeItems(placesOverlayList);
+//  }
+//}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
 

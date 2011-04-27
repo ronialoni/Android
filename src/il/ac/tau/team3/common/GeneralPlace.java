@@ -2,11 +2,12 @@ package il.ac.tau.team3.common;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+//import java.util.List;
+import java.util.ArrayList;
+
+//import org.codehaus.jackson.annotate.JsonIgnore;
+//import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 
 

@@ -383,7 +383,7 @@ implements ISPCommunicationClient
             List<PlaceOverlayItem> placesOverlayList = new ArrayList<PlaceOverlayItem>(places.length);
             for (GeneralPlace place : places)
             {
-                placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress()));
+                placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress(), synagougeMarker));
             }
             publicPlaceOverlay.changeItems(placesOverlayList);
         }
@@ -393,7 +393,7 @@ implements ISPCommunicationClient
         if (closestPlace != null)
         {
             List<PlaceOverlayItem> closestPlacesOverlayList = new ArrayList<PlaceOverlayItem>();
-            closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress()));
+            closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress(), synagougeClosestMarker));
             closestPlaceOverlay.changeItems(closestPlacesOverlayList);
         }
     }

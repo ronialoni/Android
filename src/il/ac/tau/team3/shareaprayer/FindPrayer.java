@@ -13,6 +13,7 @@ import java.util.TimerTask;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.common.SPUtils;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -471,7 +472,7 @@ extends MapActivity
                     private Timer     t  = new Timer();                    
                     private TimerTask ts = new TimerRefreshTask();
                     
-                    @Override
+                    //@Override
                     public void OverlayChangeCenterZoom()
                     {
                         ts.cancel();
@@ -480,6 +481,11 @@ extends MapActivity
                         t.schedule(ts, 1000);
                         
                     }
+
+					public void onDestroy() {
+						// TODO Auto-generated method stub
+						
+					}
                     
                 });
             }

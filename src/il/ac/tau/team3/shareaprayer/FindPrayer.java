@@ -330,7 +330,7 @@ implements ISPCommunicationClient
                 
                 else
                 {
-                    SPUtils.error(response, "recieveResponse got an unknown type");
+                    SPUtils.error("recieveResponse got an unknown type:  response = " + response);
                 }
             }
         });

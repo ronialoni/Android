@@ -64,9 +64,33 @@ public class SPUtils
         }
     }
     
-    public static <O> void debug(O object)
+    public static void debug(Object o)
     {
-        debug(object.toString());
+        debug(o.toString());
+    }
+    
+    
+    public static void debugFuncStart(String funcName, Object... params)
+    {
+        StringBuffer buff = new StringBuffer();
+        String       temp;
+        boolean      isFirst = true;
+        for (Object param : params)
+        {
+            if (isFirst)
+            {
+                isFirst = true;
+            }            
+            else
+            {
+                buff.append(", ");                
+            }
+            
+            temp = (null == param ? "null" : param.toString());
+            buff.append(temp);
+        }
+        
+        debug("->  " + funcName + "(" + buff + ")");
     }
     
     
@@ -81,17 +105,6 @@ public class SPUtils
         Log.e("ShareAPrayer", message, throwable);
     }
     
-    public static <O> void error(O object)
-    {
-        error(object.toString());
-    }
-    
-    
-    public static <O> void error(O object, String message)
-    {
-        error(message);
-        error("\t" + object.toString());
-    }
     
     
     

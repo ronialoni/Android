@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 public class PlaceAndUser implements Serializable{
+	
 	private GeneralUser user;
 	private GeneralPlace place;
 	private static final long serialVersionUID = 7821097316432935684L;

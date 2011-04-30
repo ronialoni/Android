@@ -1,0 +1,136 @@
+package il.ac.tau.team3.shareaprayer;
+
+import java.io.IOException;
+
+import android.app.Activity;
+import android.graphics.Typeface;
+import android.os.Bundle;
+ 
+import com.ericsson.mmaps.FontProvider;
+import com.ericsson.mmaps.MapFactory;
+import com.ericsson.mmaps.MapStyle;
+import com.ericsson.mmaps.MapView;
+import com.ericsson.mmaps.SymbolProvider;
+import com.ericsson.mmaps.graphics.RaveGeoFont;
+import com.ericsson.mmaps.graphics.RaveGeoImage;
+import com.ericsson.mmaps.tools.ScaleBarTool;
+import com.ericsson.mmaps.tools.TouchNavigationTool;
+ 
+public class FindPrayer extends Activity {
+ 
+	private MapView mapView_ = null;
+	private static final String DATABASE_KEY = "122";
+ 
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+ 
+        MapFactory factory = MapFactory.getInstance();
+ 
+        MapStyle style = new MapStyle();
+        // Set the style below to use Open Street Maps.
+        style.set(MapStyle.MAP_SOURCE, MapStyle.OPEN_STREET_MAP);
+ 
+        try {
+			mapView_ = factory.createMapView(this, style, fonts(), symbols(), DATABASE_KEY);
+			setContentView(mapView_);
+ 
+			TouchNavigationTool touchController = new TouchNavigationTool(getBaseContext(), mapView_, true);
+			touchController.activate();
+			mapView_.getMapComponent().addTool(new ScaleBarTool(mapView_.getMapComponent()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+ 
+    protected final FontProvider fonts() {
+        return new FontProvider() {
+            public RaveGeoFont medium() {
+                return new RaveGeoFont(Typeface.DEFAULT, 12);
+            }
+ 
+            public RaveGeoFont mediumBold() {
+                return new RaveGeoFont(Typeface.DEFAULT_BOLD, 12);
+            }
+ 
+            public RaveGeoFont small() {
+                return new RaveGeoFont(Typeface.DEFAULT, 10);
+            }
+ 
+            public RaveGeoFont smallBold() {
+                return new RaveGeoFont(Typeface.DEFAULT_BOLD, 10);
+            }
+ 
+            public RaveGeoFont smallItalic() {
+                return new RaveGeoFont(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC), 10);                
+            }            
+        };
+    }
+ 
+    protected final SymbolProvider symbols() {
+        return new SymbolProvider() {
+ 
+            private RaveGeoImage airport = null;
+			private RaveGeoImage subway = null;
+			private RaveGeoImage railway = null;
+			private RaveGeoImage ferry = null;
+			private RaveGeoImage poi = null;
+			private RaveGeoImage city = null;
+			private RaveGeoImage bus = null;
+ 
+			public boolean hasSymbols() {
+                return false;
+            }
+ 
+            public RaveGeoImage airport() throws IOException {
+            	if(airport == null) {
+            		airport = RaveGeoImage.createImage(getResources().getDrawable(R.drawable.plane));	
+            	}
+                return airport;
+            }
+ 
+            public RaveGeoImage bus() throws IOException {
+            	if(bus == null) {
+            		bus = RaveGeoImage.createImage(getResources().getDrawable(R.drawable.pstop));
+            	}
+            	return bus;
+            }
+ 
+            public RaveGeoImage city() throws IOException {
+            	if(city == null) {
+            		city = RaveGeoImage.createImage(getResources().getDrawable(R.drawable.reddot));
+            	}
+            	return city;
+            }
+ 
+            public RaveGeoImage defaultPoi() throws IOException {
+            	if(poi == null) {
+            		poi = RaveGeoImage.createImage(getResources().getDrawable(R.drawable.smallsquare));
+            	}
+            	return poi;
+            }
+ 
+            public RaveGeoImage ferry() throws IOException {
+            	if(ferry == null) {
+            		ferry = RaveGeoImage.createImage(getResources().getDrawable(R.drawable.ferry));
+            	}
+            	return ferry;
+            }
+ 
+            public RaveGeoImage railway() throws IOException {
+            	if(railway == null) {
+            		railway = RaveGeoImage.createImage(getResources().getDrawable(R.drawable.train));
+            	}
+            	return railway;
+            }
+ 
+            public RaveGeoImage subway() throws IOException {
+            	if(subway == null) {
+            		subway = RaveGeoImage.createImage(getResources().getDrawable(R.drawable.t));	
+            	}
+                return subway;
+            }
+        };
+    }
+}

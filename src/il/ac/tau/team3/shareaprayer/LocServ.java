@@ -33,7 +33,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 
-
 public class LocServ 
 extends Service 
 {

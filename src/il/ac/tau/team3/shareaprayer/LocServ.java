@@ -106,7 +106,7 @@ extends Service
 		{	
         	curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
         	user = new GeneralUser(userId, curr_loc, "bla");
-        	Long id = restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, Long.class);
+        	Long id = restTemplate.postForObject("http://10.0.2.2:8888/resources/prayerjersy/updateuserbyname", user, Long.class);
         	if (id != null)	
         	{
         		user.setId(id);
@@ -175,7 +175,7 @@ extends Service
 				}
 				
 				Log.e("post message", sw.getBuffer().toString());
-    			Long id = restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, Long.class);
+    			Long id = restTemplate.postForObject("http://10.0.2.2:8888/resources/prayerjersy/updateuserbyname", user, Long.class);
     			user.setId(id);
     			
     			try	

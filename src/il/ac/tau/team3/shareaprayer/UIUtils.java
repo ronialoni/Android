@@ -3,6 +3,7 @@ package il.ac.tau.team3.shareaprayer;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.spcomm.ACommHandler;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,7 +26,7 @@ public class UIUtils {
 			{
 				
 				if(!place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-					placeOverlay.getActivity().getRestTemplateFacade().AddJoiner(place, placeOverlay.getThisUser());
+					placeOverlay.getActivity().getSPComm().requestPostRegister(place, new ACommHandler<String>());
 				}else{
 					createAlertDialog(_sAlreadyRegisterAlertMsg, placeOverlay.getActivity());
 				}
@@ -73,9 +74,9 @@ public class UIUtils {
 	                    public void run()
 	                    {
 	                        GeneralPlace newMinyan = new GeneralPlace("New Minyan Place", "", point);
-	                        newMinyan.addJoiner(user.getName());
+	                        newMinyan.addJoiner((null == user) ? "Unnamed User" : user.getName());
 	                        
-	                        activity.getRestTemplateFacade().UpdatePlace(newMinyan);
+	                        activity.getSPComm().requestPostNewPlace(newMinyan, new ACommHandler<Long>());
 	                                                
 	                        synchronized (activity.getRefreshTask())
 	                        {

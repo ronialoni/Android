@@ -1,0 +1,40 @@
+package il.ac.tau.team3.shareaprayer;
+
+import org.mapsforge.android.maps.MapActivity;
+import org.mapsforge.android.maps.MapView;
+import org.mapsforge.android.maps.MapViewMode;
+
+import android.os.Bundle;
+
+
+
+
+//public class FindPrayer extends Activity {
+//    /** Called when the activity is first created. */
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.main);
+//        TextView tv = new TextView(this);
+//        tv.setText("Hello, Aviad");
+//        setContentView(tv);
+//        
+//
+//    }
+//}
+
+public class FindPrayer extends MapActivity {
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) 	{
+		
+		super.onCreate(savedInstanceState);
+        MapView mapView = new MapView(this);
+        mapView.setClickable(true);
+        mapView.setBuiltInZoomControls(true);
+        mapView.setMapViewMode(MapViewMode.MAPNIK_TILE_DOWNLOAD);
+        setContentView(mapView);
+		}
+	
+}

@@ -1,6 +1,6 @@
 package il.ac.tau.team3.shareaprayer;
 
-
+ 
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +65,7 @@ extends MapActivity
 	private PlaceArrayItemizedOverlay closestPlaceOverlay;
 	
 	private RestTemplateFacade restTemplateFacade;
-	
+	private ServiceConnection svcConn;
 	
 	
 	public RestTemplateFacade getRestTemplateFacade() {
@@ -328,6 +328,8 @@ extends MapActivity
         {
             service.UnRegisterListner(locationListener);
         }
+        unbindService(svcConn);
+        super.onDestroy();
     }
         
     	
@@ -410,7 +412,7 @@ extends MapActivity
     	
    	
    	
-        ServiceConnection svcConn = new ServiceConnection()
+        svcConn = new ServiceConnection()
         {
             
             public void onServiceDisconnected(ComponentName className)
@@ -426,12 +428,15 @@ extends MapActivity
                 {
                     service.RegisterListner(locationListener);
                     SPGeoPoint gp = service.getLocation();
+                   
                     publicPlaceOverlay.setThisUser(service.getUser());
-                    mapView.getController().setCenter(SPUtils.toGeoPoint(gp));
+                    closestPlaceOverlay.setThisUser(service.getUser());
                     if (gp == null)
                     {
                         return;
                     }
+                    mapView.getController().setCenter(SPUtils.toGeoPoint(gp));
+                    
                     Thread t = new Thread()
                     {
                         

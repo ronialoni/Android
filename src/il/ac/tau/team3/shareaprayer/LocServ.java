@@ -45,7 +45,7 @@ extends Service
 	
 	private GeneralUser   user;
 	private String        userId;
-	private RestTemplate  restTemplate; 
+	private RestTemplateFacade  restTemplateFacade; 
 	
 	
 	public static final String ACTION_SERVICE = "il.ac.tau.team3.shareaprayer.MAIN";
@@ -106,7 +106,7 @@ extends Service
 		{	
         	curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
         	user = new GeneralUser(userId, curr_loc, "bla");
-        	Long id = restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, Long.class);
+        	Long id = restTemplateFacade.UpdateUserByName(user);
         	if (id != null)	
         	{
         		user.setId(id);
@@ -132,23 +132,15 @@ extends Service
 		if (accounts.length != 0)	
 		{	
 			userId = accounts[0].name;
+			//userId = "miki@gmail.com";
 		} 
 		else
 		{
 			userId = "NoGmailAccount@gmail.com";
 		}
 
-		restTemplate = new RestTemplate();
-    	restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        
-    	List<HttpMessageConverter<?>>      mc   = restTemplate.getMessageConverters();
-        MappingJacksonHttpMessageConverter json = new MappingJacksonHttpMessageConverter();
-        List<MediaType>     supportedMediaTypes = new ArrayList<MediaType>();
-        supportedMediaTypes.add(new MediaType("text", "javascript"));
-        json.setSupportedMediaTypes(supportedMediaTypes);
-        mc.add(json);
-
-        restTemplate.setMessageConverters(mc);
+		restTemplateFacade = new RestTemplateFacade();
+    	
 		
         
 		
@@ -175,8 +167,10 @@ extends Service
 				}
 				
 				Log.e("post message", sw.getBuffer().toString());
-    			Long id = restTemplate.postForObject("http://share-a-prayer.appspot.com/resources/prayerjersy/updateuserbyname", user, Long.class);
-    			user.setId(id);
+    			Long id = restTemplateFacade.UpdateUserByName(user);
+    			if(id !=null){
+    				user.setId(id);
+    			}
     			
     			try	
     			{

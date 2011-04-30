@@ -119,7 +119,7 @@ extends PrayerArrayItemizedOverlay
 		PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
 		String msg; 
 		List<String> joiners = placeItem.getPlace().getAllJoiners();
-		if(joiners == null)
+		if(joiners == null || joiners.isEmpty())
 		{
 			msg = "No prayers listed.\n"; 
 		}

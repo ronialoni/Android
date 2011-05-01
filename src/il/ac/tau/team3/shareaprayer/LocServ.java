@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import il.ac.tau.team3.common.GeneralUser;
@@ -105,7 +106,12 @@ extends Service
 		{	
         	curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
         	user = new GeneralUser(userId, curr_loc, "bla");
-        	Long id = restTemplateFacade.UpdateUserByName(user);
+        	Long id = null;
+			try	{
+				id = restTemplateFacade.UpdateUserByName(user);
+			} catch (RestClientException e)	{
+				
+			};
         	if (id != null)	
         	{
         		user.setId(id);
@@ -151,7 +157,7 @@ extends Service
     	    	// create a GeoPoint with the latitude and longitude coordinates
     			curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
     			user = new GeneralUser(userId, curr_loc, "bla");
-    			StringWriter sw = new StringWriter();
+    			/*StringWriter sw = new StringWriter();
 				ObjectMapper mapper = new ObjectMapper();
 				MappingJsonFactory jsonFactory = new MappingJsonFactory();
 				try
@@ -165,8 +171,14 @@ extends Service
 					
 				}
 				
-				Log.e("post message", sw.getBuffer().toString());
-    			Long id = restTemplateFacade.UpdateUserByName(user);
+				Log.e("post message", sw.getBuffer().toString());*/
+    			Long id = null;
+    			try	{
+    				id = restTemplateFacade.UpdateUserByName(user);
+    			} catch (RestClientException e)	{
+    				
+    			};
+    			
     			if(id !=null){
     				user.setId(id);
     			}

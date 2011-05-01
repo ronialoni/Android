@@ -25,16 +25,16 @@ public class BitmapDrawableNumbered extends BitmapDrawable {
             
             arg.drawBitmap(getBitmap(), this.getBounds().left, this.getBounds().top, p);
             
-            p.setColor(Color.RED);
+            p.setColor(Color.WHITE);
                     p.setStyle(Paint.Style.STROKE);
                     p.setStrokeWidth(2);
                     //p.setARGB(255, 255, 0, 0);
                     p.setTypeface(Typeface.DEFAULT);
-                    p.setTextSize(20);
+                    p.setTextSize(16);
             
             p.setAntiAlias(true);
             arg.drawText((new Integer(place.getAllJoiners().size())).toString() , 
-                            getBounds().left + getBitmap().getWidth()/2, 
-                            getBounds().top + getBitmap().getHeight()/2 , p);
+                            getBounds().left + getBitmap().getWidth()/2 - 5, 
+                            getBounds().top + getBitmap().getHeight()/2 + 5 , p);
     }
 }

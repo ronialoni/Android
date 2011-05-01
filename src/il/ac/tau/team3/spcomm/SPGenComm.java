@@ -99,7 +99,9 @@ public class SPGenComm {
 			    	   if (null != retObj)
 			    		   retObj.onError(null);
 			           Log.e("ShareAPrayer", "Exception in call to requestGet(...)" + rce.getMessage(), rce);
-			       }
+			       } catch (NullPointerException e)	{
+			        	Log.e("ShareAPrayer", "NULL Exception in call to requestGet(...)" + e.getMessage(), e);
+			        }
 			       
 			       if (null != retObj)
 			    	   retObj.onRecv(response);
@@ -132,8 +134,10 @@ public class SPGenComm {
 		        {
 		        	if (null != retObj)
 		     		   retObj.onError(null);
-		            Log.e("ShareAPrayer", "Exception in call to requestGet(...)", rce);
-		        }    
+		            Log.e("ShareAPrayer", "Exception in call to requestGet(...)" + rce.getMessage(), rce);
+		        } catch (NullPointerException e)	{
+		        	Log.e("ShareAPrayer", "NULL Exception in call to requestGet(...)" + e.getMessage(), e);
+		        }
 		     
 		        if (null != retObj)
 		        	retObj.onRecv(response);

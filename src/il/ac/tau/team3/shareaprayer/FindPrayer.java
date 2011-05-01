@@ -389,7 +389,7 @@ extends MapActivity
         publicPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeMarker, this);
         mapView.getOverlays().add(publicPlaceOverlay);
        
-        
+                
         synagougeClosestMarker    = this.getResources().getDrawable(R.drawable.place_red_david);
         closestPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeClosestMarker, this);
         mapView.getOverlays().add(closestPlaceOverlay);
@@ -416,6 +416,16 @@ extends MapActivity
 				}
 			    	
     	    }
+
+			public void OnUserChange(GeneralUser user) {
+				// TODO Auto-generated method stub
+				try	{
+					publicPlaceOverlay.setThisUser(service.getUser());
+					closestPlaceOverlay.setThisUser(service.getUser());
+				} catch (NullPointerException e)	{
+					
+				}
+			}
     	};
     	
 
@@ -443,6 +453,7 @@ extends MapActivity
                     service.RegisterListner(locationListener);
                     SPGeoPoint gp = service.getLocation();
                    
+                    GeneralUser user = service.getUser();
                     publicPlaceOverlay.setThisUser(service.getUser());
                     closestPlaceOverlay.setThisUser(service.getUser());
                     if (gp == null)

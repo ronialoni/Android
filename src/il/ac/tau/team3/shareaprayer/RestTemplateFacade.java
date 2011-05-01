@@ -108,53 +108,5 @@ public class RestTemplateFacade {
 		return true;
 	 }
 	 
-	 boolean AddJoiner(GeneralPlace place, GeneralUser joiner){
-		// place.addJoiner(joiner.getName());
-		 PlaceAndUser pau = new PlaceAndUser(joiner, place);
-		
-		 try{
-			 StringWriter writer = new StringWriter();
-		        ObjectMapper mapper = new ObjectMapper();
-		        final JsonGenerator jsonGenerator = mapper.getJsonFactory().createJsonGenerator(writer);
-		        jsonGenerator.setPrettyPrinter(new DefaultPrettyPrinter());
-
-		        mapper.writeValue(jsonGenerator, pau);
-		        Log.e("share", writer.toString());
-			 restTemplate.postForObject(_sServerHeader + "addjoiner", pau, String.class);
-		 }catch (Exception e) {
-			Log.d("Share A Prayer",e.getMessage(),e);
-			return false;
-		}
-		 return true;
-	 }
-	 boolean RemovePlace(GeneralPlace place){
-			
-			
-			 try{
-				 StringWriter writer = new StringWriter();
-			        ObjectMapper mapper = new ObjectMapper();
-			        final JsonGenerator jsonGenerator = mapper.getJsonFactory().createJsonGenerator(writer);
-			        jsonGenerator.setPrettyPrinter(new DefaultPrettyPrinter());
-
-			        mapper.writeValue(jsonGenerator, place);
-			        Log.e("share", writer.toString());
-				 restTemplate.postForObject(_sServerHeader + "deleteplace", place, String.class);
-			 }catch (Exception e) {
-				Log.d("Share A Prayer",e.getMessage(),e);
-				return false;
-			}
-			 return true;
-		 }
-	 
-	 boolean RemoveJoiner(GeneralPlace place, GeneralUser joiner){
-		 PlaceAndUser pau = new PlaceAndUser(joiner, place);
-		 
-		 try{
-			 restTemplate.postForObject(_sServerHeader + "removejoiner", pau, String.class);
-		 }catch (Exception e) {
-			Log.d("Share A Prayer",e.getMessage(),e);
-			return false;
-		}
-		 return true;
-	 }
+	
 }

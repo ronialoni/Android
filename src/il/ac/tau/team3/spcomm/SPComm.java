@@ -47,6 +47,7 @@ public class SPComm {
 
     }
     
+    
     public void requestGetUsers(double latitude, double longitude, int radius, ICommHandler<GeneralUser[]> callback)
     {
         Map<String, String> parameters = getParameters(latitude, longitude, radius);
@@ -74,9 +75,9 @@ public class SPComm {
 
     }
     
-    public void requestPostRegister(GeneralPlace to ,GeneralUser user, ICommHandler<String> callback)
+    public void requestPostRegister(GeneralPlace to ,GeneralUser user, boolean[] praysWishes, ICommHandler<String> callback)
     {
-    	PlaceAndUser pau = new PlaceAndUser(user, to);
+    	PlaceAndUser pau = new PlaceAndUser(user, to,praysWishes);
         com.requestPost(pau, String.class, POST_FOR_OBJECT_ADD_JOINER, callback);
     }
     
@@ -88,8 +89,8 @@ public class SPComm {
         
     }
     
-    public void removeJoiner(GeneralPlace place, GeneralUser joiner, ICommHandler<Void> callback)	{
-    	PlaceAndUser pau = new PlaceAndUser(joiner, place);
+    public void removeJoiner(GeneralPlace place, GeneralUser joiner,boolean[] praysWishes, ICommHandler<Void> callback)	{
+    	PlaceAndUser pau = new PlaceAndUser(joiner, place,praysWishes);
     	
     	com.requestPost(pau, Void.class, POST_FOR_OBJECT_REMOVE_JOINER, callback);
     }
@@ -97,6 +98,7 @@ public class SPComm {
     public void deletePlace(GeneralPlace place, ICommHandler<String> callback)	{
     	com.requestPost(place, String.class, POST_FOR_OBJECT_DELETE_PLACE, callback);
     }
+    
     
     
     public void searchForAddress(String address, ICommHandler<MapsQueryLocation> callback)	{

@@ -188,6 +188,7 @@ extends Service
     				for (ILocationProv locProv : locationProvs)
     				{
     					locProv.LocationChanged(curr_loc);
+    					locProv.OnUserChange(user);
     				}
     			} 
     			catch (Exception e)

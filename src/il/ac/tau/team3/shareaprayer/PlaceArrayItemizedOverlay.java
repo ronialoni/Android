@@ -116,23 +116,64 @@ extends PrayerArrayItemizedOverlay
 	protected boolean onTap(int index)
 	{
 	    
-		PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
-		String msg; 
+		final PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
+		String msg1; 
 		List<String> joiners = placeItem.getPlace().getAllJoiners();
 		if(joiners == null || joiners.isEmpty())
 		{
-			msg = "No prayers listed.\n"; 
+			msg1 = "No prayers are listed to Shaharit.\n"; 
 		}
 		else
 		{
-			msg = "Prayer listed are:\n";
+			msg1 = "Prayer listed to Shaharit are:\n";
 			for(String joiner : joiners)
 			{
-				msg = msg + joiner + "\n";			
+				msg1 = msg1 + joiner + "\n";			
+			}
+		}
+		String msg2; 
+		List<String> joiners2 = placeItem.getPlace().getAllJoiners2();
+		if(joiners2 == null || joiners2.isEmpty())
+		{
+			msg2 = "No prayers listed to Minha.\n"; 
+		}
+		else
+		{
+			msg2 = "Prayer listed to Minha are:\n";
+			for(String joiner2 : joiners2)
+			{
+				msg2 = msg2 + joiner2 + "\n";			
 			}
 		}
 		
-		UIUtils.createRegisterDialog(msg, placeItem.getPlace(), this);
+		String msg3; 
+		List<String> joiners3 = placeItem.getPlace().getAllJoiners3();
+		if(joiners3 == null || joiners3.isEmpty())
+		{
+			msg3 = "No prayers listed to Arvit.\n"; 
+		}
+		else
+		{
+			msg3 = "Prayer listed to Arvit are:\n";
+			for(String joiner3 : joiners3)
+			{
+				msg3 = msg3 + joiner3 + "\n";			
+			}
+		}
+		
+		final PlaceArrayItemizedOverlay p = this;
+		final String cmsg1=msg1;
+		final String cmsg2=msg2;
+		final String cmsg3=msg3;
+		
+		activity.runOnUiThread(new Runnable() {
+			
+			public void run() {
+				UIUtils.createRegisterDialog(cmsg1,cmsg2,cmsg3, placeItem.getPlace(), p);
+				
+			}
+		});
+		
 		
 	    return true;
 	}

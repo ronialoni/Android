@@ -8,15 +8,24 @@ public class PlaceAndUser implements Serializable{
 	
 	private GeneralUser user;
 	private GeneralPlace place;
+	private boolean[] praysWishes;
 	private static final long serialVersionUID = 7821097316432935684L;
 	public PlaceAndUser(){
 		this.user = new GeneralUser();
 		this.place = new GeneralPlace();
+		this.praysWishes = new boolean[3];
 	}
-	public PlaceAndUser(GeneralUser user, GeneralPlace place) {
+	public PlaceAndUser(GeneralUser user, GeneralPlace place, boolean praysWishes[]) {
 		super();
 		this.user = user;
 		this.place = place;
+		this.praysWishes = praysWishes;
+	}
+	public boolean[] getPraysWishes() {
+		return praysWishes;
+	}
+	public void setPraysWishes(boolean[] praysWishes) {
+		this.praysWishes = praysWishes;
 	}
 	public GeneralUser getUser() {
 		return user;

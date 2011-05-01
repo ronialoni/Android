@@ -20,6 +20,33 @@ public class BitmapDrawableNumbered extends BitmapDrawable {
 		this.setBounds(0, 0, image.getWidth(), image.getHeight());
 	}
 	
+	public int getNumber()	{
+		int max = 0;
+		try	{
+			if (max < place.getAllJoiners().size())	{
+				max = place.getAllJoiners().size();
+			}
+		} catch (NullPointerException e)	{
+			
+		}
+		try	{
+			if (max < place.getAllJoiners2().size())	{
+				max = place.getAllJoiners2().size();
+			}
+		} catch (NullPointerException e)	{
+			
+		}
+		try	{
+			if (max < place.getAllJoiners3().size())	{
+				max = place.getAllJoiners3().size();
+			}
+		} catch (NullPointerException e)	{
+			
+		}
+		
+		return max;
+	}
+	
     @Override
     public void draw(Canvas arg)    {
             
@@ -33,7 +60,7 @@ public class BitmapDrawableNumbered extends BitmapDrawable {
                     p.setTextSize(16);
             
             p.setAntiAlias(true);
-            arg.drawText((new Integer(place.getAllJoiners().size())).toString() , 
+            arg.drawText((new Integer(getNumber())).toString() , 
                             getBounds().left + getBitmap().getWidth()/2 - 5, 
                             getBounds().top + getBitmap().getHeight()/2 + 5 , p);
     }

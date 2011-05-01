@@ -13,6 +13,7 @@ public class SPComm {
 
     private static final String GET_FOR_OBJECT_USERS  = "users";
     private static final String GET_FOR_OBJECT_PLACES = "places";
+    private static final String GET_USER_BY_ACCOUNT = "getuserbymail";
         
     private static final String POST_FOR_OBJECT_NEW_PLACE  = "updateplacebylocation";
     private static final String POST_FOR_OBJECT_ADD_JOINER = "addjoiner";
@@ -55,6 +56,20 @@ public class SPComm {
         
         //requestGet(parameters, responseType, request);
         com.requestGet(parameters, GeneralUser[].class, request, callback);
+        
+
+    }
+    
+    public void requestGetUserByAccount(String account, ICommHandler<Long> callback)
+    {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("account" , String.valueOf(account));
+        
+        
+        String request = GET_USER_BY_ACCOUNT;
+        
+        //requestGet(parameters, responseType, request);
+        com.requestGet(parameters, Long.class, request, callback);
         
 
     }

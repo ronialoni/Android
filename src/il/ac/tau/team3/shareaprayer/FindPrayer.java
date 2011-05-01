@@ -527,10 +527,10 @@ extends MapActivity
                     @Override
                     public void OverlayChangeCenterZoom()
                     {
-                        ts.cancel();
-                        t.purge();
-                        ts = new TimerRefreshTask();
-                        t.schedule(ts, 1000);
+                       ts.cancel();
+                       t.purge();
+                       ts = new TimerRefreshTask();
+                      t.schedule(ts, 10000);
                         
                     }
                     
@@ -542,6 +542,8 @@ extends MapActivity
         };
         
         bindService(new Intent(LocServ.ACTION_SERVICE), svcConn, BIND_AUTO_CREATE);
+        
+        
         
     }
 	

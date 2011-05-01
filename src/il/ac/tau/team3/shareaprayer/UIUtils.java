@@ -321,14 +321,14 @@ public class UIUtils {
 		TextView text = (TextView) dialog.findViewById(R.id.TextMsgCreatePlace);
 		text.setText(_sNewPlaceQues);
 
-		Button yesButton = (Button) dialog.findViewById(R.id.YesButton);
+		Button yesButton = (Button) dialog.findViewById(R.id.CPDYesButton);
 
-		Button noButton = (Button) dialog.findViewById(R.id.NoButton);
+		Button noButton = (Button) dialog.findViewById(R.id.CPDNoButton);
 
-		CheckBox pray1 = (CheckBox) dialog.findViewById(R.id.checkBox1);
+		CheckBox pray1 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox1);
 
-		CheckBox pray2 = (CheckBox) dialog.findViewById(R.id.checkBox2);
-		CheckBox pray3 = (CheckBox) dialog.findViewById(R.id.checkBox3);
+		CheckBox pray2 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);
+		CheckBox pray3 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
 
 		pray1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 

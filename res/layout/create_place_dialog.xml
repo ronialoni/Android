@@ -3,24 +3,24 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-    <TableLayout android:id="@+id/tableLayout1" android:layout_gravity="fill" android:layout_width="wrap_content" android:layout_height="match_parent">
+    <TableLayout android:id="@+id/CPDtableLayout1" android:layout_gravity="fill" android:layout_width="wrap_content" android:layout_height="match_parent">
         <TextView android:layout_width="wrap_content" android:text="TextView" android:layout_height="wrap_content" android:id="@+id/TextMsgCreatePlace"></TextView>
         
-            <TableRow android:id="@+id/tableRowi1" android:layout_width="fill_parent" android:layout_height="wrap_content">
-                <CheckBox android:text="Shaharit" android:id="@+id/checkBox1" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
+            <TableRow android:id="@+id/CPDtableRowi1" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <CheckBox android:text="Shaharit" android:id="@+id/CPDcheckBox1" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
             </TableRow>
-            <TableRow android:id="@+id/tableRowi2" android:layout_width="fill_parent" android:layout_height="wrap_content">
-                <CheckBox android:text="Minha" android:id="@+id/checkBox2" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
+            <TableRow android:id="@+id/CPDtableRowi2" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <CheckBox android:text="Minha" android:id="@+id/CPDcheckBox2" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
             </TableRow>
-            <TableRow android:id="@+id/tableRowi3" android:layout_width="fill_parent" android:layout_height="wrap_content">
-                <CheckBox android:text="Arvit" android:id="@+id/checkBox3" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
+            <TableRow android:id="@+id/CPDtableRowi3" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <CheckBox android:text="Arvit" android:id="@+id/CPDcheckBox3" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
             </TableRow>
        
-        <TableRow android:id="@+id/tableRowR1" android:layout_width="fill_parent" android:layout_height="wrap_content">
-	        <TableLayout android:id="@+id/tableLayout2" android:layout_width="wrap_content" android:layout_height="wrap_content">
-	            <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="wrap_content">
-	                <Button android:text="Yes" android:id="@+id/YesButton" android:layout_height="wrap_content" android:layout_width="wrap_content"></Button>
-	                <Button android:text="No" android:id="@+id/NoButton" android:layout_height="wrap_content" android:layout_width="wrap_content"></Button>
+        <TableRow android:id="@+id/CPDtableRowR1" android:layout_width="fill_parent" android:layout_height="wrap_content">
+	        <TableLayout android:id="@+id/CPDtableLayout2" android:layout_width="wrap_content" android:layout_height="wrap_content">
+	            <TableRow android:id="@+id/CPDtableRowR3" android:layout_width="wrap_content" android:layout_height="wrap_content">
+	                <Button android:text="Yes" android:id="@+id/CPDYesButton" android:layout_height="wrap_content" android:layout_width="wrap_content"></Button>
+	                <Button android:text="No" android:id="@+id/CPDNoButton" android:layout_height="wrap_content" android:layout_width="wrap_content"></Button>
 	            </TableRow>
 	        </TableLayout>
 	    </TableRow>

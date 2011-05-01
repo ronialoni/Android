@@ -49,7 +49,7 @@ public class UIUtils {
 				}
 				
 				if(!place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-					placeOverlay.getActivity().getSPComm().requestPostRegister(place, new ACommHandler<String>());
+					placeOverlay.getActivity().getSPComm().requestPostRegister(place,placeOverlay.getThisUser(), new ACommHandler<String>());
 				}else{
 					createAlertDialog(_sAlreadyRegisterAlertMsg, placeOverlay.getActivity());
 				}

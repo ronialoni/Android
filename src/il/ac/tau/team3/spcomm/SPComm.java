@@ -3,6 +3,7 @@ package il.ac.tau.team3.spcomm;
 import il.ac.tau.team3.addressQuery.MapsQueryLocation;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
+import il.ac.tau.team3.common.PlaceAndUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 
 import java.util.HashMap;
@@ -15,6 +16,8 @@ public class SPComm {
         
     private static final String POST_FOR_OBJECT_NEW_PLACE  = "updateplacebylocation";
     private static final String POST_FOR_OBJECT_ADD_JOINER = "addjoiner";
+    private static final String POST_FOR_OBJECT_REMOVE_JOINER = "removejoiner";
+    private static final String POST_FOR_OBJECT_DELETE_PLACE = "deleteplace";
     
     private SPGenComm com = new SPGenComm();
     
@@ -55,10 +58,10 @@ public class SPComm {
 
     }
     
-    public void requestPostRegister(GeneralPlace to, ICommHandler<String> callback)
+    public void requestPostRegister(GeneralPlace to ,GeneralUser user, ICommHandler<String> callback)
     {
-
-        com.requestPost(to, String.class, POST_FOR_OBJECT_ADD_JOINER, callback);
+    	PlaceAndUser pau = new PlaceAndUser(user, to);
+        com.requestPost(pau, String.class, POST_FOR_OBJECT_ADD_JOINER, callback);
     }
     
     public void requestPostNewPlace(GeneralPlace place, ICommHandler<Long> callback)

@@ -144,9 +144,13 @@ extends MapActivity
     								List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(users.length);
     								for (GeneralUser user : users)
     								{
-    									if ((thisUser == null) || (! thisUser.getId().equals(user.getId())))	
-    									{
-    										usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
+    									try	{
+	    									if (! thisUser.getId().equals(user.getId()))	
+	    									{
+	    										usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
+	    									}
+    									} catch (NullPointerException e)	{
+    										
     									}
     								}
     								otherUsersOverlay.changeItems(usersOverlayList);
@@ -302,6 +306,11 @@ extends MapActivity
 			public void onTouchEvent(SPGeoPoint sp) 
 			{
 				NewPlaceCall(sp);
+			}
+
+			public void onMoveEvent(SPGeoPoint sp) {
+				// TODO Auto-generated method stub
+				
 			}
         });
         
@@ -460,8 +469,41 @@ extends MapActivity
                     Log.e("ShareAPrayer", "Exception in call to registerListner()", t);
                 }
    
-                
-                otherUsersOverlay.RegisterListner(new IOverlayChange()
+                mapView.registerTapListener(new IMapTapDetect() {
+                	
+                	class TimerRefreshTask 
+                    extends TimerTask
+                    {
+                        
+                        @Override
+                        public void run()
+                        {
+                            synchronized (refreshTask)
+                            {
+                                refreshTask.notify();
+                            }
+                        }
+                        
+                    };
+                    
+                    private Timer     t  = new Timer();                    
+                    private TimerTask ts = new TimerRefreshTask();
+
+					public void onMoveEvent(SPGeoPoint sp) {
+						// TODO Auto-generated method stub
+						ts.cancel();
+                        t.purge();
+                        ts = new TimerRefreshTask();
+                        t.schedule(ts, 1000);
+					}
+
+					public void onTouchEvent(SPGeoPoint sp) {
+						// TODO Auto-generated method stub
+						
+					}
+                	
+                });
+                /*otherUsersOverlay.RegisterListner(new IOverlayChange()
                 {
                     
                     class TimerRefreshTask 
@@ -492,7 +534,7 @@ extends MapActivity
                         
                     }
                     
-                });
+                });*/
             }
             
             

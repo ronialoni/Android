@@ -21,6 +21,22 @@ import android.widget.TextView;
 
 public class UIUtils {
 	
+	static class updateUI<T> extends ACommHandler<T>	{
+		
+		FindPrayer activity;
+		
+		updateUI(FindPrayer a_activity)	{
+			activity = a_activity;
+		}
+		
+		@Override
+		public void onRecv(T Obj)	{
+			synchronized(activity.getRefreshTask())	{
+				activity.getRefreshTask().notify();
+			}
+		}
+	};
+	
 	static String _sNewPlaceQues= "Do you want to create a public praying place?";
 	static String _sAlreadyRegisterAlertMsg = "You are already registered to this place.";
 	static String _sWantToRegisterQues = "Would you like to register to this place?";
@@ -49,7 +65,7 @@ public class UIUtils {
 				}
 				
 				if(!place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-					placeOverlay.getActivity().getSPComm().requestPostRegister(place,placeOverlay.getThisUser(), new ACommHandler<String>());
+					placeOverlay.getActivity().getSPComm().requestPostRegister(place,placeOverlay.getThisUser(), new updateUI<String>(placeOverlay.getActivity()));
 				}else{
 					createAlertDialog(_sAlreadyRegisterAlertMsg, placeOverlay.getActivity());
 				}
@@ -78,7 +94,7 @@ public class UIUtils {
 				if(place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
 					//TODO: remove joiner
 					//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemoveJoiner(place, placeOverlay.getThisUser());
-					placeOverlay.getActivity().getSPComm().removeJoiner(place, user, new ACommHandler<Void>());
+					placeOverlay.getActivity().getSPComm().removeJoiner(place, user, new updateUI<Void>(placeOverlay.getActivity()));
 					
 				}else{
 					createAlertDialog(_sUserNotRegisterMsg, placeOverlay.getActivity());
@@ -101,7 +117,7 @@ public class UIUtils {
 				if(place.getOwner().equals(placeOverlay.getThisUser().getName())){
 					//TODO: add remove place
 					//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
-					placeOverlay.getActivity().getSPComm().deletePlace(place, new ACommHandler<String>());
+					placeOverlay.getActivity().getSPComm().deletePlace(place, new updateUI<String>(placeOverlay.getActivity()));
 				}else{
 					createAlertDialog(_sUserNotOwnerMsg, placeOverlay.getActivity());
 				}
@@ -130,7 +146,7 @@ public class UIUtils {
 		
 			// TODO: add joiner
 			//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().AddJoiner(place, placeOverlay.getThisUser());
-			placeOverlay.getActivity().getSPComm().requestPostRegister(place, user, new ACommHandler<String>());
+			placeOverlay.getActivity().getSPComm().requestPostRegister(place, user, new updateUI<String>(placeOverlay.getActivity()));
 			
 		}else{
 			createAlertDialog(_sAlreadyRegisterAlertMsg, placeOverlay.getActivity());
@@ -142,7 +158,7 @@ public class UIUtils {
 		if(place.getOwner().equals(placeOverlay.getThisUser().getName())){
 			// TODO: remmove place
 			//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
-			placeOverlay.getActivity().getSPComm().deletePlace(place, new ACommHandler<String>());
+			placeOverlay.getActivity().getSPComm().deletePlace(place, new updateUI<String>(placeOverlay.getActivity()));
 		}else{
 			createAlertDialog(_sUserNotOwnerMsg, placeOverlay.getActivity());
 		}
@@ -163,7 +179,7 @@ public class UIUtils {
 		if(place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
 			// TODO: add remove joiner
 			//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemoveJoiner(place, placeOverlay.getThisUser());
-			placeOverlay.getActivity().getSPComm().removeJoiner(place, user, new ACommHandler<Void>());
+			placeOverlay.getActivity().getSPComm().removeJoiner(place, user, new updateUI<Void>(placeOverlay.getActivity()));
 			
 		}else{
 			createAlertDialog(_sUserNotRegisterMsg, placeOverlay.getActivity());
@@ -320,7 +336,9 @@ public class UIUtils {
 		 GeneralPlace newMinyan = new GeneralPlace(user, user.getName() + "'s Minyan Place", "", point);
          newMinyan.addJoiner(user.getName());
          
-         activity.getSPComm().requestPostNewPlace(newMinyan, new ACommHandler<Long>());
+         activity.getSPComm().requestPostNewPlace(newMinyan, new updateUI<Long>(activity) {
+        	 
+         });
                                  
          synchronized (activity.getRefreshTask())
          {
@@ -342,7 +360,7 @@ public class UIUtils {
                     GeneralPlace newMinyan = new GeneralPlace(user, user.getName() + "'s Minyan Place", "", point);
                     newMinyan.addJoiner(user.getName());
                     
-                    activity.getSPComm().requestPostNewPlace(newMinyan, new ACommHandler<Long>());
+                    activity.getSPComm().requestPostNewPlace(newMinyan, new updateUI<Long>(activity));
                                             
                     synchronized (activity.getRefreshTask())
                     {

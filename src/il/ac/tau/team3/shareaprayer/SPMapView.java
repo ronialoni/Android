@@ -165,7 +165,17 @@ extends MapView
 				}
 				
 			}
-		} 
+		}
+		
+		if (event.getAction() == MotionEvent.ACTION_MOVE)	{
+			GeoPoint   p          = this.getProjection().fromPixels((int) startPosX, (int) startPosY);
+			SPGeoPoint eventPoint = new SPGeoPoint(p.getLatitudeE6(),p.getLongitudeE6());
+			for (IMapTapDetect tap : tapListeners)	
+			{
+				tap.onMoveEvent(eventPoint);
+				//this.mapActivity.createDialog("Do you want to create a public praying place?", eventPoint);
+			}
+		}
 		
 		return super.onTouchEvent(event);		
 	}

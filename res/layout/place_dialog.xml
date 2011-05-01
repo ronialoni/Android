@@ -7,6 +7,7 @@
         <TextView android:layout_width="wrap_content" android:text="" android:layout_height="wrap_content" android:id="@+id/TextMsg"></TextView>
         <TextView android:layout_width="wrap_content" android:text="" android:layout_height="wrap_content" android:id="@+id/TextMsg1"></TextView>
         <TextView android:layout_width="wrap_content" android:text="" android:layout_height="wrap_content" android:id="@+id/TextMsg2"></TextView>
+        
         <TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
             <CheckBox android:text="Shaharit" android:id="@+id/checkBoxPlace1" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
         </TableRow>
@@ -16,11 +17,12 @@
         <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="wrap_content">
             <CheckBox android:text="Arvit" android:id="@+id/checkBoxPlace3" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
         </TableRow>
-        <TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/button1" android:text="Button"></Button>
-            <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/button3" android:text="Button"></Button>
-        	<Button android:layout_height="wrap_content" android:id="@+id/button2" android:layout_width="wrap_content" android:text="Button"></Button>
-        	<Button android:layout_height="wrap_content" android:id="@+id/button4" android:layout_width="wrap_content" android:text="Button"></Button>
+        
+        <TableRow android:id="@+id/tableRow5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:weightSum = "1.0">
+            <Button android:id="@+id/button1" android:text="Button" android:layout_height="wrap_content" android:layout_width="1px" android:layout_weight=".2"></Button>
+            <Button android:id="@+id/button3" android:text="Button" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight=".2"></Button>
+        	<Button android:layout_height="wrap_content" android:id="@+id/button2" android:layout_width="wrap_content" android:text="Button" android:layout_weight=".2"></Button>
+        	<Button android:layout_height="wrap_content" android:id="@+id/button4" android:layout_width="wrap_content" android:text="Button" android:layout_weight=".2"></Button>
         </TableRow>
         
     </TableLayout>

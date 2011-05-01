@@ -145,18 +145,18 @@ public class UIUtils {
 		if (place.getPrays()[0]) {
 			dialog.setContentView(R.layout.place_dialog);
 			TextView text = (TextView) dialog.findViewById(R.id.TextMsg);
-			String msg = message1 + _sWantToRegisterQues;
-			text.setText(msg);
+			//String msg = message1 + _sWantToRegisterQues;
+			text.setText(message1);
 		}
 		if (place.getPrays()[1]) {
 			TextView text2 = (TextView) dialog.findViewById(R.id.TextMsg1);
-			String msg2 = message2 + _sWantToRegisterQues;
-			text2.setText(msg2);
+			//String msg2 = message2 + _sWantToRegisterQues;
+			text2.setText(message2);
 		}
 		if (place.getPrays()[2]) {
 			TextView text3 = (TextView) dialog.findViewById(R.id.TextMsg2);
-			String msg3 = message3 + _sWantToRegisterQues;
-			text3.setText(msg3);
+			//String msg3 = message3 + _sWantToRegisterQues;
+			text3.setText(message3);
 		}
 
 		CheckBox pray1 = (CheckBox) dialog.findViewById(R.id.checkBoxPlace1);

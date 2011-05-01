@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.mapsforge.android.maps.MapActivity;
 //import org.mapsforge.android.maps.MapViewMode;
@@ -342,6 +343,8 @@ extends MapActivity
 										}
 										searchQueryOverlay.clear();
 										searchQueryOverlay.addItem(new OverlayItem(gp, "Search query result", v.getText().toString()));
+										Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
+										toast.show();
 									} catch (NullPointerException e)	{
 										
 									} catch (ArrayIndexOutOfBoundsException e)	{
@@ -541,8 +544,8 @@ extends MapActivity
         
         bindService(new Intent(LocServ.ACTION_SERVICE), svcConn, BIND_AUTO_CREATE);
         
-        
-        
+        Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
+        toast.show();
     }
 	
 	

@@ -139,8 +139,12 @@ public class SPGenComm {
 		        	Log.e("ShareAPrayer", "NULL Exception in call to requestGet(...)" + e.getMessage(), e);
 		        }
 		     
-		        if (null != retObj)
-		        	retObj.onRecv(response);
+		        try	{
+			        if (null != retObj)
+			        	retObj.onRecv(response);
+		        } catch (Exception e)	{
+		        	Log.e("Share", e.getMessage());
+		        }
 		    }
     	});
     }

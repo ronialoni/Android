@@ -397,8 +397,6 @@ extends MapActivity
 		othersDefaultMarker = this.getResources().getDrawable(R.drawable.others_kipa_pin);
 		otherUsersOverlay   = new PrayerArrayItemizedOverlay(othersDefaultMarker, this);
 		mapView.getOverlays().add(otherUsersOverlay);	 
-        
-        
 		
 		
         // Define a listener that responds to location updates

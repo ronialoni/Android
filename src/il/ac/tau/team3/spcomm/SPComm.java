@@ -19,6 +19,7 @@ public class SPComm {
     private static final String POST_FOR_OBJECT_REMOVE_JOINER = "removejoiner";
     private static final String POST_FOR_OBJECT_DELETE_PLACE = "deleteplace";
     
+    
     private SPGenComm com = new SPGenComm();
     
     private Map<String, String> getParameters(double latitude, double longitude, int radius)
@@ -71,6 +72,17 @@ public class SPComm {
         
         
     }
+    
+    public void removeJoiner(GeneralPlace place, GeneralUser joiner, ICommHandler<Void> callback)	{
+    	PlaceAndUser pau = new PlaceAndUser(joiner, place);
+    	
+    	com.requestPost(pau, Void.class, POST_FOR_OBJECT_REMOVE_JOINER, callback);
+    }
+    
+    public void deletePlace(GeneralPlace place, ICommHandler<String> callback)	{
+    	com.requestPost(place, String.class, POST_FOR_OBJECT_DELETE_PLACE, callback);
+    }
+    
     
     public void searchForAddress(String address, ICommHandler<MapsQueryLocation> callback)	{
     	Map<String, String> parameters = new HashMap<String, String>();

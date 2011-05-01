@@ -236,10 +236,14 @@ extends MapActivity
     				{
     					wait(10000);
     				}
-    				if (service.getLocation() != null)
-    				{
-    					updateUsersOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
-    					updatePlacesOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
+    				try	{
+	    				if (service.getLocation() != null)
+	    				{
+	    					updateUsersOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
+	    					updatePlacesOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
+	    				}
+    				} catch (NullPointerException e)	{
+    					
     				}
     			}
     			catch (InterruptedException e)

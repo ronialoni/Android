@@ -78,6 +78,7 @@ public class UIUtils {
 				if(place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
 					//TODO: remove joiner
 					//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemoveJoiner(place, placeOverlay.getThisUser());
+					placeOverlay.getActivity().getSPComm().removeJoiner(place, user, new ACommHandler<Void>());
 					
 				}else{
 					createAlertDialog(_sUserNotRegisterMsg, placeOverlay.getActivity());
@@ -100,6 +101,7 @@ public class UIUtils {
 				if(place.getOwner().equals(placeOverlay.getThisUser().getName())){
 					//TODO: add remove place
 					//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
+					placeOverlay.getActivity().getSPComm().deletePlace(place, new ACommHandler<String>());
 				}else{
 					createAlertDialog(_sUserNotOwnerMsg, placeOverlay.getActivity());
 				}
@@ -128,6 +130,7 @@ public class UIUtils {
 		
 			// TODO: add joiner
 			//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().AddJoiner(place, placeOverlay.getThisUser());
+			placeOverlay.getActivity().getSPComm().requestPostRegister(place, user, new ACommHandler<String>());
 			
 		}else{
 			createAlertDialog(_sAlreadyRegisterAlertMsg, placeOverlay.getActivity());
@@ -139,6 +142,7 @@ public class UIUtils {
 		if(place.getOwner().equals(placeOverlay.getThisUser().getName())){
 			// TODO: remmove place
 			//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
+			placeOverlay.getActivity().getSPComm().deletePlace(place, new ACommHandler<String>());
 		}else{
 			createAlertDialog(_sUserNotOwnerMsg, placeOverlay.getActivity());
 		}
@@ -159,6 +163,7 @@ public class UIUtils {
 		if(place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
 			// TODO: add remove joiner
 			//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemoveJoiner(place, placeOverlay.getThisUser());
+			placeOverlay.getActivity().getSPComm().removeJoiner(place, user, new ACommHandler<Void>());
 			
 		}else{
 			createAlertDialog(_sUserNotRegisterMsg, placeOverlay.getActivity());

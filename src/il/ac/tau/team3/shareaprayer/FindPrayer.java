@@ -443,7 +443,9 @@ extends MapActivity
                         @Override
                         public void run()
                         {
-                        	refreshTask.notify();
+                        	synchronized(refreshTask){
+                        		refreshTask.notify();
+                        	}
                         }
                     };
                     t.run();

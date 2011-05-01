@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+    <TableLayout android:id="@+id/tableLayout1" android:layout_gravity="fill" android:layout_width="wrap_content" android:layout_height="match_parent">
+        <TextView android:layout_width="wrap_content" android:text="TextView" android:layout_height="wrap_content" android:id="@+id/TextMsgCreatePlace"></TextView>
+        <TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/YesButton" android:text="Yes"></Button>
+            <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/NoButton" android:text="No"></Button>
+        </TableRow>
+        
+    </TableLayout>
+</LinearLayout>

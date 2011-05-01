@@ -169,6 +169,11 @@ public class UIUtils {
 	
 	static void createRegisterDialog(String message, final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay){
 		
+		if(placeOverlay == null || placeOverlay.getThisUser() == null || place == null){
+			Log.d("UIUtils::createRegisterDialog", "placeOverlay == null || placeOverlay.getThisUser() == null || place == null");
+			return;
+		}
+		
 		final Dialog dialog = new Dialog(placeOverlay.getActivity());
 		dialog.setContentView(R.layout.place_dialog);
 		TextView text = (TextView) dialog.findViewById(R.id.TextMsg);
@@ -264,7 +269,61 @@ public class UIUtils {
 		alert.show();
 	}
 	
-	 static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user)
+	 static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user){
+		 if(point == null || activity == null || user == null){
+				Log.d("UIUtils::createRegisterDialog", "point == null || activity == null || user == null");
+				return;
+			}
+			
+			final Dialog dialog = new Dialog(activity);
+			dialog.setContentView(R.layout.create_place_dialog);
+			TextView text = (TextView) dialog.findViewById(R.id.TextMsgCreatePlace);
+			text.setText(_sNewPlaceQues);
+			
+			Button yesButton = (Button) dialog.findViewById(R.id.YesButton);
+			
+			
+			Button noButton = (Button) dialog.findViewById(R.id.NoButton);
+			
+			yesButton.setOnClickListener(new OnClickListener() {
+				
+				public void onClick(View view) 
+				{
+					
+					CreateNewPlace_YesClick(user,activity,point);
+					dialog.dismiss();
+					
+				};
+				
+			});
+			
+			noButton.setOnClickListener(new OnClickListener() {
+				
+				public void onClick(View view) 
+				{
+										
+					dialog.dismiss();
+					
+				};
+				
+			});
+			
+			dialog.show();
+	 }
+	 
+	 static void CreateNewPlace_YesClick(GeneralUser user, FindPrayer activity, SPGeoPoint point){
+		 GeneralPlace newMinyan = new GeneralPlace(user, user.getName() + "'s Minyan Place", "", point);
+         newMinyan.addJoiner(user.getName());
+         
+         activity.getSPComm().requestPostNewPlace(newMinyan, new ACommHandler<Long>());
+                                 
+         synchronized (activity.getRefreshTask())
+         {
+         	activity.getRefreshTask().notify();
+         }
+	 }
+	
+	 static void _createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user)
 	    {
 	        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 	        builder.setMessage(_sNewPlaceQues);

@@ -3,14 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="libs/osmdroid-android-3.0.3.jar"/>
-	<classpathentry kind="lib" path="libs/osmdroid-google-wrapper-3.0.3.jar"/>
 	<classpathentry kind="lib" path="libs/apache-mime4j-0.6.1.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-android-1.5.8.jar"/>
 	<classpathentry kind="lib" path="libs/mapsforge-map-0.2.2.jar"/>
 	<classpathentry kind="lib" path="libs/org.restlet.jar" sourcepath="/home/mb/Programming/RestAndroidLibe/restlet-android-2.0.5/src"/>
-	<classpathentry kind="lib" path="libs/jersey-bundle-1.6.jar"/>
 	<classpathentry kind="lib" path="libs/spring-android-rest-template-1.0.0.M2.jar"/>
 	<classpathentry kind="lib" path="libs/commons-httpclient-3.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/jackson-core-asl-1.7.1.jar"/>

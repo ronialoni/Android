@@ -3,7 +3,7 @@ package il.ac.tau.team3.shareaprayer;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
-import android.app.Activity;
+import il.ac.tau.team3.spcomm.ACommHandler;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -49,9 +49,7 @@ public class UIUtils {
 				}
 				
 				if(!place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-				
-					boolean suc = placeOverlay.getActivity().getRestTemplateFacade().AddJoiner(place, placeOverlay.getThisUser());
-					
+					placeOverlay.getActivity().getSPComm().requestPostRegister(place, new ACommHandler<String>());
 				}else{
 					createAlertDialog(_sAlreadyRegisterAlertMsg, placeOverlay.getActivity());
 				}
@@ -78,8 +76,8 @@ public class UIUtils {
 					}
 				}
 				if(place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-					
-					boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemoveJoiner(place, placeOverlay.getThisUser());
+					//TODO: remove joiner
+					//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemoveJoiner(place, placeOverlay.getThisUser());
 					
 				}else{
 					createAlertDialog(_sUserNotRegisterMsg, placeOverlay.getActivity());
@@ -100,7 +98,8 @@ public class UIUtils {
 		{
 			public void onClick(DialogInterface dialog, int id) {
 				if(place.getOwner().equals(placeOverlay.getThisUser().getName())){
-					boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
+					//TODO: add remove place
+					//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
 				}else{
 					createAlertDialog(_sUserNotOwnerMsg, placeOverlay.getActivity());
 				}
@@ -127,7 +126,8 @@ public class UIUtils {
 		
 		if(!place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
 		
-			boolean suc = placeOverlay.getActivity().getRestTemplateFacade().AddJoiner(place, placeOverlay.getThisUser());
+			// TODO: add joiner
+			//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().AddJoiner(place, placeOverlay.getThisUser());
 			
 		}else{
 			createAlertDialog(_sAlreadyRegisterAlertMsg, placeOverlay.getActivity());
@@ -137,7 +137,8 @@ public class UIUtils {
 	
 	static void DeleteClick(final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay){
 		if(place.getOwner().equals(placeOverlay.getThisUser().getName())){
-			boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
+			// TODO: remmove place
+			//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
 		}else{
 			createAlertDialog(_sUserNotOwnerMsg, placeOverlay.getActivity());
 		}
@@ -156,8 +157,8 @@ public class UIUtils {
 			}
 		}
 		if(place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-			
-			boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemoveJoiner(place, placeOverlay.getThisUser());
+			// TODO: add remove joiner
+			//boolean suc = placeOverlay.getActivity().getRestTemplateFacade().RemoveJoiner(place, placeOverlay.getThisUser());
 			
 		}else{
 			createAlertDialog(_sUserNotRegisterMsg, placeOverlay.getActivity());
@@ -273,26 +274,19 @@ public class UIUtils {
 	            
 	            public void onClick(DialogInterface dialog, int id)
 	            {
-	                Thread t = new Thread()
-	                {
-	                    
-	                    @Override
-	                    public void run()
-	                    {
-	                        GeneralPlace newMinyan = new GeneralPlace(user, user.getName() + "'s Minyan Place", "", point);
-	                        newMinyan.addJoiner(user.getName());
-	                        
-	                        boolean suc =activity.getRestTemplateFacade().UpdatePlace(newMinyan);
-	                                                
-	                        synchronized (activity.getRefreshTask())
-	                        {
-	                        	activity.getRefreshTask().notify();
-	                        }
-	                    }
-	                };
-	                t.run();
 	                
-	            }
+                    GeneralPlace newMinyan = new GeneralPlace(user, user.getName() + "'s Minyan Place", "", point);
+                    newMinyan.addJoiner(user.getName());
+                    
+                    activity.getSPComm().requestPostNewPlace(newMinyan, new ACommHandler<Long>());
+                                            
+                    synchronized (activity.getRefreshTask())
+                    {
+                    	activity.getRefreshTask().notify();
+                    }
+                }
+            
+	      
 	        });
 	        builder.setNegativeButton("No", new DialogInterface.OnClickListener()
 	        {

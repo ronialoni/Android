@@ -142,19 +142,20 @@ public class UIUtils {
 		final boolean praysWishes[] = new boolean[3];
 
 		final Dialog dialog = new Dialog(placeOverlay.getActivity());
+		dialog.setContentView(R.layout.place_dialog);
 		if (place.getPrays()[0]) {
-			dialog.setContentView(R.layout.place_dialog);
-			TextView text = (TextView) dialog.findViewById(R.id.TextMsg);
+			
+			TextView text = (TextView) dialog.findViewById(R.id.RTextMsg);
 			//String msg = message1 + _sWantToRegisterQues;
 			text.setText(message1);
 		}
 		if (place.getPrays()[1]) {
-			TextView text2 = (TextView) dialog.findViewById(R.id.TextMsg1);
+			TextView text2 = (TextView) dialog.findViewById(R.id.RTextMsg1);
 			//String msg2 = message2 + _sWantToRegisterQues;
 			text2.setText(message2);
 		}
 		if (place.getPrays()[2]) {
-			TextView text3 = (TextView) dialog.findViewById(R.id.TextMsg2);
+			TextView text3 = (TextView) dialog.findViewById(R.id.RTextMsg2);
 			//String msg3 = message3 + _sWantToRegisterQues;
 			text3.setText(message3);
 		}
@@ -213,13 +214,13 @@ public class UIUtils {
 		});
 
 		Button regButton = (Button) dialog.findViewById(R.id.button1);
-		regButton.setText("Register");
+		regButton.setText("Reg");
 		// if(place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
 		// regButton.setVisibility(View.INVISIBLE);
 		// }
 
 		Button unregButton = (Button) dialog.findViewById(R.id.button2);
-		unregButton.setText("Unregister");
+		unregButton.setText("Unreg");
 		// if(!place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
 		// unregButton.setVisibility(View.INVISIBLE);
 		// }

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 public class UIUtils {
@@ -143,6 +144,7 @@ public class UIUtils {
 
 		final Dialog dialog = new Dialog(placeOverlay.getActivity());
 		dialog.setContentView(R.layout.place_dialog);
+		dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		if (place.getPrays()[0]) {
 			
 			TextView text = (TextView) dialog.findViewById(R.id.RTextMsg);

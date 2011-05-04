@@ -84,20 +84,25 @@ extends MapActivity
 			return null;
 		}
 		
-		GeneralPlace closestPlace = null;
-		double userLat = service.getUser().getSpGeoPoint().getLatitudeInDegrees();
-		double userLong = service.getUser().getSpGeoPoint().getLongitudeInDegrees();
-		double distance = SPUtils.INFINITY;
-		double tmp = 0;
-		for (GeneralPlace place : places){
-			tmp = SPUtils.calculateDistanceMeters(userLong, userLat,
-                    place.getSpGeoPoint().getLongitudeInDegrees() , place.getSpGeoPoint().getLatitudeInDegrees());
-			if(tmp < distance){
-				distance = tmp;
-				closestPlace = place;
+		try	{
+			GeneralPlace closestPlace = null;
+			double userLat = service.getUser().getSpGeoPoint().getLatitudeInDegrees();
+			double userLong = service.getUser().getSpGeoPoint().getLongitudeInDegrees();
+			double distance = SPUtils.INFINITY;
+			double tmp = 0;
+			for (GeneralPlace place : places){
+				tmp = SPUtils.calculateDistanceMeters(userLong, userLat,
+	                    place.getSpGeoPoint().getLongitudeInDegrees() , place.getSpGeoPoint().getLatitudeInDegrees());
+				if(tmp < distance){
+					distance = tmp;
+					closestPlace = place;
+				}
 			}
+			return closestPlace;
+			
+		} catch (NullPointerException e)	{
+			return null;
 		}
-		return closestPlace;
 		
 	}
 	
@@ -195,7 +200,7 @@ extends MapActivity
     					        	List<PlaceOverlayItem> placesOverlayList = new ArrayList<PlaceOverlayItem>(places.length);
     					            for (GeneralPlace place : places)
     					            {
-    					            	if(!(place.getId().equals(closestPlace.getId()))){
+    					            	if ((closestPlace == null) || (!(place.getId().equals(closestPlace.getId())))){
     					            		placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress(), synagougeMarker));
     					            	}
     					            }
@@ -242,7 +247,7 @@ extends MapActivity
     					wait(10000);
     				}
     				try	{
-	    				if (service.getLocation() != null)
+	    				//if (service.getLocation() != null)
 	    				{
 	    					updateUsersOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
 	    					updatePlacesOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));

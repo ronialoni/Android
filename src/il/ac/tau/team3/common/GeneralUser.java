@@ -23,7 +23,7 @@ public class GeneralUser extends GeneralLocation implements Serializable {
 		}
 	
 		public String getStatus() {
-			return status;
+			return status == null ? "" : status;
 		}
 		public void setStatus(String status) {
 			this.status = status;

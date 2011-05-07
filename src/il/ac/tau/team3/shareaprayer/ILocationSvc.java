@@ -13,5 +13,5 @@ public interface ILocationSvc {
 	
 	public LocServ getService();
 
-	public GeneralUser getUser();
+	public GeneralUser getUser() throws UserNotFoundException;
 }

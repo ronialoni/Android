@@ -12,6 +12,7 @@ import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
+import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -93,8 +95,8 @@ extends MapActivity
 		
 		try	{
 			GeneralPlace closestPlace = null;
-			double userLat = service.getUser().getSpGeoPoint().getLatitudeInDegrees();
-			double userLong = service.getUser().getSpGeoPoint().getLongitudeInDegrees();
+			double userLat = svcGetter.getService().getUser().getSpGeoPoint().getLatitudeInDegrees();
+			double userLong = svcGetter.getService().getUser().getSpGeoPoint().getLongitudeInDegrees();
 			double distance = SPUtils.INFINITY;
 			double tmp = 0;
 			for (GeneralPlace place : places){
@@ -107,7 +109,12 @@ extends MapActivity
 			}
 			return closestPlace;
 			
-		} catch (NullPointerException e)	{
+		} catch (UserNotFoundException e)	{
+			return null;
+		} catch (UnknownLocationException e)	{
+			return null;
+		} catch (ServiceNotConnected e) {
+			// TODO Auto-generated catch block
 			return null;
 		}
 		
@@ -135,19 +142,22 @@ extends MapActivity
 
     						public void run() {
     							// TODO Auto-generated method stub
-    							GeneralUser thisUser = null;
+    							
 
-    							if (service != null)
-    							{
-    								thisUser = service.getUser();
-    								if (null != thisUser)
-    								{
-    									List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
-    									userOverlayList.add(new UserOverlayItem(thisUser, thisUser.getName(), thisUser.getStatus()));
-    									userOverlay.changeItems(userOverlayList);
-
-    								}
-    							}    
+    							try	{
+    								GeneralUser thisUser = svcGetter.getService().getUser();
+	    							List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
+	    							userOverlayList.add(new UserOverlayItem(thisUser, thisUser.getName(), thisUser.getStatus()));
+	    							userOverlay.changeItems(userOverlayList);
+    							} catch (UserNotFoundException e)	{
+    								// invalid user
+    								
+    							} catch (UnknownLocationException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}  catch (ServiceNotConnected e)	{
+    								// service wasn't initialized yet
+    							} 
 
 
 
@@ -158,13 +168,20 @@ extends MapActivity
     								for (GeneralUser user : users)
     								{
     									try	{
+    										GeneralUser thisUser = svcGetter.getService().getUser();
 	    									if (! thisUser.getId().equals(user.getId()))	
 	    									{
 	    										usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
 	    									}
-    									} catch (NullPointerException e)	{
+    									} catch (UserNotFoundException e)	{
     										
-    									}
+    									} catch (UnknownLocationException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+    									} catch (ServiceNotConnected e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} 
     								}
     								otherUsersOverlay.changeItems(usersOverlayList);
     							}
@@ -198,7 +215,12 @@ extends MapActivity
     							GeneralPlace closestPlace = determineClosestPlace(places);
     					        if(closestPlace!=null){
     					        	List<PlaceOverlayItem> closestPlacesOverlayList = new ArrayList<PlaceOverlayItem>();
-    					        	closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress(), synagougeClosestMarker));
+    					        	try {
+										closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress(), synagougeClosestMarker));
+									} catch (UnknownLocationException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
     					        	closestPlaceOverlay.changeItems(closestPlacesOverlayList);
     					        }
     					        
@@ -208,7 +230,12 @@ extends MapActivity
     					            for (GeneralPlace place : places)
     					            {
     					            	if ((closestPlace == null) || (!(place.getId().equals(closestPlace.getId())))){
-    					            		placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress(), synagougeMarker));
+    					            		try {
+												placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress(), synagougeMarker));
+											} catch (UnknownLocationException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
     					            	}
     					            }
     					            
@@ -227,7 +254,7 @@ extends MapActivity
     }
     
     	
-	private ILocationSvc  service = null;
+	private ServiceConnector  svcGetter = new ServiceConnector();;
 	private ILocationProv locationListener;
 	
 	
@@ -282,8 +309,14 @@ extends MapActivity
 	
     
     private void NewPlaceCall(SPGeoPoint point){
-    	if ((service != null) && (service.getUser() != null))
-    		UIUtils.createNewPlaceDialog( point, this , service.getUser());
+    	try	{
+    		UIUtils.createNewPlaceDialog( point, this , svcGetter.getService().getUser());
+    	} catch (UserNotFoundException e)	{
+    		
+    	} catch (ServiceNotConnected e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 	
 	
@@ -294,10 +327,14 @@ extends MapActivity
 	@Override
     public void onDestroy()
     {
-        if (null != service)
-        {
-            service.UnRegisterListner(locationListener);
-        }
+        try {
+			svcGetter.getService().UnRegisterListner(locationListener);
+			svcGetter.setService(null);
+		} catch (ServiceNotConnected e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         unbindService(svcConn);
         //refreshTask.destroy();   - @Depricated !!!! & throws (on exit of course).
         super.onDestroy();
@@ -331,11 +368,9 @@ extends MapActivity
 
 
         	public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
-        		if (null == event)	{
-        			return false;
-        		}
-        		if ((event.getAction() == KeyEvent.ACTION_DOWN) && 
-        				(event.getKeyCode() == KeyEvent.KEYCODE_ENTER))
+        		if ((EditorInfo.IME_ACTION_DONE == actionId) || ((event != null) && 
+        				(event.getAction() == KeyEvent.ACTION_DOWN) && 
+        				(event.getKeyCode() == KeyEvent.KEYCODE_ENTER)))
         		    {
 					comm.searchForAddress(v.getText().toString(), new ACommHandler<MapsQueryLocation>() {
 						public void onRecv(final MapsQueryLocation Obj)	{
@@ -432,10 +467,13 @@ extends MapActivity
 			public void OnUserChange(GeneralUser user) {
 				// TODO Auto-generated method stub
 				try	{
-					publicPlaceOverlay.setThisUser(service.getUser());
-					closestPlaceOverlay.setThisUser(service.getUser());
-				} catch (NullPointerException e)	{
-					
+					publicPlaceOverlay.setThisUser(svcGetter.getService().getUser());
+					closestPlaceOverlay.setThisUser(svcGetter.getService().getUser());
+				} catch (UserNotFoundException e)	{
+				                                 	 
+				} catch (ServiceNotConnected e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
     	};
@@ -453,15 +491,17 @@ extends MapActivity
             
             public void onServiceDisconnected(ComponentName className)
             {
-                service = null;
+            	svcGetter.setService(null);
             }
             
             public void onServiceConnected(ComponentName arg0, IBinder arg1)
             {
-                service = (ILocationSvc) arg1;
+            	svcGetter.setService((ILocationSvc) arg1);
+                
                 
                 try
                 {
+                	ILocationSvc service = svcGetter.getService(); 
                     service.RegisterListner(locationListener);
                     SPGeoPoint gp = service.getLocation();
                    
@@ -630,25 +670,21 @@ extends MapActivity
     public boolean onMenuItemSelected(int featureId, MenuItem item)
     {
         int         itemId = item.getItemId();         
-        GeneralUser user   = service.getUser();
+        
         
         
         if (menuFindMe.getItemId() == itemId)
         {
-            mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
-            //mapView.getController().setZoom(mapView.getMaxZoomLevel() - 3);
-//            Thread t = new Thread()
-//            {
-//                
-//                @Override
-//                public void run()
-//                {
-//                    synchronized(refreshTask){
-//                        refreshTask.notify();
-//                    }
-//                }
-//            };
-//            t.run();
+        	try	{
+	        	GeneralUser user   = svcGetter.getService().getUser();
+	            mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
+        	} catch (UserNotFoundException e)	{
+        		
+        	} catch (UnknownLocationException e)	{
+        	} catch (ServiceNotConnected e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         
         else if (menuMyPlace.getItemId() == itemId)

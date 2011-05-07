@@ -34,11 +34,14 @@ public class GeneralLocation implements Serializable{
 	public void setSpGeoPoint(SPGeoPoint spGeoPoint) {
 		this.spGeoPoint = spGeoPoint;
 	}
-	public SPGeoPoint getSpGeoPoint() {
+	public SPGeoPoint getSpGeoPoint() throws UnknownLocationException {
+		if (spGeoPoint == null)	{
+			throw new UnknownLocationException();
+		}
 		return spGeoPoint;
 	}
 	public String getName() {
-		return name;
+		return name == null ? "" : name;
 	}
 	public void setName(String name) {
 		this.name = name;

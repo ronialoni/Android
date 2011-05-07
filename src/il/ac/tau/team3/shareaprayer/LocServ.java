@@ -79,7 +79,10 @@ extends Service
 			locationProvs.remove(a_prov);
 		}
 
-		public GeneralUser getUser() {
+		public GeneralUser getUser() throws UserNotFoundException {
+			if (null == user)	{
+				throw new UserNotFoundException();
+			}
 			return user;
 		}
     }

@@ -4,6 +4,7 @@ package il.ac.tau.team3.shareaprayer;
 
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.SPUtils;
+import il.ac.tau.team3.common.UnknownLocationException;
 
 import org.mapsforge.android.maps.OverlayItem;
 
@@ -22,9 +23,10 @@ public class PlaceOverlayItem extends OverlayItem
     
     private GeneralPlace place;
     
-    /*** @constructor ***/
+    /*** @throws UnknownLocationException 
+     * @constructor ***/
     
-    public PlaceOverlayItem(GeneralPlace place, String title, String snippet, Drawable marker)
+    public PlaceOverlayItem(GeneralPlace place, String title, String snippet, Drawable marker) throws UnknownLocationException
     {
                 super(SPUtils.toGeoPoint(place.getSpGeoPoint()), title, snippet, marker);
         this.place = place;
@@ -41,7 +43,7 @@ public class PlaceOverlayItem extends OverlayItem
     }
     
     
-    public PlaceOverlayItem(GeneralPlace place, String title, String snippet)
+    public PlaceOverlayItem(GeneralPlace place, String title, String snippet) throws UnknownLocationException
     {
         super(SPUtils.toGeoPoint(place.getSpGeoPoint()), title, snippet);
         this.place = place;
@@ -54,7 +56,7 @@ public class PlaceOverlayItem extends OverlayItem
         return place;
     }
     
-    public void setPlace(GeneralPlace place)
+    public void setPlace(GeneralPlace place) throws UnknownLocationException
     {
         this.place = place;
         this.setPoint(SPUtils.toGeoPoint(place.getSpGeoPoint()));

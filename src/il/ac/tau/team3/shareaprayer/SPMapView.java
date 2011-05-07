@@ -37,9 +37,11 @@ import org.mapsforge.android.maps.MapViewMode;
 //import org.mapsforge.android.maps.Overlay;
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
+import org.mapsforge.android.maps.Overlay;
 import org.mapsforge.android.maps.OverlayItem;
 import org.mapsforge.android.maps.ArrayItemizedOverlay;
 import org.mapsforge.android.maps.OverlayCircle;
+import org.mapsforge.android.maps.Projection;
 
 //import tomer.temp.common.GeoLocation;
 //import org.mapsforge.android.maps.ArrayCircleOverlay;
@@ -50,8 +52,12 @@ import org.mapsforge.android.maps.OverlayCircle;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Canvas;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.GestureDetector.OnGestureListener;
 
 
 
@@ -91,15 +97,13 @@ extends MapView
         initFields();
     }
     
-        
-    
+  
     private void initFields()	
     {
     	this.setClickable(true);
         this.setBuiltInZoomControls(true);
         this.setMapViewMode(MapViewMode.MAPNIK_TILE_DOWNLOAD);
         tapListeners = new ArrayList<IMapTapDetect>();
-                
     }
 	
     
@@ -131,6 +135,9 @@ extends MapView
 	private float startPosX;
 	private float startPosY;
 	
+	private float MaxPosX;
+	private float MaxPosY;
+	
 	
 	
 	/*** @Override ***/
@@ -140,22 +147,37 @@ extends MapView
 	{
 	    
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
-		{
-			startTime = event.getEventTime(); 
+		{ 
 			startPosX = event.getX();
-            startPosY = event.getY(); 
+            startPosY = event.getY();
+            MaxPosX = 0;
+            MaxPosY = 0;
+		} else if (event.getAction() == MotionEvent.ACTION_MOVE)	{
+			
+		} else	{
+			MaxPosX = Float.POSITIVE_INFINITY;
+			MaxPosY = Float.POSITIVE_INFINITY;
 		}
 		
+		MaxPosX = Math.max(Math.abs(event.getX() - startPosX), MaxPosX);
+		MaxPosY = Math.max(Math.abs(event.getY() - startPosY), MaxPosY);
 		
+		
+		//startPosX = event.getX();
+        //startPosY = event.getY();
 		/*
 		 * 
 		 */
-		if ((event.getX() == startPosX) && (event.getY() == startPosY))
+		//if ((event.getX() == startPosX) && (event.getY() == startPosY))
 		{          
-			timeElapsed = event.getEventTime() - startTime;
-			if (timeElapsed > 800) 
+			//timeElapsed = event.getEventTime() - startTime;
+			if (((event.getAction() == MotionEvent.ACTION_DOWN) || (event.getAction() == MotionEvent.ACTION_MOVE)) && 
+					(Math.abs(event.getEventTime() -  event.getDownTime()) > 300) && (MaxPosX < 100) && (MaxPosY < 100)) 
 			{
-				GeoPoint   p          = this.getProjection().fromPixels((int) startPosX, (int) startPosY);
+				MaxPosX = Float.POSITIVE_INFINITY;
+				MaxPosY = Float.POSITIVE_INFINITY;
+				
+				GeoPoint   p          = this.getProjection().fromPixels((int) event.getX(), (int) event.getY());
 				SPGeoPoint eventPoint = new SPGeoPoint(p.getLatitudeE6(),p.getLongitudeE6());
 				//createDialog("Do you want to create a public praying place?");
 				for (IMapTapDetect tap : tapListeners)	

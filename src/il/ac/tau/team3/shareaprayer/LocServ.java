@@ -141,6 +141,8 @@ extends Service
 		if (accounts.length != 0)	
 		{	
 			userId = accounts[0].name;
+			user = new GeneralUser(null, null, null);
+			
 			//userId = "miki@gmail.com";
 		} 
 		else

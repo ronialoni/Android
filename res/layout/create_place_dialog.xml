@@ -14,20 +14,20 @@
         >
         <TextView 
             android:layout_height="wrap_content" 
-            android:id="@+id/textView1" 
+            android:id="@+id/CPDtextView1" 
             android:layout_width="fill_parent" 
             android:text="Address:" android:textStyle="bold"></TextView>
         
         <EditText 
             android:layout_height="wrap_content" 
             android:layout_width="match_parent"
-            android:id="@+id/editText1" 
+            android:id="@+id/CPDeditText1" 
             />
             <!-- android:padding = "5dp" -->
             
         <TextView 
             android:text="Type of prayer:" 
-            android:id="@+id/textView2" 
+            android:id="@+id/CPDtextView2" 
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:textStyle="bold"></TextView>

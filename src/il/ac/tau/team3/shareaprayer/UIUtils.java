@@ -329,10 +329,10 @@ public class UIUtils {
 		//text.setText(_sNewPlaceQues);
 		
 		// Address field
-		TextView text1 = (TextView) dialog.findViewById(R.id.textView1);
+		TextView text1 = (TextView) dialog.findViewById(R.id.CPDtextView1);
         text1.setText(_sAddress);
 		
-		EditText edittext = (EditText) dialog.findViewById(R.id.editText1);
+		EditText edittext = (EditText) dialog.findViewById(R.id.CPDeditText1);
 		
 		// TODO Create a function Point_to_Address
         //edittext.setText(point_to_address(point));

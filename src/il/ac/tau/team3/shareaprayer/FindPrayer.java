@@ -11,13 +11,19 @@ import il.ac.tau.team3.addressQuery.MapsQueryLocation;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log; 
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +35,7 @@ import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 
 
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -292,7 +299,7 @@ extends MapActivity
             service.UnRegisterListner(locationListener);
         }
         unbindService(svcConn);
-        refreshTask.destroy();
+        //refreshTask.destroy();   - @Depricated !!!! & throws (on exit of course).
         super.onDestroy();
     }
         
@@ -486,7 +493,8 @@ extends MapActivity
                     Log.e("ShareAPrayer", "Exception in call to registerListner()", t);
                 }
    
-                mapView.registerTapListener(new IMapTapDetect() {
+                mapView.registerTapListener(new IMapTapDetect() 
+                {
                 	
                 	class TimerRefreshTask 
                     extends TimerTask
@@ -560,11 +568,105 @@ extends MapActivity
         
         bindService(new Intent(LocServ.ACTION_SERVICE), svcConn, BIND_AUTO_CREATE);
         
+        
+
         Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
         toast.show();
+  
+        
+// startup dialog        
+//        
+//        Dialog dialog = new Dialog(this);
+//
+//        dialog.setContentView(R.layout.startup);
+//        dialog.setTitle(R.id.image_row_root);
+//
+//        //Button button1 = (Button) dialog.findViewById(R.id.startup_button);
+//        //button1.onTouchEvent(event)
+//        
+//        TextView text = (TextView) dialog.findViewById(R.id.startup_wellcome_text);
+//        text.setText("Hello, this is a custom dialog!");
+//        
+//        ImageView image = (ImageView) dialog.findViewById(R.id.startup_wellcome_image);
+//        image.setImageResource(R.drawable.user_kipa_pin);
+//        
+//        
+//        EditText more_text = (EditText) dialog.findViewById(R.id.startup_more_text);
+//        more_text.setText("Yes... More text!");
+//    
+//        dialog.setCancelable(true);
+//       
+//        //showDialog(R.layout.dialog);
+//        dialog.show();
+
+        
+            }
+	
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        
+        menuFindMe  = menu.add("Find Me!");
+        menuMyPlace = menu.add("My Place");
+        
+        return super.onCreateOptionsMenu(menu);
+        
+    }	
+    
+    
+    MenuItem menuFindMe;
+    MenuItem menuMyPlace;
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // TODO Auto-generated method stub
+        return super.onOptionsItemSelected(item);
+    }
+    
+    
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item)
+    {
+        int         itemId = item.getItemId();         
+        GeneralUser user   = service.getUser();
+        
+        
+        if (menuFindMe.getItemId() == itemId)
+        {
+            mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
+            //mapView.getController().setZoom(mapView.getMaxZoomLevel() - 3);
+//            Thread t = new Thread()
+//            {
+//                
+//                @Override
+//                public void run()
+//                {
+//                    synchronized(refreshTask){
+//                        refreshTask.notify();
+//                    }
+//                }
+//            };
+//            t.run();
+        }
+        
+        else if (menuMyPlace.getItemId() == itemId)
+        {
+            // TODO
+            //GeneralPlace place;
+        }
+        
+        else
+        {
+            // Should never get here!
+            throw new RuntimeException("WTFException");
+        }
+        
+        return super.onMenuItemSelected(featureId, item);
     }
 	
-	
-	
+    
+    
 }
 

@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello World, FindPrayer!</string>
     <string name="app_name">Share-A-Prayer</string>
+    <string name="create_place_title">Create Place: Properties</string>
 </resources>

@@ -17,6 +17,7 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 import android.accounts.Account;

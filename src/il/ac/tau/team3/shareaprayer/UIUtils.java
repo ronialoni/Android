@@ -15,12 +15,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 public class UIUtils {
 
 	static String _sNewPlaceQues = "Do you want to create a public praying place?";
+	static String _sAddress = "Address:";
 	static String _sAlreadyRegisterAlertMsg = "You are already registered to this place.";
 	static String _sWantToRegisterQues = "Would you like to register to this place?";
 	static String _sUserNotRegisterMsg = "You are not register to this place.";
@@ -316,13 +318,28 @@ public class UIUtils {
 		if (point == null || activity == null || user == null) {
 			Log.d("UIUtils::createRegisterDialog",
 					"point == null || activity == null || user == null");
-			return;
+			//return;
 		}
 
 		final Dialog dialog = new Dialog(activity);
 		dialog.setContentView(R.layout.create_place_dialog);
-		TextView text = (TextView) dialog.findViewById(R.id.TextMsgCreatePlace);
-		text.setText(_sNewPlaceQues);
+		dialog.setTitle(R.string.create_place_title);
+		
+		//TextView text = (TextView) dialog.findViewById(R.id.TextMsgCreatePlace);
+		//text.setText(_sNewPlaceQues);
+		
+		// Address field
+		TextView text1 = (TextView) dialog.findViewById(R.id.textView1);
+        text1.setText(_sAddress);
+		
+		EditText edittext = (EditText) dialog.findViewById(R.id.editText1);
+		
+		// TODO Create a function Point_to_Address
+        //edittext.setText(point_to_address(point));
+        edittext.setText("DEBUG: the address touched");
+        edittext.setTextColor(0x222);
+		
+		
 
 		Button yesButton = (Button) dialog.findViewById(R.id.CPDYesButton);
 

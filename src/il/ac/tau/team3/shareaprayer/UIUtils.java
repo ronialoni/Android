@@ -3,6 +3,7 @@ package il.ac.tau.team3.shareaprayer;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -16,8 +17,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.PopupWindow;
+import android.widget.QuickContactBadge;
+import android.widget.RemoteViews.ActionException;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 public class UIUtils {
 
@@ -301,7 +308,8 @@ public class UIUtils {
 	}
 
 	static void createNewPlaceDialog(final SPGeoPoint point,
-			final FindPrayer activity, final GeneralUser user) {
+			final FindPrayer activity, final GeneralUser user) 
+	{
 
 		// activity.getSPComm().requestGetUserByAccount(user.getName(),new
 		// ACommHandler<Long>() {
@@ -332,19 +340,50 @@ public class UIUtils {
 		TextView text1 = (TextView) dialog.findViewById(R.id.CPDtextView1);
         text1.setText(_sAddress);
 		
-		EditText edittext = (EditText) dialog.findViewById(R.id.CPDeditText1);
+		
+        EditText edittext = (EditText) dialog.findViewById(R.id.CPDeditText1);
+		
+		
 		
 		// TODO Create a function Point_to_Address
         //edittext.setText(point_to_address(point));
         edittext.setText("DEBUG: the address touched");
-        edittext.setTextColor(0x222);
 		
 		
-
+        
+        
+        // Dates Fields:
+        
+        TextView fromDate = (TextView) dialog.findViewById(R.id.CPDFromDatetextView);
+        TextView toDate = (TextView) dialog.findViewById(R.id.CPDToDatetextView);
+        // TODO Change to today's  and tomorrow's date, dynamically
+        fromDate.setText("08/05/2011");
+        toDate.setText("09/05/2011");
+        
+//        final Button changeFrom = (Button) dialog.findViewById(R.id.CPDChange1button);
+//        final LinearLayout cfLay = (LinearLayout) dialog.findViewById(R.id.create_place_root);
+//        final PopupWindow pop = new PopupWindow(new TimePicker(dialog.getContext()));
+//        //pop.setTouchable(true);
+//        //pop.setFocusable(true);
+//        changeFrom.setOnClickListener(new OnClickListener()
+//        {            
+//            public void onClick(View v)
+//            {
+//                SPUtils.debugFuncStart("onClick", v);
+//                pop.showAsDropDown(cfLay);
+//                SPUtils.debug("<- should be shown !!  - " + cfLay);
+//            }
+//        });
+        
+        
+        
 		Button yesButton = (Button) dialog.findViewById(R.id.CPDYesButton);
 
 		Button noButton = (Button) dialog.findViewById(R.id.CPDNoButton);
 
+		
+		
+		
 		CheckBox pray1 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox1);
 
 		CheckBox pray2 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);

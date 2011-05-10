@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+              android:id    = "@+id/create_place_root" 
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     >
@@ -16,7 +16,8 @@
             android:layout_height="wrap_content" 
             android:id="@+id/CPDtextView1" 
             android:layout_width="fill_parent" 
-            android:text="Address:" android:textStyle="bold"></TextView>
+            android:text="Address:" android:textStyle="bold"
+            ></TextView>
         
         <EditText 
             android:layout_height="wrap_content" 
@@ -24,6 +25,45 @@
             android:id="@+id/CPDeditText1" 
             />
             <!-- android:padding = "5dp" -->
+       
+       
+       
+       <TextView android:text="Select Dates:" android:id="@+id/CPDDatestextView" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
+        
+        <TableLayout android:id="@+id/CPDDatestableLayout" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            
+            <TableRow android:id="@+id/CPDDatestableRow1" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity = "center">
+	            
+	            <TextView android:text="From:" android:id="@+id/CPDFromtextView" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight = "1"></TextView>
+	            <TextView android:text="DefaultFrom" android:id="@+id/CPDFromDatetextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	            
+	            <LinearLayout android:id = "@+id/ll"
+	               android:gravity       = "right"
+	               android:layout_height = "wrap_content"
+                   android:layout_width  = "fill_parent"
+	               >
+	               
+	               <Button android:id         = "@+id/CPDChange1button" 
+	                    android:text          = "Change" 
+	                    android:textSize      = "10dp" 
+                        android:layout_height = "wrap_content" 
+	                    android:layout_width  = "wrap_content" 
+	                    android:onClick       = "popupDatePicker"
+	                    />	                    
+	            </LinearLayout>
+      
+            </TableRow>
+        
+            <TableRow android:id="@+id/CPDDatestableRow2" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:text="To:" android:id="@+id/CPDTotextView" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight = "1"></TextView>
+                <TextView android:text="DefaultTo" android:id="@+id/CPDToDatetextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+                <Button android:text="Change" android:id="@+id/CPDChange2button" android:layout_height="wrap_content" android:layout_width="wrap_content"></Button>
+        
+            </TableRow>
+        </TableLayout>
+            
+            
+            
             
         <TextView 
             android:text="Type of prayer:" 
@@ -77,8 +117,7 @@
         <TableRow
             android:layout_height="wrap_content" 
             android:id="@+id/CPDtableRowi3" 
-            android:layout_width="fill_parent" 
-            android:layout_gravity="fill_horizontal">
+            android:layout_width="fill_parent">
             
             <CheckBox 
                 android:layout_height="wrap_content" 
@@ -95,30 +134,30 @@
                 android:layout_width="wrap_content" 
                 ></ImageView>
         </TableRow>
-       
-        <TableRow 
-            android:id="@+id/CPDtableRowR1" 
-            android:layout_width="fill_parent" 
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            >
-	        
-	        <Button 
-                       android:text="Yes" 
-                       android:id="@+id/CPDYesButton" 
-                       android:layout_height="wrap_content" 
-                       android:layout_width="fill_parent"
-                       android:layout_weight = "1"
-                       ></Button>
-	        <Button 
-	           android:text="No" 
-	           android:layout_height="wrap_content" 
-	           android:id="@+id/CPDNoButton" 
-	           android:layout_width="fill_parent"
-	           android:layout_weight = "4"
-	           ></Button>
-	        
-	    </TableRow>
-         
+        
+        
+        
+        <LinearLayout 
+            android:id="@+id/linearLayout1" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+            
+           <Button 
+               android:text="Yes" 
+               android:id="@+id/CPDYesButton" 
+               android:layout_height="wrap_content" 
+               android:layout_width="fill_parent"
+               android:layout_weight = ".2"
+            ></Button>
+            <Button 
+               android:text="No" 
+               android:layout_height="wrap_content" 
+               android:id="@+id/CPDNoButton" 
+               android:layout_width="fill_parent"
+               android:layout_weight = ".2"
+               />
+        </LinearLayout>
     </TableLayout>
+      
+    
 </LinearLayout>

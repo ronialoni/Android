@@ -669,22 +669,28 @@ extends MapActivity
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item)
     {
-        int         itemId = item.getItemId();         
+        int itemId = item.getItemId();         
         
         
         
         if (menuFindMe.getItemId() == itemId)
         {
-        	try	{
-	        	GeneralUser user   = svcGetter.getService().getUser();
-	            mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
-        	} catch (UserNotFoundException e)	{
-        		
-        	} catch (UnknownLocationException e)	{
-        	} catch (ServiceNotConnected e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            try
+            {
+                GeneralUser user = svcGetter.getService().getUser();
+                mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
+            }
+            catch (UserNotFoundException e)
+            {                
+            }
+            catch (UnknownLocationException e)
+            {
+            }
+            catch (ServiceNotConnected e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         
         else if (menuMyPlace.getItemId() == itemId)

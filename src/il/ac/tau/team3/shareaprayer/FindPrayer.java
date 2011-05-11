@@ -47,7 +47,7 @@ import android.graphics.drawable.Drawable;
 
 
 
-public class FindPrayer 
+public class FindPrayer  
 extends MapActivity 
 {
     

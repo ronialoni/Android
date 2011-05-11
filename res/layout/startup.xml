@@ -23,7 +23,7 @@
         <ImageView android:id          = "@+id/startup_wellcome_image"
             android:layout_width       = "wrap_content"
             android:layout_height      = "wrap_content"
-            android:layout_marginRight = "10dp"
+            android:layout_marginRight = "10dp" 
            />
     
         <TextView android:id      = "@+id/startup_wellcome_text"
@@ -35,7 +35,7 @@
     </LinearLayout>
      
     <EditText android:id      = "@+id/startup_more_text"
-        android:layout_width  = "fill_parent"
+        android:layout_width  = "fill_parent" 
         android:layout_height = "wrap_content"
         android:padding       = "10dp"
         android:textColor     = "#222"

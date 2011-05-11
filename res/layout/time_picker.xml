@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+              android:id    = "@+id/time_picker_root"
+    android:orientation     = "vertical"
+    android:layout_width    = "wrap_content"
+    android:layout_height   = "wrap_content"
+    android:padding         = "10dp"
+    >
+    
+    
+    
+    <TextView android:id      = "@+id/time_picker_head_text"
+        android:gravity       = "center"
+        android:layout_width  = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:textColor     = "#777"
+        android:text          = "//TODO..."
+        android:drawableLeft  = "@drawable/icon"
+        />
+    
+    
+    <TimePicker android:id    = "@+id/time_picker_time_picker"
+        android:layout_below  = "@id/time_picker_head_text"
+        android:layout_width  = "wrap_content"
+        android:layout_height = "wrap_content"
+        >
+    </TimePicker>
+
+
+    
+    <LinearLayout android:id  = "@+id/time_picker_buttons" 
+        android:layout_below  = "@id/time_picker_time_picker"
+        android:orientation   = "horizontal"
+        android:layout_width  = "match_parent" 
+        android:layout_height = "wrap_content"
+        >
+                        
+        <Button android:id        = "@+id/time_picker_button_yes" 
+            android:layout_height = "wrap_content" 
+            android:layout_width  = "fill_parent"
+            android:layout_weight = ".5"
+            android:text          = "Yes" 
+            />
+            
+        <Button android:id        = "@+id/time_picker_button_no" 
+            android:layout_height = "wrap_content" 
+            android:layout_width  = "fill_parent"
+            android:layout_weight = ".5"
+            android:text          = "No" 
+            />
+    </LinearLayout>
+    
+    
+</LinearLayout>

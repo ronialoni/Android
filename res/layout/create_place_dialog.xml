@@ -17,6 +17,7 @@
             android:id="@+id/CPDtextView1" 
             android:layout_width="fill_parent" 
             android:text="Address:" android:textStyle="bold"
+            android:textColor = "#ffffff"
             ></TextView>
         
         <EditText 
@@ -25,19 +26,38 @@
             android:id="@+id/CPDeditText1" 
             />
             <!-- android:padding = "5dp" -->
-       
-       
-       
-       <TextView android:text="Select Dates:" android:id="@+id/CPDDatestextView" android:layout_width="fill_parent" android:layout_height="wrap_content"></TextView>
         
-        <TableLayout android:id="@+id/CPDDatestableLayout" android:layout_width="fill_parent" android:layout_height="wrap_content">
-            
-            <TableRow android:id="@+id/CPDDatestableRow1" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity = "center">
+        
+        
+        <TextView android:id="@+id/CPDDatestextView" 
+            android:text="Select Dates:" 
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:textStyle = "bold"
+            android:textColor = "#ffffff"
+            />
+        
+       
+            <TableRow android:id="@+id/CPDDatestableRow1" 
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content" 
+                android:gravity = "center"
+                >
 	            
-	            <TextView android:text="From:" android:id="@+id/CPDFromtextView" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight = "1"></TextView>
-	            <TextView android:text="DefaultFrom" android:id="@+id/CPDFromDatetextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	           <TextView android:id="@+id/CPDFromtextView" 
+	               android:text="From:" 
+	               android:layout_width="fill_parent" 
+	               android:layout_height="wrap_content" 
+	               android:layout_weight = "1"
+	               />
+	               
+	           <TextView android:id      = "@+id/CPDFromDatetextView" 
+	               android:text          = "DefaultFrom" 
+	               android:layout_width  = "fill_parent"
+	               android:layout_height = "wrap_content"
+	               />
 	            
-	            <LinearLayout android:id = "@+id/ll"
+	           <LinearLayout android:id = "@+id/ll1"
 	               android:gravity       = "right"
 	               android:layout_height = "wrap_content"
                    android:layout_width  = "fill_parent"
@@ -51,40 +71,72 @@
 	                    android:onClick       = "popupDatePicker"
 	                    />	                    
 	            </LinearLayout>
-      
             </TableRow>
         
-            <TableRow android:id="@+id/CPDDatestableRow2" android:layout_width="wrap_content" android:layout_height="wrap_content">
-                <TextView android:text="To:" android:id="@+id/CPDTotextView" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight = "1"></TextView>
-                <TextView android:text="DefaultTo" android:id="@+id/CPDToDatetextView" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-                <Button android:text="Change" android:id="@+id/CPDChange2button" android:layout_height="wrap_content" android:layout_width="wrap_content"></Button>
-        
+            <TableRow android:id="@+id/CPDDatestableRow2" 
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content"
+                android:gravity = "center"
+                >
+                
+                <TextView android:id="@+id/CPDTotextView" 
+                    android:text="To:" 
+                    android:layout_width="fill_parent" 
+                    android:layout_height="wrap_content" 
+                    android:layout_weight = "1"
+                    />
+                    
+                <TextView android:id="@+id/CPDToDatetextView" 
+                    android:text="DefaultTo" 
+                    android:layout_width="fill_parent" 
+                    android:layout_height="wrap_content"
+                    />
+                
+                <LinearLayout android:id = "@+id/ll2"
+                   android:gravity       = "right"
+                   android:layout_height = "wrap_content"
+                   android:layout_width  = "fill_parent"
+                   >
+                   
+                   <Button android:id         = "@+id/CPDChange2button" 
+                        android:text          = "Change" 
+                        android:textSize      = "10dp" 
+                        android:layout_height = "wrap_content" 
+                        android:layout_width  = "wrap_content" 
+                        android:onClick       = "popupDatePicker"
+                        />                      
+                </LinearLayout>
             </TableRow>
-        </TableLayout>
-            
-            
-            
-            
+       
+       
         <TextView 
             android:text="Type of prayer:" 
             android:id="@+id/CPDtextView2" 
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
-            android:textStyle="bold"></TextView>
+            android:textStyle="bold"
+            android:textColor = "#ffffff"
+            ></TextView>
         
         <TableRow 
             android:id="@+id/CPDtableRowi1" 
-            android:layout_width="match_parent" 
+            android:layout_width="fill_parent" 
             android:layout_height="wrap_content"
             >
                 
             <CheckBox 
                 android:text="Shaharit" 
-                android:id="@+id/CPDcheckBox1" 
+                android:id="@+id/CPDcheckBox1"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_weight = "1"
+                android:textColor = "#bbbbbb"
                 ></CheckBox>
+            
+            <TextView android:id="@+id/CPDshahritTime" 
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content"
+                />
             
             <ImageView 
                     android:src="@drawable/shaharit_small" 
@@ -102,11 +154,18 @@
             >
             <CheckBox 
                 android:text="Minha" 
-                android:id="@+id/CPDcheckBox2" 
+                android:id="@+id/CPDcheckBox2"
                 android:layout_width="wrap_content" 
                 android:layout_height="wrap_content"
                 android:layout_weight = "1"
+                android:textColor = "#bbbbbb"
                 ></CheckBox>
+            
+             <TextView android:id="@+id/CPDminhaTime" 
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content"
+                />
+            
             <ImageView 
                 android:src="@drawable/minha_small" 
                 android:layout_height="wrap_content" 
@@ -115,19 +174,25 @@
                 
         </TableRow>
         <TableRow
-            android:layout_height="wrap_content" 
             android:id="@+id/CPDtableRowi3" 
+            android:layout_height="wrap_content" 
             android:layout_width="fill_parent">
             
             <CheckBox 
                 android:layout_height="wrap_content" 
                 android:text="Arvit" 
-                android:id="@+id/CPDcheckBox3" 
+                android:id="@+id/CPDcheckBox3"
                 android:layout_width="wrap_content"
                 android:layout_weight = "1"
+                android:textColor = "#bbbbbb"
                 ></CheckBox>
             
-            <ImageView 
+           <TextView android:id="@+id/CPDarvitTime" 
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content"
+                />
+            
+           <ImageView 
                 android:src="@drawable/arvit_small" 
                 android:layout_height="wrap_content" 
                 android:id="@+id/imageView3" 
@@ -157,7 +222,6 @@
                android:layout_weight = ".2"
                />
         </LinearLayout>
-    </TableLayout>
-      
+    </TableLayout> 
     
 </LinearLayout>

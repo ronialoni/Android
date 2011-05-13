@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+              android:id    = "@+id/startup_root"
+    android:orientation     = "vertical"
+    android:layout_width    = "match_parent"
+    android:layout_height   = "wrap_content"
+    android:fitsSystemWindows = "true"
+    android:paddingLeft  = "5dp"
+    android:paddingRight = "5dp"
+    >
+-->
+<TableLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+             android:id    = "@+id/startup_root" 
+    android:layout_width   = "fill_parent" 
+    android:layout_height  = "match_parent"
+    android:layout_gravity = "fill"
+    android:padding        = "5dp" 
+    >   
+    
+    
+    <!-- Head -->
+            
+    <TextView android:id      = "@+id/startup_head"
+        android:gravity       = "center_vertical"
+        android:layout_width  = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:textColor     = "#ffffff"
+        android:textSize      = "20sp"
+        android:textStyle     = "bold"
+        android:typeface      = "serif"
+        android:text          = "Wellcome"
+        android:drawableLeft  = "@drawable/icon"
+        />    
+     
+     
+    <!-- Name -->
+    
+    <TextView android:id      = "@+id/startup_name_text"
+        android:layout_width  = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:textColor     = "#ffffff"
+        android:textSize      = "15sp"
+        android:textStyle     = "bold"
+        android:typeface      = "serif"
+        android:text          = "Your Name"
+        />
+    
+    <TableRow 
+        android:orientation   = "horizontal"
+        android:layout_width  = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:gravity       = "center_vertical"
+        
+        >
+        
+        <TextView
+            android:layout_width  = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:gravity       = "center_vertical"
+            android:paddingRight  = "5dp"            
+            android:textStyle     = "bold"
+            android:text          = "First:"
+            />
+        
+	    <EditText android:id      = "@+id/startup_name_first"
+	        android:layout_width  = "fill_parent" 
+	        android:layout_height = "wrap_content"
+	        android:layout_weight = "1"
+            android:padding       = "10dp"
+	        android:textColor     = "#000000"
+	        android:textSize      = "15sp"
+	        android:text          = "//TODO: ? "
+	        />        
+    </TableRow>
+    
+    <TableRow 
+        android:orientation   = "horizontal"
+        android:layout_width  = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:gravity       = "center_vertical"
+        >
+        
+        <TextView
+            android:layout_width  = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:gravity       = "center_vertical"
+            android:paddingRight  = "5dp"            
+            android:textStyle     = "bold"
+            android:text          = "Last:"
+            />
+        
+        <EditText android:id      = "@+id/startup_name_last"
+            android:layout_width  = "fill_parent" 
+            android:layout_height = "wrap_content"
+            android:layout_weight = "1"
+            android:padding       = "10dp"
+            android:textColor     = "#000000"
+            android:textSize      = "15sp"
+            android:text          = "//TODO: ? "
+            />        
+    </TableRow>
+    
+    
+    
+    
+    
+    <!-- Accounts -->
+    
+    <TextView android:id      = "@+id/startup_accounts_text"
+        android:layout_width  = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:textColor     = "#ffffff"
+        android:textSize      = "15sp"
+        android:textStyle     = "bold"
+        android:typeface      = "serif"
+        android:text          = "Choose Account"
+        />
+     
+     
+    <RadioGroup android:id    = "@+id/startup_accounts_radios"
+        android:layout_width  = "fill_parent"
+        android:layout_height = "wrap_content"     
+        >
+    </RadioGroup>
+    
+    
+
+    
+    
+    <!-- Buttons -->
+    
+    <LinearLayout 
+        android:layout_width  = "wrap_content" 
+        android:layout_height = "wrap_content"
+        >
+            
+        <Button android:id        = "@+id/startup_button_start" 
+            android:layout_width  = "fill_parent"
+            android:layout_height = "wrap_content" 
+            android:layout_weight = "1"
+            android:text          = "Start" 
+            />
+        
+        <Button android:id        = "@+id/startup_button_exit" 
+            android:layout_width  = "fill_parent"
+            android:layout_height = "wrap_content" 
+            android:layout_weight = "1"
+            android:text          = "Exit" 
+            />
+    </LinearLayout>
+    
+             
+</TableLayout>
+
+
+
+   <!-- 
+     <ListView android:id      = "@+id/startup_accounts_list"    
+        android:layout_width  = "fill_parent"    
+        android:layout_height = "wrap_content"           
+        >
+    </ListView>
+      --> 
+      
+        <!-- android:layout_above = "@id/bottom_view" --> 
+        <!-- android:cacheColorHint = "#00000000" -->
+        
+
+
+
+<!-- Icons -->
+<!-- 
+    <LinearLayout android:id  = "@+id/startup_icons"
+        android:orientation   = "horizontal"
+        android:layout_width  = "wrap_content"
+        android:layout_height = "wrap_content"
+        >     
+            <ImageButton android:id   = "@+id/startup_image_1"
+                android:layout_width  = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:background    = "#000"
+                android:src           = "@drawable/user_red_sruga_small"
+                /> 
+    
+            <ImageButton android:id   = "@+id/startup_image_2"
+                android:layout_width  = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:src           = "@drawable/user_red_nahman_small"
+                /> 
+            
+            <ImageView android:id   = "@+id/startup_image_3"
+                android:layout_width  = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:src           = "@drawable/user_red_hassid_small"
+                /> 
+            
+            <ImageView android:id   = "@+id/startup_image_4"
+                android:layout_width  = "wrap_content"
+                android:layout_height = "wrap_content"
+                android:background    = "#000"
+                android:src           = "@drawable/user_red_hat_small"
+                /> 
+    </LinearLayout>          
+--> 

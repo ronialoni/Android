@@ -22,6 +22,7 @@ import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Dialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,9 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 
 public class LocServ 
@@ -137,23 +141,29 @@ extends Service
 		iFilter.addAction(LocationManager.GPS_PROVIDER);
 		iFilter.addAction(LocationManager.NETWORK_PROVIDER);
 		
-		Account[] accounts = AccountManager.get(this).getAccounts();
-		if (accounts.length != 0)	
-		{	
-			userId = accounts[0].name;
-			user = new GeneralUser(null, null, null);
-			
-			//userId = "miki@gmail.com";
-		} 
-		else
-		{
-			userId = "NoGmailAccount@gmail.com";
-		}
-
-		restTemplateFacade = new RestTemplateFacade();
-    	
 		
         
+		
+		
+//		Account[] accounts = AccountManager.get(this).getAccounts();
+//		if (accounts.length != 0)	
+//		{	
+//			userId = accounts[0].name;
+//			user = new GeneralUser(null, null, null);
+//			
+//			//userId = "miki@gmail.com";
+//		} 
+//		else
+//		{
+//			userId = "NoGmailAccount@gmail.com";
+//		}
+        
+        
+        
+        
+        
+        restTemplateFacade = new RestTemplateFacade();
+    		    
 		
 		LocationListener locationListener = new LocationListener() 
     	{

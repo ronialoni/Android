@@ -52,7 +52,7 @@ public class SPUtils
     
     
     
-    private static final boolean DEBUGGING = true; 
+    public static final boolean DEBUGGING = true; 
     
     
     
@@ -79,7 +79,7 @@ public class SPUtils
         {
             if (isFirst)
             {
-                isFirst = true;
+                isFirst = false;
             }            
             else
             {

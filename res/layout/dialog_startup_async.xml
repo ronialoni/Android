@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+              android:id    = "@+id/dsa_root"
+    android:layout_width    = "fill_parent"
+    android:layout_height   = "fill_parent"
+    android:orientation     = "vertical"
+    android:padding         = "10dp"
+    >
+    
+    
+    <!-- Head -->
+            
+    <TextView android:id      = "@+id/dsa_head"
+        android:gravity       = "center_vertical"
+        android:layout_width  = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:textColor     = "#ffffff"
+        android:textSize      = "20sp"
+        android:textStyle     = "bold"
+        android:typeface      = "serif"
+        android:text          = "Sorry"
+        android:drawableLeft  = "@drawable/icon"
+        /> 
+    
+    
+    <!-- Info -->
+            
+    <TextView android:id      = "@+id/dsa_info"
+        android:gravity       = "center"
+        android:layout_width  = "fill_parent"
+        android:layout_height = "wrap_content"
+        
+
+
+
+        android:text          = "Share-A-Prayer requires you to sync an account to your Android device.___more text will look like this!___and this is probably the 4th row."
+        android:drawableLeft  = "@drawable/icon"
+        />
+    
+        
+    
+    
+    
+    <!-- Buttons -->
+    
+    <LinearLayout 
+        android:layout_width  = "fill_parent" 
+        android:layout_height = "wrap_content"
+        >
+            
+        <Button android:id        = "@+id/dsa_button_sync" 
+            android:layout_width  = "fill_parent"
+            android:layout_height = "wrap_content" 
+            android:layout_weight = "1"
+            android:text          = "Sync" 
+            />
+        
+        <Button android:id        = "@+id/dsa_button_exit" 
+            android:layout_width  = "fill_parent"
+            android:layout_height = "wrap_content" 
+            android:layout_weight = "1"
+            android:text          = "Exit" 
+            />
+    </LinearLayout>
+    
+    
+    
+    
+</LinearLayout>

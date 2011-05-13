@@ -13,6 +13,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -327,7 +328,6 @@ public class UIUtils {
 
 	/*package*/ static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
 	{
-
 		// activity.getSPComm().requestGetUserByAccount(user.getName(),new
 		// ACommHandler<Long>() {
 		// @Override
@@ -338,17 +338,19 @@ public class UIUtils {
 		// }
 		// });
 
-		final boolean prays[] = new boolean[3];
+		final boolean prays[] = new boolean[] {false, false, false};
 
-		if (point == null || activity == null || user == null) {
-			Log.d("UIUtils::createRegisterDialog",
-					"point == null || activity == null || user == null");
+		if (point == null || activity == null || user == null)
+		{
+			Log.d("UIUtils::createRegisterDialog", "point == null || activity == null || user == null");
 			//return;
 		}
 
 		final Dialog dialog = new Dialog(activity);
-		dialog.setContentView(R.layout.create_place_dialog);
+		dialog.setContentView(R.layout.dialog_place_create);
 		dialog.setTitle(R.string.create_place_title);
+		//dialog.setTitle(R.layout.image_row);
+        
 		
 		//TextView text = (TextView) dialog.findViewById(R.id.TextMsgCreatePlace);
 		//text.setText(_sNewPlaceQues);
@@ -434,7 +436,7 @@ public class UIUtils {
 		/*
 		 * Prayer type check-boxes.
 		 */		
-		CheckBox pray1 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox1);
+		final CheckBox pray1 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox1);
 		CheckBox pray2 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);
 		CheckBox pray3 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
 	
@@ -445,22 +447,58 @@ public class UIUtils {
             {
                 SPUtils.debugFuncStart("pray1.onCheckedChanged", buttonView, isChecked);
                 final TextView shaharitTime = (TextView) dialog.findViewById(R.id.CPDshahritTime);
+                
                 if (isChecked)
                 {
-                    prays[0] = true;
-                    int mHour = 7;
+                    int mHour   = 7;
                     int mMinute = 0;
+                    
                     TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() 
                     {                        
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute)
                         {
+                            SPUtils.debugFuncStart("timePickerDialog.onTimeSet", view, hourOfDay, minute);
+                            
+                            prays[0] = true;
                             shaharitTime.setText((hourOfDay < 10 ? "0" : "") + hourOfDay + ":" + (minute < 10 ? "0" : "") + minute + " ");
+                            
                             // TODO Update times of Shaharit in the server
                         }
                     };
-                  TimePickerDialog timePickerDialog = new TimePickerDialog(activity, mTimeSetListener, mHour, mMinute, true);
-                  timePickerDialog.show();
+                    
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(activity, mTimeSetListener, mHour, mMinute, true);
+                    timePickerDialog.setIcon(R.drawable.shaharit_small);
+                    timePickerDialog.setInverseBackgroundForced(true);          
+                    timePickerDialog.setCancelable(true);              //
+                    timePickerDialog.setCanceledOnTouchOutside(true);  //
+                    timePickerDialog.setOnCancelListener(new OnCancelListener()
+                    {                        
+                        /**
+                         * @imp Runs only when pressing the "back" button ????!!!!
+                         *      So, I I will igno0re this function.
+                         */
+                        //@Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            // TODO This apparently does nothing, try making it work
+                            SPUtils.debugFuncStart("timePickerDialog.onCancel", dialog);
+                        }
+                    });
+                                                           
+                    timePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+                    {                        
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            SPUtils.debugFuncStart("timePickerDialog.onDismiss", dialog);
+                            SPUtils.debug("--> prays[0] = " + prays[0]);
+                            pray1.setChecked(prays[0]);
+                            
+                        }
+                    });                    
+                    
+                    timePickerDialog.show();
                 }
+                
                 else
                 {
                     prays[0] = false;
@@ -477,8 +515,8 @@ public class UIUtils {
                 final TextView minhaTime = (TextView) dialog.findViewById(R.id.CPDminhaTime);
                 if (isChecked)
                 {
-                    prays[1] = true;
-                    int mHour = 16;
+                    prays[1]    = true;
+                    int mHour   = 16;
                     int mMinute = 0;
                     TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() 
                     {                        
@@ -488,8 +526,11 @@ public class UIUtils {
                             // TODO Update times of Minha in the server
                         }
                     };
-                  TimePickerDialog timePickerDialog = new TimePickerDialog(activity, mTimeSetListener, mHour, mMinute, true);
-                  timePickerDialog.show();
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(activity, mTimeSetListener, mHour, mMinute, true);
+                    timePickerDialog.setIcon(R.drawable.minha_small);
+                    //timePickerDialog.setInverseBackgroundForced(true);
+                    
+                    timePickerDialog.show();
                 }
                 else
                 {
@@ -518,8 +559,11 @@ public class UIUtils {
                             // TODO Update times of Arvit in the server
                         }
                     };
-                  TimePickerDialog timePickerDialog = new TimePickerDialog(activity, mTimeSetListener, mHour, mMinute, true);
-                  timePickerDialog.show();
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(activity, mTimeSetListener, mHour, mMinute, true);
+                    timePickerDialog.setIcon(R.drawable.arvit_small);
+                    //timePickerDialog.setInverseBackgroundForced(true);
+
+                    timePickerDialog.show();
                 }
                 else
                 {

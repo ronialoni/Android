@@ -18,14 +18,24 @@ import il.ac.tau.team3.spcomm.SPComm;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log; 
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +47,8 @@ import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
 import org.mapsforge.android.maps.GeoPoint;
 
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -47,12 +59,12 @@ import android.graphics.drawable.Drawable;
 
 
 
-public class FindPrayer  
+public class FindPrayer 
 extends MapActivity 
 {
     
     	
-	private Drawable userDefaultMarker;
+	private Drawable userDefaultMarker; 
 	private Drawable othersDefaultMarker;
 	private Drawable synagougeMarker;
 	private Drawable synagougeClosestMarker;
@@ -133,66 +145,87 @@ extends MapActivity
     		return;
     	}
 
-    	comm.requestGetUsers(center.getLatitudeInDegrees(), center.getLongitudeInDegrees(), radius, 
-    			new ACommHandler<GeneralUser[]>()	{
-
-
-    				public void onRecv(final GeneralUser[] users) {
-    					FindPrayer.this.runOnUiThread(new Runnable() {
-
-    						public void run() {
-    							// TODO Auto-generated method stub
-    							
-
-    							try	{
-    								GeneralUser thisUser = svcGetter.getService().getUser();
-	    							List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
-	    							userOverlayList.add(new UserOverlayItem(thisUser, thisUser.getName(), thisUser.getStatus()));
-	    							userOverlay.changeItems(userOverlayList);
-    							} catch (UserNotFoundException e)	{
-    								// invalid user
-    								
-    							} catch (UnknownLocationException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}  catch (ServiceNotConnected e)	{
-    								// service wasn't initialized yet
-    							} 
-
-
-
-
-    							if (null != users)
-    							{
-    								List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(users.length);
-    								for (GeneralUser user : users)
-    								{
-    									try	{
-    										GeneralUser thisUser = svcGetter.getService().getUser();
-	    									if (! thisUser.getId().equals(user.getId()))	
-	    									{
-	    										usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
-	    									}
-    									} catch (UserNotFoundException e)	{
-    										
-    									} catch (UnknownLocationException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-    									} catch (ServiceNotConnected e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										} 
-    								}
-    								otherUsersOverlay.changeItems(usersOverlayList);
-    							}
-    						}
-
-    					});
-
-    				}
-
-
-    			});
+    	comm.requestGetUsers(center.getLatitudeInDegrees(), center.getLongitudeInDegrees(), radius, new ACommHandler<GeneralUser[]>()	
+    	{
+    	    public void onRecv(final GeneralUser[] users)
+    	    {
+    	        FindPrayer.this.runOnUiThread(new Runnable()
+    	        {    	            
+    	            public void run()
+    	            {
+    	                // TODO Auto-generated method stub
+    	                try
+    	                {
+    	                    GeneralUser thisUser = svcGetter
+    	                    .getService().getUser();
+    	                    List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
+    	                    userOverlayList.add(new UserOverlayItem(
+    	                            thisUser, thisUser.getName(),
+    	                            thisUser.getStatus()));
+                                    userOverlay.changeItems(userOverlayList);
+    	                }
+    	                catch (UserNotFoundException e)
+    	                {
+    	                    // invalid user
+    	                    // TODO Auto-generated catch block
+    	                    e.printStackTrace();
+    	                }
+    	                catch (UnknownLocationException e)
+    	                {
+    	                    // TODO Auto-generated catch block
+    	                    e.printStackTrace();
+    	                }
+    	                catch (ServiceNotConnected e)
+    	                {
+    	                    // service wasn't initialized yet
+    	                    // TODO Auto-generated catch block
+    	                    e.printStackTrace();
+    	                }
+    	                catch (NullPointerException npe)
+    	                {
+    	                    SPUtils.error("NullPointerException - Should have been WRAPED !!!", npe);
+    	                    npe.printStackTrace();
+    	                }
+                                
+    	                if (null != users)
+    	                {
+    	                    List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(
+    	                            users.length);
+    	                    for (GeneralUser user : users)
+    	                    {
+    	                        try
+    	                        {
+    	                            GeneralUser thisUser = svcGetter.getService().getUser();
+    	                            if (!thisUser.getId().equals(user.getId()))
+    	                            {
+    	                                usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
+    	                            }
+    	                        }
+    	                        catch (UserNotFoundException e)
+    	                        {
+    	                            // TODO Auto-generated catch block
+                                    e.printStackTrace();
+    	                        }
+    	                        catch (UnknownLocationException e)
+    	                        {
+    	                            // TODO Auto-generated catch block
+    	                            e.printStackTrace();
+    	                        }
+    	                        catch (ServiceNotConnected e)
+    	                        {
+    	                            // TODO Auto-generated catch block
+    	                            e.printStackTrace();
+    	                        }
+    	                    }
+    	                    otherUsersOverlay.changeItems(usersOverlayList);
+    	                }
+    	            }
+    	            
+    	        });
+                        
+    	    }
+                    
+    	});
 
     }
     
@@ -613,50 +646,211 @@ extends MapActivity
         Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
         toast.show();
   
+      
         
-// startup dialog        
-//        
-//        Dialog dialog = new Dialog(this);
-//
-//        dialog.setContentView(R.layout.startup);
-//        dialog.setTitle(R.id.image_row_root);
-//
-//        //Button button1 = (Button) dialog.findViewById(R.id.startup_button);
-//        //button1.onTouchEvent(event)
-//        
-//        TextView text = (TextView) dialog.findViewById(R.id.startup_wellcome_text);
-//        text.setText("Hello, this is a custom dialog!");
-//        
-//        ImageView image = (ImageView) dialog.findViewById(R.id.startup_wellcome_image);
-//        image.setImageResource(R.drawable.user_kipa_pin);
-//        
-//        
-//        EditText more_text = (EditText) dialog.findViewById(R.id.startup_more_text);
-//        more_text.setText("Yes... More text!");
-//    
-//        dialog.setCancelable(true);
-//       
-//        //showDialog(R.layout.dialog);
-//        dialog.show();
-
         
+////////startup dialog       
+//
+//
+        final Account[] accounts = AccountManager.get(this).getAccounts();
+        SPUtils.debug(accounts);
+        if (SPUtils.DEBUGGING && null != accounts)
+        {
+            for (int i = 0; i < accounts.length; i++)
+            {
+                SPUtils.debug("accounts[" + i + "].name = " + accounts[i].name);
+                SPUtils.debug("accounts[" + i + "].type = " + accounts[i].type);
             }
+        }
+        
+        
+        Dialog dialog = new Dialog(this);
+        dialog.setCancelable(SPUtils.DEBUGGING); //@debug: Want to be able to cancel while developing.
+        
+        if (0 == accounts.length)
+        {
+            // TODO No Account In Sync dialog.
+            Log.w("Share-A-Prayer", "No accounts found");
+            
+            dialog.setContentView(R.layout.dialog_startup_async);
+            dialog.setTitle("title from code");
+            
+            ((Button) dialog.findViewById(R.id.dsa_button_exit)).setOnClickListener(new OnClickListener()
+            {                
+                public void onClick(View v)
+                {
+                    // TODO Auto-generated method stub
+                    FindPrayer.this.finish();
+                }
+            });
+            
+            ((Button) dialog.findViewById(R.id.dsa_button_sync)).setOnClickListener(new OnClickListener()
+            {                
+                public void onClick(View v)
+                {
+                    // TODO Open Sync Center.
+                }
+            });
+        }
+        
+        else
+        {            
+            dialog.setContentView(R.layout.dialog_startup_sync);
+            // this.requestWindowFeature(Window.);
+            // dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
+            // R.drawable.icon);
+            dialog.setTitle("title from code");
+            // dialog.setTitle(R.id.image_row_root);
+            
+            // EditText more_text = (EditText)
+            // dialog.findViewById(R.id.startup_name_first);
+            // more_text.setText("");
+            
+            RadioGroup  accountsRadioGroup = (RadioGroup) dialog.findViewById(R.id.startup_accounts_radios);
+            RadioButton tempRadioButton;
+            
+            for (int i = 0; i < accounts.length; i++)
+            {
+                tempRadioButton = new RadioButton(this);
+                tempRadioButton.setId(i);
+                tempRadioButton.setText(accounts[i].name);
+                
+                //tempRadioButton.setBackgroundColor(0x888888 / ((i % 2) + 1));
+                //tempRadioButton.setGravity(Gravity.CENTER);
+                
+                accountsRadioGroup.addView(tempRadioButton);
+            }
+            
+            accountsRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener()
+            {
+                //@Override
+                public void onCheckedChanged(RadioGroup group, int checkedId)
+                {
+                    // TODO There is probably more to do
+                    GeneralUser user = null;                    
+                    
+                    try
+                    {
+                        user = svcGetter.getService().getUser();                        
+                    }
+                    catch (UserNotFoundException e)
+                    {
+                        e.printStackTrace();
+                    }                    
+                    catch (ServiceNotConnected e)
+                    {
+                        e.printStackTrace();
+                    }
+                    
+                    
+                    if (null != user)
+                    {
+                        user.setName(accounts[checkedId].name);
+                    }
+                    
+                    else
+                    {
+                        Log.w("*** SP ***", "RadioGroup Listener got a null user.");
+                    }
+                }
+            });
+            
+        }        
+        
+        
+        
+        dialog.show();
+//
+// 
+////////     
+            
+	}
 	
+	
+	
+	
+	/**
+	 * @menu
+	 * 
+	 * 
+	 */
+		
+
+//    private MenuItem menuFindMe;
+//    private MenuItem menuMyPlace;
     
+	private String[]   menuItemesNames;
+    private MenuItem[] menuItems;
+	private Runnable[] menuListeners;
+  
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
+        this.menuItemesNames = new String[]
+        {
+                "Find Me!", // 0
+                "My Place"  // 1
+        };
         
-        menuFindMe  = menu.add("Find Me!");
-        menuMyPlace = menu.add("My Place");
+        int numOfMenuItems = this.menuItemesNames.length;
+        
+        this.menuItems = new MenuItem[numOfMenuItems];
+        
+        for (int i = 0; i < numOfMenuItems; i++)
+        {
+            this.menuItems[i] = menu.add(Menu.NONE, i, Menu.NONE, this.menuItemesNames[i]);
+        }
+        
+        
+//        {
+//                menu.add(Menu.NONE, 0, Menu.NONE, "Find Me!"),
+//                menu.add(Menu.NONE, 1, Menu.NONE, "My Place")
+//        };
+        
+        this.menuListeners = new Runnable[numOfMenuItems];
+        
+        this.menuListeners[0] = new Runnable()
+        {            
+            public void run()
+            {
+                // TODO Auto-generated method stub
+                try
+                {
+                    GeneralUser user = svcGetter.getService().getUser();
+                    mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
+                }
+                catch (UserNotFoundException e)
+                {
+                }
+                catch (UnknownLocationException e)
+                {
+                }
+                catch (ServiceNotConnected e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        };
+        
+        this.menuListeners[1] = new Runnable()
+        {            
+            public void run()
+            {
+                // TODO Auto-generated method stub
+            }
+        };
+           
+        
+      
+//        menuFindMe  = menu.add("Find Me!");
+//        menuMyPlace = menu.add("My Place");
         
         return super.onCreateOptionsMenu(menu);
         
     }	
     
     
-    MenuItem menuFindMe;
-    MenuItem menuMyPlace;
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -671,39 +865,40 @@ extends MapActivity
     {
         int itemId = item.getItemId();         
         
+        this.menuListeners[itemId].run();
         
         
-        if (menuFindMe.getItemId() == itemId)
-        {
-            try
-            {
-                GeneralUser user = svcGetter.getService().getUser();
-                mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
-            }
-            catch (UserNotFoundException e)
-            {                
-            }
-            catch (UnknownLocationException e)
-            {
-            }
-            catch (ServiceNotConnected e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        
-        else if (menuMyPlace.getItemId() == itemId)
-        {
-            // TODO
-            //GeneralPlace place;
-        }
-        
-        else
-        {
-            // Should never get here!
-            throw new RuntimeException("WTFException");
-        }
+//        if (menuFindMe.getItemId() == itemId)
+//        {
+//            try
+//            {
+//                GeneralUser user = svcGetter.getService().getUser();
+//                mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
+//            }
+//            catch (UserNotFoundException e)
+//            {                
+//            }
+//            catch (UnknownLocationException e)
+//            {
+//            }
+//            catch (ServiceNotConnected e)
+//            {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//        }
+//        
+//        else if (menuMyPlace.getItemId() == itemId)
+//        {
+//            // TODO
+//            //GeneralPlace place;
+//        }
+//        
+//        else
+//        {
+//            // Should never get here!
+//            throw new RuntimeException("WTFException");
+//        }
         
         return super.onMenuItemSelected(featureId, item);
     }

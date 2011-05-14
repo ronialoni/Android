@@ -16,7 +16,7 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 	 */
 	private static final long serialVersionUID = 3680632953183211194L;
 	private String address;
-	private String owner;
+	private GeneralUser owner;
 	//private List<String> allJoiners;
 	//private List<String> allJoiners2;
 	//private List<String> allJoiners3;
@@ -63,7 +63,7 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 		//this.allJoiners3 = new ArrayList<String>();
 		this.praysOfTheDay = new Pray[3];
 		this.prays = new boolean[3];
-		this.owner = owner.getName();
+		this.owner = owner;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
@@ -101,11 +101,11 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 	}
 
 	
-	public String getOwner() {
+	public GeneralUser getOwner() {
 		return owner;
 	}
 
-	public void setOwner(String owner) {
+	public void setOwner(GeneralUser owner) {
 		this.owner = owner;
 	}
 	

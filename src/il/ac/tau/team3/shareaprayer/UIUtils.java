@@ -107,7 +107,7 @@ public class UIUtils {
 
 	static void DeleteClick(final GeneralPlace place,
 			final PlaceArrayItemizedOverlay placeOverlay) {
-		if (place.getOwner().equals(placeOverlay.getThisUser().getName())) {
+		if (place.getOwner().getName().equals(placeOverlay.getThisUser().getName())) {
 			// TODO: remmove place
 			// boolean suc =
 			// placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
@@ -254,7 +254,7 @@ public class UIUtils {
 		Button deleteButton = (Button) dialog.findViewById(R.id.button3);
 		deleteButton.setText("Delete");
 		if (place.getOwner() != null && placeOverlay.getThisUser() != null) {
-			if (!(place.getOwner().equals(placeOverlay.getThisUser().getName()))) {
+			if (!(place.getOwner().getName().equals(placeOverlay.getThisUser().getName()))) {
 				deleteButton.setVisibility(View.INVISIBLE);
 			}
 		}

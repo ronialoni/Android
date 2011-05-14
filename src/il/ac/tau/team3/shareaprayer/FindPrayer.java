@@ -85,6 +85,7 @@ extends MapActivity
             return null;
         }
 		
+		
 		GeoPoint screenEdge = mapView.getProjection().fromPixels(mapView.getWidth(), mapView.getHeight());
         if (screenEdge == null)
         {
@@ -651,7 +652,7 @@ extends MapActivity
         
 ////////startup dialog       
 //
-//
+//Na
         final Account[] accounts = AccountManager.get(this).getAccounts();
         SPUtils.debug(accounts);
         if (SPUtils.DEBUGGING && null != accounts)

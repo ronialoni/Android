@@ -1,9 +1,14 @@
 package il.ac.tau.team3.shareaprayer;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
+import il.ac.tau.team3.common.Pray;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.spcomm.ACommHandler;
@@ -38,7 +43,7 @@ import android.widget.TimePicker;
 public class UIUtils {
 
 	static String _sNewPlaceQues = "Do you want to create a public praying place?";
-	static String _sAddress = "Address:";
+	static String _sNoPraySelected = "Please select at least one pray before creating a new place.";
 	static String _sAlreadyRegisterAlertMsg = "You are already registered to this place.";
 	static String _sWantToRegisterQues = "Would you like to register to this place?";
 	static String _sUserNotRegisterMsg = "You are not register to this place.";
@@ -307,333 +312,273 @@ public class UIUtils {
 	
 	
 
-	/*package*/ static void createAlertDialog(String msg, Context context) 
-	{
+	static void createAlertDialog(String msg, Context context) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(msg);
 		builder.setCancelable(true);
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() 
-		{
-		    public void onClick(DialogInterface dialog, int id)
-		    {
-		    }
-		});
+		builder.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+					}
+				});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
 	
 	
-	
-	
-
-	/*package*/ static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
-	{
-		// activity.getSPComm().requestGetUserByAccount(user.getName(),new
-		// ACommHandler<Long>() {
-		// @Override
-		// public void onRecv(Long id) {
-		// Long a = id;
-		// Log.d(a.toString(),a.toString());
-		// //
-		// }
-		// });
-
-		final boolean prays[] = new boolean[] {false, false, false};
-
-		if (point == null || activity == null || user == null)
-		{
-			Log.d("UIUtils::createRegisterDialog", "point == null || activity == null || user == null");
-			//return;
-		}
-
-		final Dialog dialog = new Dialog(activity);
-		dialog.setContentView(R.layout.dialog_place_create);
-		dialog.setTitle(R.string.create_place_title);
-		//dialog.setTitle(R.layout.image_row);
+	static class CreatePlaceDialog	{
+		private Dialog dialog;
+		private EditText editAddress;
+		private Calendar startDate = new GregorianCalendar(); 
+		private Calendar endDate = new GregorianCalendar(); 
+		private TextView fromDate;
+        private TextView toDate;
+        private FindPrayer activity;
+        private Button changeStartDate;
+        private Button changeEndDate;
+        private final int NUMBER_OF_PRAYS = 3;
+        private boolean prays[] = new boolean[NUMBER_OF_PRAYS];
+        private CheckBox[] checkBoxes = new CheckBox[NUMBER_OF_PRAYS];
+        private TextView[] timeTextViews = new TextView[NUMBER_OF_PRAYS];
+        private Calendar[] prayTimes = new GregorianCalendar[NUMBER_OF_PRAYS];
+      
         
-		
-		//TextView text = (TextView) dialog.findViewById(R.id.TextMsgCreatePlace);
-		//text.setText(_sNewPlaceQues);
-		
-		// Address field
-		TextView text1 = (TextView) dialog.findViewById(R.id.CPDtextView1);
-        text1.setText(_sAddress);
-		
-		
-        EditText edittext = (EditText) dialog.findViewById(R.id.CPDeditText1);
-		
-		
-		
-		// TODO Create a function Point_to_Address
-        //edittext.setText(point_to_address(point));
-        edittext.setText("DEBUG: the address touched");
-		
-		        
-        
-        /*
-         * Dates fields:
-         */        
-        final TextView fromDate = (TextView) dialog.findViewById(R.id.CPDFromDatetextView);
-        final TextView toDate   = (TextView) dialog.findViewById(R.id.CPDToDatetextView);
-        // get the current date 
-        final Calendar calendar = Calendar.getInstance(); 
-        final int mYear = calendar.get(Calendar.YEAR); 
-        final int mMonth = calendar.get(Calendar.MONTH)+1; 
-        final int mDay = calendar.get(Calendar.DAY_OF_MONTH); 
-        fromDate.setText((mDay < 10 ? "0" : "") + mDay + "/" + (mMonth < 10 ? "0" : "") + mMonth + "/" + mYear + " ");
-        
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        final int mYear2 = calendar.get(Calendar.YEAR); 
-        final int mMonth2 = calendar.get(Calendar.MONTH)+1; 
-        final int mDay2 = calendar.get(Calendar.DAY_OF_MONTH); 
-        toDate.setText((mDay2 < 10 ? "0" : "") + mDay2 + "/" + (mMonth2 < 10 ? "0" : "") + mMonth2 + "/" + mYear2 + " ");
-        
-        ((Button) dialog.findViewById(R.id.CPDChange1button)).setOnClickListener(new OnClickListener()
-        {            
-            public void onClick(View v)
-            {
-                DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener()
+        private class DatePickerClickListener implements OnClickListener	{
+        	
+        	private Calendar cal;
+        	private TextView textStr;
+        	
+        	public DatePickerClickListener(Calendar a_cal, TextView a_textStr)	{
+        		cal = a_cal;
+        		textStr = a_textStr;
+        	}
+
+			public void onClick(View v) {
+				DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener()
                 {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
                     {
-                        monthOfYear++;
-                        fromDate.setText((dayOfMonth < 10 ? "0" : "") + dayOfMonth + "/" + (monthOfYear < 10 ? "0" : "") + monthOfYear + "/" + year + " ");
+                    	cal.set(year, monthOfYear, monthOfYear);
+                        //monthOfYear++;
+                    	textStr.setText(cal.toString());
                         // TODO Send dates to server
                     }
                 };
-                DatePickerDialog datePickerDialog = new DatePickerDialog(activity, mDateSetListener, mYear, mMonth-1, mDay);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(CreatePlaceDialog.this.activity, 
+                		mDateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
-            }
-        });
+			}
+        	
+        }
         
-        ((Button) dialog.findViewById(R.id.CPDChange2button)).setOnClickListener(new OnClickListener()
-        {            
-            public void onClick(View v)
-            {
-                DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener()
-                {
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
-                    {
-                        monthOfYear++;
-                        toDate.setText((dayOfMonth < 10 ? "0" : "") + dayOfMonth + "/" + (monthOfYear < 10 ? "0" : "") + monthOfYear + "/" + year + " ");
-                        // TODO Send dates to server
-                    }
-                };
-                DatePickerDialog datePickerDialog = new DatePickerDialog(activity, mDateSetListener, mYear2, mMonth2-1, mDay2);
-                datePickerDialog.show();
-            }
-        });
+        class PrayTimePickDialog extends TimePickerDialog {
+
+        	private CheckBox checkBox;
+        	private int prayIndex;
+        	
+        	public PrayTimePickDialog(final TextView a_timeStr, int defHour, int defMin, 
+        			CheckBox a_checkBox, final int a_prayIndex, int a_resIcon)	{
+        		super(activity, 
+        				new OnTimeSetListener() {
+        			
+        			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    					SPUtils.debugFuncStart("timePickerDialog.onTimeSet", view, hourOfDay, minute);
+    					CreatePlaceDialog.this.prays[a_prayIndex] = true;
+    					prayTimes[a_prayIndex].set(2000, 1, 1, hourOfDay, minute, 0);
+    					// TODO: CLEAN THIS
+    					a_timeStr.setText((hourOfDay < 10 ? "0" : "") + hourOfDay + ":" + (minute < 10 ? "0" : "") + minute + " ");
+    					
+    				}
+        			
+        		}, defHour, defMin, true);
+        		
+                this.setIcon(a_resIcon);
+                this.setInverseBackgroundForced(true);          
+                this.setCancelable(true);              //
+                this.setCanceledOnTouchOutside(true);  //
+        		checkBox = a_checkBox;
+        	}
+        	
+        	@Override
+			public void cancel()	{
+        		SPUtils.debugFuncStart("timePickerDialog.onCancel", dialog);
+        		super.cancel();
+        	}
+        	
+        	@Override
+        	public void dismiss()	{
+        		SPUtils.debugFuncStart("timePickerDialog.onDismiss", dialog);
+                SPUtils.debug("--> prays["+prayIndex+"] = " + "prays["+prayIndex+"]");
+                checkBox.setChecked(prays[prayIndex]);
+                super.dismiss();
+        	}
+        	
+        	
+        	
+        }
         
-        
-        
-//        // TimePicker PopupWindow
-//        final PopupWindow pop = new PopupWindow(activity);
-//        View layout = ((LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.time_picker, (ViewGroup) activity.findViewById(R.id.time_picker_root));
-//        pop.setContentView(layout);
-//        pop.setWindowLayoutMode(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        
-        
-		/*
-		 * Prayer type check-boxes.
-		 */		
-		final CheckBox pray1 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox1);
-		CheckBox pray2 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);
-		CheckBox pray3 = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
-	
-		
-        pray1.setOnCheckedChangeListener(new OnCheckedChangeListener()
+        class CheckBoxListener implements OnCheckedChangeListener
         {              
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+        	private TextView timeTextView;
+        	private int		 index;
+        	private CheckBox checkBox;
+        	int defHour;
+        	int defMinutes;
+        	int resIcon;
+        	
+        	
+            public CheckBoxListener(TextView timeTextView, int index, CheckBox checkBox, 
+            		int defHour, int defMinutes, int resIcon) {
+				super();
+				this.timeTextView = timeTextView;
+				this.index = index;
+				this.checkBox = checkBox;
+				this.defHour = defHour;
+				this.defMinutes = defMinutes;
+				this.resIcon = resIcon;
+				
+			}
+
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
                 SPUtils.debugFuncStart("pray1.onCheckedChanged", buttonView, isChecked);
-                final TextView shaharitTime = (TextView) dialog.findViewById(R.id.CPDshahritTime);
                 
                 if (isChecked)
                 {
-                    int mHour   = 7;
-                    int mMinute = 0;
+                                        
+                    (new PrayTimePickDialog(timeTextView, defHour, defMinutes, checkBox, index, resIcon)).show();
                     
-                    TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() 
-                    {                        
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-                        {
-                            SPUtils.debugFuncStart("timePickerDialog.onTimeSet", view, hourOfDay, minute);
-                            
-                            prays[0] = true;
-                            shaharitTime.setText((hourOfDay < 10 ? "0" : "") + hourOfDay + ":" + (minute < 10 ? "0" : "") + minute + " ");
-                            
-                            // TODO Update times of Shaharit in the server
-                        }
-                    };
-                    
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(activity, mTimeSetListener, mHour, mMinute, true);
-                    timePickerDialog.setIcon(R.drawable.shaharit_small);
-                    timePickerDialog.setInverseBackgroundForced(true);          
-                    timePickerDialog.setCancelable(true);              //
-                    timePickerDialog.setCanceledOnTouchOutside(true);  //
-                    timePickerDialog.setOnCancelListener(new OnCancelListener()
-                    {                        
-                        /**
-                         * @imp Runs only when pressing the "back" button ????!!!!
-                         *      So, I I will igno0re this function.
-                         */
-                        //@Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            // TODO This apparently does nothing, try making it work
-                            SPUtils.debugFuncStart("timePickerDialog.onCancel", dialog);
-                        }
-                    });
-                                                           
-                    timePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-                    {                        
-                        public void onDismiss(DialogInterface dialog)
-                        {
-                            SPUtils.debugFuncStart("timePickerDialog.onDismiss", dialog);
-                            SPUtils.debug("--> prays[0] = " + prays[0]);
-                            pray1.setChecked(prays[0]);
-                            
-                        }
-                    });                    
-                    
-                    timePickerDialog.show();
                 }
                 
                 else
                 {
-                    prays[0] = false;
-                    shaharitTime.setText("");
+                    prays[index] = false;
+                    timeTextView.setText("");
                 }                
             }
-        });
-
-        pray2.setOnCheckedChangeListener(new OnCheckedChangeListener()
-        {              
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                SPUtils.debugFuncStart("pray2.onCheckedChanged", buttonView, isChecked);
-                final TextView minhaTime = (TextView) dialog.findViewById(R.id.CPDminhaTime);
-                if (isChecked)
-                {
-                    prays[1]    = true;
-                    int mHour   = 16;
-                    int mMinute = 0;
-                    TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() 
-                    {                        
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-                        {
-                            minhaTime.setText((hourOfDay < 10 ? "0" : "") + hourOfDay + ":" + (minute < 10 ? "0" : "") + minute + " ");
-                            // TODO Update times of Minha in the server
-                        }
-                    };
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(activity, mTimeSetListener, mHour, mMinute, true);
-                    timePickerDialog.setIcon(R.drawable.minha_small);
-                    //timePickerDialog.setInverseBackgroundForced(true);
-                    
-                    timePickerDialog.show();
-                }
-                else
-                {
-                    prays[1] = false;
-                    minhaTime.setText("");
-                }                
-            }
-        });
-        
-        pray3.setOnCheckedChangeListener(new OnCheckedChangeListener()
-        {              
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                SPUtils.debugFuncStart("pray3.onCheckedChanged", buttonView, isChecked);
-                final TextView arvitTime = (TextView) dialog.findViewById(R.id.CPDarvitTime);
-                if (isChecked)
-                {
-                    prays[2] = true;
-                    int mHour = 18;
-                    int mMinute = 0;
-                    TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() 
-                    {                        
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-                        {
-                            arvitTime.setText((hourOfDay < 10 ? "0" : "") + hourOfDay + ":" + (minute < 10 ? "0" : "") + minute + " ");
-                            // TODO Update times of Arvit in the server
-                        }
-                    };
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(activity, mTimeSetListener, mHour, mMinute, true);
-                    timePickerDialog.setIcon(R.drawable.arvit_small);
-                    //timePickerDialog.setInverseBackgroundForced(true);
-
-                    timePickerDialog.show();
-                }
-                else
-                {
-                    prays[2] = false;
-                    arvitTime.setText("");
-                }                
-            }
-        });
+        };
 		
+		public CreatePlaceDialog(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	{
+			if (point == null || a_activity == null || user == null)
+			{
+				
+				Log.d("UIUtils::createRegisterDialog", "point == null || activity == null || user == null");
+				// TODO: change to checked exception
+				throw new NullPointerException("CreatePlaceDialog: executed with NULL!!!!");
+				//return;
+			}
+			
+			for (int i = 0; i < prayTimes.length; prayTimes[i] = new GregorianCalendar(),i++);
+			  
+			activity = a_activity;
+			
+			dialog = new Dialog(activity);
+			dialog.setContentView(R.layout.dialog_place_create);
+			dialog.setTitle(R.string.create_place_title);
+			
+			editAddress = (EditText) dialog.findViewById(R.id.CPDeditText1);
+			
+			fromDate = (TextView) dialog.findViewById(R.id.CPDFromDatetextView);
+			toDate   = (TextView) dialog.findViewById(R.id.CPDToDatetextView);
+		//	fromDate.setText(startDate.toString()); 
+	    //    toDate.setText(endDate.toString());
+	        
+	        changeStartDate = (Button) dialog.findViewById(R.id.CPDChange1button);
+	        changeEndDate = (Button) dialog.findViewById(R.id.CPDChange2button);
+	        
+			changeStartDate.setOnClickListener(new DatePickerClickListener(startDate, fromDate));
+			changeEndDate.setOnClickListener(new DatePickerClickListener(endDate, toDate));
+			
+			
+			checkBoxes[0] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox1);
+			timeTextViews[0] = (TextView) dialog.findViewById(R.id.CPDshahritTime);
+			checkBoxes[0].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[0], 
+					0, checkBoxes[0], 7, 0, R.drawable.shaharit_small));
+			checkBoxes[1] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);
+			timeTextViews[1] = (TextView) dialog.findViewById(R.id.CPDminhaTime);
+			checkBoxes[1].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[1], 
+					1, checkBoxes[0], 15, 0, R.drawable.minha_small));
+			checkBoxes[2] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
+			timeTextViews[2] = (TextView) dialog.findViewById(R.id.CPDarvitTime);
+			checkBoxes[2].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[2], 
+					2, checkBoxes[2], 19, 0, R.drawable.arvit_small));
+			
+			Button yesButton = (Button) dialog.findViewById(R.id.CPDYesButton);
+	        Button noButton = (Button) dialog.findViewById(R.id.CPDNoButton);
+	        
+	    
+			yesButton.setOnClickListener(new OnClickListener() {
 
-        
-        /*
-         * Yes/No buttons.
-         */
-        Button yesButton = (Button) dialog.findViewById(R.id.CPDYesButton);
-        Button noButton = (Button) dialog.findViewById(R.id.CPDNoButton);
-        
-    
-		yesButton.setOnClickListener(new OnClickListener() {
+				public void onClick(View view) {
+					final Date finalstartDate = new Date(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
+					final Date finalendDate = new Date(endDate.get(Calendar.YEAR),endDate.get(Calendar.MONTH),endDate.get(Calendar.DAY_OF_MONTH));
+					CreateNewPlace_YesClick(prays, user, activity, point, finalstartDate, finalendDate, prayTimes);
+					dialog.dismiss();
 
-			public void onClick(View view) {
+				};
 
-				CreateNewPlace_YesClick(prays, user, activity, point);
-				dialog.dismiss();
+			});
 
-			};
+			noButton.setOnClickListener(new OnClickListener() {
 
-		});
+				public void onClick(View view) {
 
-		noButton.setOnClickListener(new OnClickListener() {
+					dialog.dismiss();
 
-			public void onClick(View view) {
+				};
 
-				dialog.dismiss();
+			});
 
-			};
+			
+			dialog.show();
+			
+		}
 
-		});
+	};
+	
+
+	static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
+	{
+		try {
+			new CreatePlaceDialog(point, activity, user);
+		} catch (NullPointerException e)	{
+			
+		}
+		
+     }
+
+	
+	
+	
+	static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user,
+			FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes) {
+		GeneralPlace newMinyan = new GeneralPlace(user, user.getName()
+				+ "'s Minyan Place", "", point, startDate,endDate);
+		newMinyan.setPrays(prays);
+		Calendar c = new GregorianCalendar(2011,2,2,15,30);
+		Pray praysOfTheDay[] = new Pray[3];
+		List<String> j = new ArrayList<String>();
+		j.add(user.getName());
+		if (prays[0]) {
+			
+			Pray pray = new Pray(prayTimes[0], c, "Shaharit", j);
+			newMinyan.setPraysOfTheDay(0, pray);
+		}
+		if (prays[1]) {
+			Pray pray = new Pray(prayTimes[1], c, "Minha", j);
+			newMinyan.setPraysOfTheDay(1, pray);
+		}
+		if (prays[2]) {
+			Pray pray = new Pray(prayTimes[2], c, "Arvit", j);
+			newMinyan.setPraysOfTheDay(2, pray);
+		}
+
+		activity.getSPComm().requestPostNewPlace(newMinyan,
+				new UpdateUI<Long>(activity));
 
 		
-		dialog.show();
 	}
 
-	
-	
-	
-    /* package */static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user, FindPrayer activity, SPGeoPoint point)
-    {
-        GeneralPlace newMinyan = new GeneralPlace(user, user.getName() + "'s Minyan Place", "", point);
-        newMinyan.setPrays(prays);
-        if (prays[0])
-        {
-            newMinyan.addJoiner(user.getName());
-        }
-        if (prays[1])
-        {
-            newMinyan.addJoiner2(user.getName());
-        }
-        if (prays[2])
-        {
-            newMinyan.addJoiner3(user.getName());
-        }
-        
-        activity.getSPComm().requestPostNewPlace(newMinyan, new UpdateUI<Long>(activity));
-        
-        // synchronized (activity.getRefreshTask())
-        // {
-        // activity.getRefreshTask().notify();
-        // }
-    }
 
     
     

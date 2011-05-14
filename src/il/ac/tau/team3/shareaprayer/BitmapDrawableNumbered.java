@@ -22,25 +22,35 @@ public class BitmapDrawableNumbered extends BitmapDrawable {
 	
 	public int getNumber()	{
 		int max = 0;
+		
 		try	{
-			if (max < place.getAllJoiners().size())	{
-				max = place.getAllJoiners().size();
+			if (max < place.getPraysOfTheDay()[0].numberOfJoiners())	{
+				max = place.getPraysOfTheDay()[0].numberOfJoiners();
 			}
 		} catch (NullPointerException e)	{
 			
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+			
+		}
 		try	{
-			if (max < place.getAllJoiners2().size())	{
-				max = place.getAllJoiners2().size();
+			if (max < place.getPraysOfTheDay()[1].numberOfJoiners())	{
+				max = place.getPraysOfTheDay()[1].numberOfJoiners();
 			}
 		} catch (NullPointerException e)	{
 			
 		}
+		catch(ArrayIndexOutOfBoundsException e){
+			
+		}
 		try	{
-			if (max < place.getAllJoiners3().size())	{
-				max = place.getAllJoiners3().size();
+			if (max < place.getPraysOfTheDay()[2].numberOfJoiners())	{
+				max = place.getPraysOfTheDay()[2].numberOfJoiners();
 			}
 		} catch (NullPointerException e)	{
+			
+		}
+		catch(ArrayIndexOutOfBoundsException e){
 			
 		}
 		

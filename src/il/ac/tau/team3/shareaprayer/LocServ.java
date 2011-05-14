@@ -145,18 +145,18 @@ extends Service
         
 		
 		
-//		Account[] accounts = AccountManager.get(this).getAccounts();
-//		if (accounts.length != 0)	
-//		{	
-//			userId = accounts[0].name;
-//			user = new GeneralUser(null, null, null);
-//			
-//			//userId = "miki@gmail.com";
-//		} 
-//		else
-//		{
-//			userId = "NoGmailAccount@gmail.com";
-//		}
+		Account[] accounts = AccountManager.get(this).getAccounts();
+		if (accounts.length != 0)	
+		{	
+			userId = accounts[0].name;
+			user = new GeneralUser(null, null, null);
+			
+			//userId = "miki@gmail.com";
+		} 
+		else
+		{
+			userId = "NoGmailAccount@gmail.com";
+		}
         
         
         

@@ -2,10 +2,13 @@ package il.ac.tau.team3.shareaprayer;
 
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
+import il.ac.tau.team3.common.Pray;
 
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapView;
@@ -117,54 +120,38 @@ extends PrayerArrayItemizedOverlay
 	{
 	    
 		final PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
-		String msg1; 
-		List<String> joiners = placeItem.getPlace().getAllJoiners();
-		if(joiners == null || joiners.isEmpty())
-		{
-			msg1 = "No prayers are listed to Shaharit.\n"; 
-		}
-		else
-		{
-			msg1 = "Prayer listed to Shaharit are:\n";
-			for(String joiner : joiners)
-			{
-				msg1 = msg1 + joiner + "\n";			
+		
+		Map<String, String> msgs = new HashMap<String, String>();
+		try{
+		
+			for (Pray p : placeItem.getPlace().getPraysOfTheDay())	{
+				String msg = null;
+				try	{
+					if (p.getJoiners().size() == 0)	{
+						msg = "No prayers are listed to " + p.getName() + ".\n";
+					} else	{
+						msg = "Prayer listed to " + p.getName() + " are:\n";
+					}
+					for (String joiner : p.getJoiners())	{
+						msg += joiner + "\n";
+					}
+				} catch (NullPointerException e)	{
+					if (null != p){ 
+						msg = "No prayers are listed to " + p.getName() + ".\n";
+					}
+				}
+				if (null != p){ 
+					msgs.put(p.getName(), msg);
+				}
 			}
-		}
-		String msg2; 
-		List<String> joiners2 = placeItem.getPlace().getAllJoiners2();
-		if(joiners2 == null || joiners2.isEmpty())
-		{
-			msg2 = "No prayers listed to Minha.\n"; 
-		}
-		else
-		{
-			msg2 = "Prayer listed to Minha are:\n";
-			for(String joiner2 : joiners2)
-			{
-				msg2 = msg2 + joiner2 + "\n";			
-			}
+		} catch (NullPointerException e)	{
 		}
 		
-		String msg3; 
-		List<String> joiners3 = placeItem.getPlace().getAllJoiners3();
-		if(joiners3 == null || joiners3.isEmpty())
-		{
-			msg3 = "No prayers listed to Arvit.\n"; 
-		}
-		else
-		{
-			msg3 = "Prayer listed to Arvit are:\n";
-			for(String joiner3 : joiners3)
-			{
-				msg3 = msg3 + joiner3 + "\n";			
-			}
-		}
 		
 		final PlaceArrayItemizedOverlay p = this;
-		final String cmsg1=msg1;
-		final String cmsg2=msg2;
-		final String cmsg3=msg3;
+		final String cmsg1=msgs.get("Shaharit");
+		final String cmsg2=msgs.get("Minha");
+		final String cmsg3=msgs.get("Arvit");
 		
 		activity.runOnUiThread(new Runnable() {
 			

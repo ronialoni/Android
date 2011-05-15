@@ -26,8 +26,8 @@ public class SPGenComm {
     private Handler		  comm;
     private Thread 		 recvThread;
     
-   // private static final String SERVER_URL = "http://share-a-prayer.appspot.com/resources/prayerjersy/";
-    private static final String SERVER_URL = "http://10.0.2.2:8888/resources/prayerjersy/";
+    private static final String SERVER_URL = "http://share-a-prayer.appspot.com/resources/prayerjersy/";
+   // private static final String SERVER_URL = "http://10.0.2.2:8888/resources/prayerjersy/";
     
     public RestTemplate getRestTemplate()
     {

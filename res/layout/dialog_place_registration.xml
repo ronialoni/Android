@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <TableLayout 
+    	android:id				="@+id/tableLayout1" 
+    	android:layout_width	="fill_parent" 
+    	android:layout_height	="fill_parent" 
+    	xmlns:android			="http://schemas.android.com/apk/res/android">
+        
+        <LinearLayout android:id	="@+id/linearLayout1" 
+        	android:layout_width	="fill_parent" 
+        	android:layout_height	="wrap_content">
+            
+             <Button 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="fill_parent" 
+            	android:text			="Show registered users" 
+            	android:id				="@+id/DPRShowPeople"></Button>
+        </LinearLayout>
+        
+        <TextView 
+        	android:text			="Address:" 
+        	android:layout_height	="wrap_content" 
+        	android:layout_width	="wrap_content" 
+            android:textColor 		= "#ffffff"
+            android:typeface		= "serif"
+        	android:id				="@+id/DPRaddressTitle"></TextView>
+        	 
+        <TextView 
+        	android:text			="//TODO:  Address of place" 
+        	android:layout_height	="wrap_content" 
+        	android:layout_width	="wrap_content" 
+        	android:id				="@+id/DPRaddress"></TextView>
+        
+        <TextView 
+        	android:text			="Open until:" 
+        	android:layout_height	="wrap_content" 
+        	android:layout_width	="wrap_content" 
+            android:textColor 		= "#ffffff"
+            android:typeface		= "serif"
+        	android:id				="@+id/DPRdatesTitle"></TextView>
+        
+        <TextView 
+        	android:text			="//TODO:  Dates of place" 
+        	android:layout_height	="wrap_content" 
+        	android:layout_width	="wrap_content" 
+        	android:id				="@+id/DPRdates"></TextView>
+        
+        <TableRow 
+        	android:id				="@+id/tableRow12" 
+        	android:layout_width	="fill_parent" 
+        	android:layout_height	="wrap_content">
+            
+            <TextView 
+            	android:text			="Select prayers:" 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="fill_parent" 
+           		android:typeface		= "serif"
+            	android:textColor 		= "#ffffff"
+            	android:layout_weight	= "1"
+            	android:id				="@+id/DPRselectPrayers"></TextView>
+
+            <TextView 
+            	android:text			="Time:" 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="fill_parent" 
+           		android:typeface		= "serif"
+            	android:textColor 		= "#ffffff"
+            	android:layout_weight	= "1"
+            	android:id				="@+id/DPRselectPrayers"></TextView>
+            
+            <TextView 
+            	android:text			="Users:" 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="fill_parent" 
+           		android:typeface		= "serif"
+            	android:textColor 		= "#ffffff"
+            	android:id				="@+id/DPRusersNumber"></TextView>
+            
+            <TextView 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="fill_parent" 
+            	android:id				="@+id/DPRselectPrayers"></TextView>
+            
+        </TableRow>
+        
+        <TableRow 
+        	android:id				="@+id/tableRow1" 
+        	android:layout_width	="fill_parent" 
+        	android:layout_height	="wrap_content">
+            
+            <CheckBox 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="wrap_content" 
+            	android:layout_weight	= "1"
+            	android:id				="@+id/DPRcheckboxShaharit"
+            	android:text			="Shaharit"></CheckBox>
+            
+            <TextView 
+            	android:text			="00:00" 
+            	android:id				="@+id/DPRtimeShaharit" 
+            	android:layout_width	="wrap_content" 
+            	android:layout_weight	= "1"
+            	android:gravity			="center_vertical" 
+            	android:layout_height	="wrap_content"></TextView>
+            	
+            <TextView 
+            	android:text			="#" 
+            	android:gravity			="center" 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="fill_parent" 
+            	android:id				="@+id/DPRnumberOfUsersShaharit"></TextView>
+            
+            <ImageView 
+            	android:layout_width	="fill_parent" 
+            	android:layout_height	="wrap_content"
+            	android:src				="@drawable/shaharit_small" 
+            	android:layout_gravity	="right" 
+            	android:id				="@+id/DPRiconShaharit"></ImageView>
+        </TableRow>
+       
+        <TableRow 
+        	android:id				="@+id/tableRow2" 
+        	android:layout_width	="wrap_content" 
+        	android:layout_height	="wrap_content">
+            
+            <CheckBox 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="wrap_content" 
+            	android:layout_weight 	= "1"
+            	android:id				="@+id/DPRcheckboxMinha" 
+            	android:text			="Minha"></CheckBox>
+            
+             <TextView 
+            	android:text			="00:00" 
+            	android:id				="@+id/DPRtimeMinha" 
+            	android:layout_width	="wrap_content" 
+            	android:layout_weight	= "1"
+            	android:gravity			="center_vertical" 
+            	android:layout_height	="wrap_content" 
+            	></TextView>
+            
+            <TextView 
+            	android:text			="#" 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="wrap_content" 
+            	android:id				="@+id/DPRnumberOfUsersMinha" 
+            	android:gravity			="center"></TextView>
+            
+            <ImageView 
+            	android:layout_width	="wrap_content" 
+            	android:layout_height	="wrap_content" 
+            	android:src				="@drawable/minha_small" 
+            	android:id				="@+id/DPRiconMinha"></ImageView>
+        </TableRow>
+        
+        <TableRow 
+        	android:id				="@+id/tableRow3" 
+        	android:layout_width	="wrap_content" 
+        	android:layout_height	="wrap_content">
+            
+            <CheckBox 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="wrap_content" 
+            	android:layout_weight 	= "1"
+            	android:id				="@+id/DPRcheckboxArvit" 
+            	android:text			="Arvit"></CheckBox>
+
+ 			<TextView 
+            	android:text			="00:00" 
+            	android:id				="@+id/DPRtimeArvit" 
+            	android:layout_width	="wrap_content" 
+            	android:layout_weight	= "1"
+            	android:gravity			="center_vertical" 
+            	android:layout_height	="wrap_content"></TextView>
+                        
+            <TextView 
+            	android:text			="#" 
+            	android:layout_height	="wrap_content" 
+            	android:layout_width	="wrap_content" 
+            	android:id				="@+id/DPRnumberOfUsersArvit" 
+            	android:gravity			="center"></TextView>
+            
+            <ImageView 
+            	android:layout_width	="wrap_content" 
+            	android:layout_height	="wrap_content" 
+            	android:src				="@drawable/arvit_small" 
+            	android:id				="@+id/DPRiconArvit"></ImageView>
+        </TableRow>
+        
+        <LinearLayout 
+            android:id="@+id/linearLayout1" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content">
+            
+           <Button 
+               android:text="Set" 
+               android:id="@+id/DPRSetButton" 
+               android:layout_height="wrap_content" 
+               android:layout_width="fill_parent"
+               android:layout_weight = ".2"
+            ></Button>
+            <Button 
+               android:text="Cancel" 
+               android:layout_height="wrap_content" 
+               android:id="@+id/DPRCancelButton" 
+               android:layout_width="fill_parent"
+               android:layout_weight = ".2"
+               />
+        </LinearLayout>
+        <GridView android:id="@+id/gridView1" android:layout_width="wrap_content" android:layout_height="wrap_content"></GridView>
+    </TableLayout>

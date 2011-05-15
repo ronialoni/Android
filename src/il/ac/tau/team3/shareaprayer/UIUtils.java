@@ -20,6 +20,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +72,6 @@ public class UIUtils {
 			}
 		}
 	}
-	
 	
 	static void RegisterClick(final GeneralPlace place,
 			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
@@ -137,9 +137,6 @@ public class UIUtils {
 	
 
 	}
-
-	
-	
 	
 	/*package*/ static void createRegisterDialog(String message1, String message2, String message3, final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
 	{
@@ -151,10 +148,108 @@ public class UIUtils {
 		}
 
 		final boolean praysWishes[] = new boolean[3];
-
+ 
 		final Dialog dialog = new Dialog(placeOverlay.getActivity());
+//		dialog.setContentView(R.layout.dialog_place_registration);
+ 
+
+//		//dialog.setTitle(removeAtGmailDotCom(place.getName()));
+//		
+//		//People Button:
+//		Button peopleButton = (Button) dialog.findViewById(R.id.DPRShowPeople);
+//		
+//		// Address and Dates
+//		TextView placeAddress = (TextView) dialog.findViewById(R.id.DPRaddress);
+//		placeAddress.setText(place.getAddress());
+//		
+//		TextView placeDates = (TextView) dialog.findViewById(R.id.DPRdates);
+//		//TODO placeDates.setText(place.getClosingDate());
+//		
+//		// Checkboxes:
+//		CheckBox[] praysCB = new CheckBox[3];
+//		praysCB[0] = (CheckBox) dialog.findViewById(R.id.DPRcheckboxShaharit);
+//		praysCB[1] = (CheckBox) dialog.findViewById(R.id.DPRcheckboxMinha);
+//		praysCB[2] = (CheckBox) dialog.findViewById(R.id.DPRcheckboxArvit);
+//		
+//		for (int i=0; i<3 ; i++)
+//		{
+//			final int temp = i;
+//			praysCB[i].setClickable(place.getPrays()[i]);
+//			praysCB[i].setTextColor(place.getPrays()[i] ? Color.WHITE : Color.GRAY);
+//			praysCB[i].setOnCheckedChangeListener(new OnCheckedChangeListener() 
+//			{
+//				public void onCheckedChanged(CompoundButton buttonView,	boolean isChecked) 
+//				{
+//					praysWishes[temp] = isChecked;
+//				}
+//			});
+//		}
+//		for (int i=0; i<3 ; i++)
+//		{		
+//			try 
+//			{
+//				//praysCB[i].setChecked(place.IsJoinerSigned(i+1, placeOverlay.getThisUser()));
+//			} catch (NullPointerException e){}
+//					
+//		}
+////		praysCB[1].setChecked(place.IsJoinerSigned(2, placeOverlay.getThisUser()));
+////		praysCB[2].setChecked(place.IsJoinerSigned(3, placeOverlay.getThisUser()));
+////		praysCB[0].setChecked(place.IsJoinerSigned(placeOverlay.getThisUser().getName()));
+////		praysCB[1].setChecked(place.IsJoinerSigned2(placeOverlay.getThisUser().getName()));
+////		praysCB[2].setChecked(place.IsJoinerSigned3(placeOverlay.getThisUser().getName()));
+//
+//		//Prayers times:
+//		TextView[] prayersTimes = new TextView[3];
+//		prayersTimes[0] = (TextView) dialog.findViewById(R.id.DPRtimeShaharit);
+//		prayersTimes[1] = (TextView) dialog.findViewById(R.id.DPRtimeMinha);
+//		prayersTimes[2] = (TextView) dialog.findViewById(R.id.DPRtimeArvit);
+//		// TODO get times of prayers and set the texts
+//		
+//		
+//		// Number of registered users:
+//		TextView[] numberOfUsers = new TextView[3];
+//		numberOfUsers[0] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersShaharit);
+//		numberOfUsers[1] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersMinha);
+//		numberOfUsers[2] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersArvit);
+//		
+//		numberOfUsers[0].setText(String.valueOf(place.getNumberOfPrayers(0)));
+//		numberOfUsers[1].setText(String.valueOf(place.getNumberOfPrayers(1)));
+//		numberOfUsers[2].setText(String.valueOf(place.getNumberOfPrayers(2)));
+//			
+//		
+//		// Set and Cancel Buttons:
+//		Button setButton = (Button) dialog.findViewById(R.id.DPRSetButton);
+//		Button cancelButton = (Button) dialog.findViewById(R.id.DPRCancelButton);
+//
+//		setButton.setOnClickListener(new OnClickListener() 
+//		{
+//			public void onClick(View view) 
+//			{
+//				//TODO Check for problems
+//				UnregisterClick(place, placeOverlay, praysWishes);
+//				RegisterClick(place, placeOverlay, praysWishes);
+//				dialog.dismiss();
+//			};
+//		});
+//		
+//		cancelButton.setOnClickListener(new OnClickListener() 
+//		{
+//			public void onClick(View view) 
+//			{
+//				dialog.dismiss();
+//			};
+//		});
+//				
+//		dialog.show();
+//		
+//		
+//		
+//		
+//		
+		
+		
+		
 		dialog.setContentView(R.layout.place_dialog);
-		dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		if (place.getPrays()[0]) {
 			
 			TextView text = (TextView) dialog.findViewById(R.id.RTextMsg);
@@ -294,9 +389,6 @@ public class UIUtils {
 		// regButton.setVisibility(visibility)
 
 	}
-	
-	
-	
 
 	static void createAlertDialog(String msg, Context context) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -311,9 +403,7 @@ public class UIUtils {
 		alert.show();
 	}
 	
-	
-	static class CreatePlaceDialog	{
-		private Dialog dialog;
+	static class CreatePlaceDialog	{		private Dialog dialog;
 		private EditText editAddress;
 		private Calendar startDate = new GregorianCalendar(); 
 		private Calendar endDate = new GregorianCalendar(); 
@@ -344,14 +434,19 @@ public class UIUtils {
                 {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
                     {
-                    	cal.set(year, monthOfYear, monthOfYear);
+                    	cal.set(year, monthOfYear, dayOfMonth);
                         //monthOfYear++;
-                    	textStr.setText(cal.toString());
+                    	textStr.setText(printDateFromCalendar(cal));
                         // TODO Send dates to server
                     }
                 };
-                DatePickerDialog datePickerDialog = new DatePickerDialog(CreatePlaceDialog.this.activity, 
-                		mDateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+                DatePickerDialog datePickerDialog = 
+                	new DatePickerDialog(
+                			CreatePlaceDialog.this.activity, 
+                			mDateSetListener, 
+                			cal.get(Calendar.YEAR), 
+                			cal.get(Calendar.MONTH), 
+                			cal.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
 			}
         	
@@ -466,8 +561,8 @@ public class UIUtils {
 			
 			fromDate = (TextView) dialog.findViewById(R.id.CPDFromDatetextView);
 			toDate   = (TextView) dialog.findViewById(R.id.CPDToDatetextView);
-		//	fromDate.setText(startDate.toString()); 
-	    //    toDate.setText(endDate.toString());
+			fromDate.setText(printDateFromCalendar(startDate)); 
+	        toDate.setText(printDateFromCalendar(endDate)); 
 	        
 	        changeStartDate = (Button) dialog.findViewById(R.id.CPDChange1button);
 	        changeEndDate = (Button) dialog.findViewById(R.id.CPDChange2button);
@@ -480,20 +575,22 @@ public class UIUtils {
 			timeTextViews[0] = (TextView) dialog.findViewById(R.id.CPDshahritTime);
 			checkBoxes[0].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[0], 
 					0, checkBoxes[0], 7, 0, R.drawable.shaharit_small));
+			
 			checkBoxes[1] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);
 			timeTextViews[1] = (TextView) dialog.findViewById(R.id.CPDminhaTime);
 			checkBoxes[1].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[1], 
 					1, checkBoxes[0], 15, 0, R.drawable.minha_small));
+			
 			checkBoxes[2] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
 			timeTextViews[2] = (TextView) dialog.findViewById(R.id.CPDarvitTime);
 			checkBoxes[2].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[2], 
 					2, checkBoxes[2], 19, 0, R.drawable.arvit_small));
 			
-			Button yesButton = (Button) dialog.findViewById(R.id.CPDYesButton);
-	        Button noButton = (Button) dialog.findViewById(R.id.CPDNoButton);
+			Button createButton = (Button) dialog.findViewById(R.id.CPDCreateButton);
+	        Button cancelButton = (Button) dialog.findViewById(R.id.CPDCancelButton);
 	        
 	    
-			yesButton.setOnClickListener(new OnClickListener() {
+			createButton.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View view) {
 					final Date finalstartDate = new Date(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
@@ -505,7 +602,7 @@ public class UIUtils {
 
 			});
 
-			noButton.setOnClickListener(new OnClickListener() {
+			cancelButton.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View view) {
 
@@ -521,7 +618,6 @@ public class UIUtils {
 		}
 
 	};
-	
 
 	static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
 	{
@@ -532,16 +628,14 @@ public class UIUtils {
 		}
 		
      }
-
-	
-	
 	
 	static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user,
 			FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes) {
 		GeneralPlace newMinyan = new GeneralPlace(user, user.getName()
 				+ "'s Minyan Place", "", point, startDate,endDate);
 		newMinyan.setPrays(prays);
-		Calendar c = new GregorianCalendar(2011,2,2,15,30);
+		//Calendar c = new GregorianCalendar(2011,2,2,15,30);
+		Calendar c = new GregorianCalendar();
 		Pray praysOfTheDay[] = new Pray[3];
 		List<GeneralUser> j = new ArrayList<GeneralUser>();
 		j.add(user);
@@ -563,6 +657,13 @@ public class UIUtils {
 				new UpdateUI<Long>(activity));
 
 		
+	}
+
+	public static String printDateFromCalendar(Calendar c) {
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int month = (c.get(Calendar.MONTH)+1);
+		int year = c.get(Calendar.YEAR);
+		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
 	}
 
 

@@ -453,9 +453,9 @@ extends MapActivity
       
         /*
          * User overlay and icon:
-         */
+         */ 
         //Creates the user's map-icon
-        userDefaultMarker = this.getResources().getDrawable(R.drawable.user_kipa_pin);
+        userDefaultMarker = this.getResources().getDrawable(R.drawable.user_red_sruga);
         // create an PrayerArrayItemizedOverlay for the user
 		userOverlay       = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
 		 // add the PrayerArrayItemizedOverlay to the MapView
@@ -482,7 +482,7 @@ extends MapActivity
         /*
          * Other users overlay and icons:
          */
-		othersDefaultMarker = this.getResources().getDrawable(R.drawable.others_kipa_pin);
+		othersDefaultMarker = this.getResources().getDrawable(R.drawable.user_blue_sruga);
 		otherUsersOverlay   = new PrayerArrayItemizedOverlay(othersDefaultMarker, this);
 		mapView.getOverlays().add(otherUsersOverlay);	 
 		

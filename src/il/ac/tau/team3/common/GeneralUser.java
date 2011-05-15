@@ -58,7 +58,11 @@ public class GeneralUser extends GeneralLocation implements Serializable {
 		
 		@JsonIgnore
 		public String getFullName() {
-			return (this.firstName + " " + this.lastName);
+			if (this.firstName == null && this.lastName == null){
+				return null;
+			}
+			
+			return (this.firstName == null? "" : (this.firstName + " "))  + (this.lastName == null? "" : this.lastName);
 		}
 		
 		

@@ -11,6 +11,7 @@ import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.Pray;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
+import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -70,7 +71,8 @@ public class UIUtils {
 			}
 		}
 	}
-
+	
+	
 	static void RegisterClick(final GeneralPlace place,
 			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
 		GeneralUser user = placeOverlay.getThisUser();
@@ -86,31 +88,21 @@ public class UIUtils {
 			}
 		}
 
-		// if(!place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-
-		// TODO: add joiner
-		// boolean suc =
-		// placeOverlay.getActivity().getRestTemplateFacade().AddJoiner(place,
-		// placeOverlay.getThisUser());
+		
 		placeOverlay
 				.getActivity()
 				.getSPComm()
 				.requestPostRegister(place, user, praysWishes,
 						new UpdateUI<String>(placeOverlay.getActivity()));
 
-		// }else{
-		// createAlertDialog(_sAlreadyRegisterAlertMsg,
-		// placeOverlay.getActivity());
-		// }
+		
 
 	}
 
 	static void DeleteClick(final GeneralPlace place,
 			final PlaceArrayItemizedOverlay placeOverlay) {
 		if (place.getOwner().getName().equals(placeOverlay.getThisUser().getName())) {
-			// TODO: remmove place
-			// boolean suc =
-			// placeOverlay.getActivity().getRestTemplateFacade().RemovePlace(place);
+		
 			placeOverlay
 					.getActivity()
 					.getSPComm()
@@ -135,20 +127,14 @@ public class UIUtils {
 				return;
 			}
 		}
-		// if(place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-		// TODO: add remove joiner
-		// boolean suc =
-		// placeOverlay.getActivity().getRestTemplateFacade().RemoveJoiner(place,
-		// placeOverlay.getThisUser());
+	
 		placeOverlay
 				.getActivity()
 				.getSPComm()
 				.removeJoiner(place, user, praysWishes,
 						new UpdateUI<Void>(placeOverlay.getActivity()));
 
-		// }else{
-		// createAlertDialog(_sUserNotRegisterMsg, placeOverlay.getActivity());
-		// }
+	
 
 	}
 

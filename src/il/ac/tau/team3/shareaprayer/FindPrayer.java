@@ -3,7 +3,9 @@ package il.ac.tau.team3.shareaprayer;
  
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,6 +16,7 @@ import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.spcomm.ACommHandler;
+import il.ac.tau.team3.spcomm.ICommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -76,7 +79,7 @@ extends MapActivity
 	private PlaceArrayItemizedOverlay closestPlaceOverlay;
 	
 	private SPComm comm = new SPComm();
-	/*** @draw ***/
+
 	
 	
 	private Integer calculateViewableRadius(SPGeoPoint center)	{
@@ -446,7 +449,8 @@ extends MapActivity
 			
         	
         });
-     
+        
+      
         /*
          * User overlay and icon:
          */
@@ -542,6 +546,8 @@ extends MapActivity
                     GeneralUser user = service.getUser();
                     publicPlaceOverlay.setThisUser(service.getUser());
                     closestPlaceOverlay.setThisUser(service.getUser());
+                    
+                  
                     if (gp == null)
                     {
                         return;

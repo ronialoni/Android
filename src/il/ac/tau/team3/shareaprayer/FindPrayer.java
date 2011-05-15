@@ -197,7 +197,7 @@ extends MapActivity
     	                        try
     	                        {
     	                            GeneralUser thisUser = svcGetter.getService().getUser();
-    	                            if (!thisUser.getId().equals(user.getId()))
+    	                            if (!thisUser.getName().equals(user.getName()))
     	                            {
     	                                usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
     	                            }

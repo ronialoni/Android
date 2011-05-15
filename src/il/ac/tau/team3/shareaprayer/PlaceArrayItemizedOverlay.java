@@ -72,49 +72,7 @@ extends PrayerArrayItemizedOverlay
 
 	
 	
-	
-	
-//	private void createRegisterDialog(String message, final GeneralPlace place, final PlaceArrayItemizedOverlay p)
-//	{
-//		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-//		builder.setMessage(message);
-//		builder.setCancelable(true);
-//		builder.setPositiveButton("Register", new DialogInterface.OnClickListener()
-//		{
-//			public void onClick(DialogInterface dialog, int id) 
-//			{
-//				
-//				if(!place.IsJoinerSigned(thisUser.getName())){
-//					p.getActivity().getRestTemplateFacade().AddJoiner(place, thisUser);
-//				}else{
-//					AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-//					builder.setMessage("You are already registered to this place.");
-//					builder.setCancelable(true);
-//					builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() 
-//					{
-//						public void onClick(DialogInterface dialog, int id) {}
-//					});
-//					AlertDialog alert = builder.create();
-//					alert.show();
-//				}
-//				
-//				
-//				
-//			}
-//		});
-//		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() 
-//		{
-//			public void onClick(DialogInterface dialog, int id) {}
-//		});
-//		
-//		AlertDialog alert = builder.create();
-//		
-//		alert.show();
-//	}
-	
 
-	
-	
 	@Override
 	protected boolean onTap(int index)
 	{
@@ -132,8 +90,8 @@ extends PrayerArrayItemizedOverlay
 					} else	{
 						msg = "Prayer listed to " + p.getName() + " are:\n";
 					}
-					for (String joiner : p.getJoiners())	{
-						msg += joiner + "\n";
+					for (GeneralUser joiner : p.getJoiners())	{
+						msg += (joiner.getFullName()== null || joiner.getFullName() == "" ? joiner.getName() : joiner.getFullName()) + "\n";
 					}
 				} catch (NullPointerException e)	{
 					if (null != p){ 

@@ -17,10 +17,7 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 	private static final long serialVersionUID = 3680632953183211194L;
 	private String address;
 	private GeneralUser owner;
-	//private List<String> allJoiners;
-	//private List<String> allJoiners2;
-	//private List<String> allJoiners3;
-	
+
 	private Pray praysOfTheDay[];
 	
 	private boolean prays[];
@@ -34,9 +31,6 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 	
 	public GeneralPlace(){
 		super();
-		//this.allJoiners = new ArrayList<String>();
-		//this.allJoiners2 = new ArrayList<String>();
-		//this.allJoiners3 = new ArrayList<String>();
 		this.praysOfTheDay = new Pray[3];
 		this.prays = new boolean[3];
 		this.startDate = new Date();
@@ -46,9 +40,6 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 	public GeneralPlace(String name, String address , SPGeoPoint spGeoPoint){
 		super(spGeoPoint,name);
 		this.address = address;
-		//this.allJoiners = new ArrayList<String>();
-		//this.allJoiners2 = new ArrayList<String>();
-		//this.allJoiners3 = new ArrayList<String>();
 		this.praysOfTheDay = new Pray[3];
 		this.prays = new boolean[3];
 		this.startDate = new Date();
@@ -58,9 +49,6 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 	public GeneralPlace(GeneralUser owner, String name, String address , SPGeoPoint spGeoPoint, Date startDate,Date endDate){
 		super(spGeoPoint,name);
 		this.address = address;
-		//this.allJoiners = new ArrayList<String>();
-		//this.allJoiners2 = new ArrayList<String>();
-		//this.allJoiners3 = new ArrayList<String>();
 		this.praysOfTheDay = new Pray[3];
 		this.prays = new boolean[3];
 		this.owner = owner;
@@ -130,7 +118,7 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 
 	
 	@JsonIgnore
-	public boolean IsJoinerSigned(int prayNumber, String joiner){
+	public boolean IsJoinerSigned(int prayNumber, GeneralUser joiner){
 			if(prayNumber < 0 || prayNumber >= praysOfTheDay.length){
 				return false;
 			}

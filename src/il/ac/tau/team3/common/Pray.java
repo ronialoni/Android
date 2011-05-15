@@ -16,10 +16,10 @@ public class Pray  implements Serializable{
 	private Calendar startTime;
 	private Calendar endTime;
 	String name;
-	List<String> joiners;
+	List<GeneralUser> joiners;
 	
 	public Pray(Calendar startTime, Calendar endTime, String name,
-			List<String> joiners) {
+			List<GeneralUser> joiners) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -32,7 +32,7 @@ public class Pray  implements Serializable{
 		this.startTime = new GregorianCalendar();
 		this.endTime =  new GregorianCalendar();
 		this.name = "";
-		this.joiners = new ArrayList<String>();
+		this.joiners = new ArrayList<GeneralUser>();
 	}
 
 	public Calendar getStartTime() {
@@ -59,30 +59,42 @@ public class Pray  implements Serializable{
 		this.name = name;
 	}
 
-	public List<String> getJoiners() {
+	public List<GeneralUser> getJoiners() {
 		return joiners;
 	}
 
-	public void setJoiners(List<String> joiners) {
+	public void setJoiners(List<GeneralUser> joiners) {
 		this.joiners = joiners;
 	}
 	
-	public boolean isJoinerSigned(String joiner){
-		return this.joiners.contains(joiner);
+	public boolean isJoinerSigned(GeneralUser joiner){
+		for( GeneralUser signedJoiner : this.joiners){
+			if(signedJoiner.getName().equals(joiner.getName())){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public int numberOfJoiners(){
 		return this.joiners.size();
 	}
 	
-	public void addJoiner(String name){
+	public void addJoiner(GeneralUser name){
+		for( GeneralUser signedJoiner : this.joiners){
+			if(signedJoiner.getName().equals(name.getName())){
+				return;
+			}
+		}
 		this.joiners.add(name);
 	}
 	
-	public void removeJoiner(String name){
-		if(this.joiners.contains(name)){
-			this.joiners.remove(name);
+	public void removeJoiner(GeneralUser name){
+		for( GeneralUser signedJoiner : this.joiners){
+			if(signedJoiner.getName().equals(name.getName())){
+				this.joiners.remove(signedJoiner);
+				return;
+			}
 		}
 	}
-	
 }

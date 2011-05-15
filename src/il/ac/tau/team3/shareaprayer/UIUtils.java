@@ -557,8 +557,8 @@ public class UIUtils {
 		newMinyan.setPrays(prays);
 		Calendar c = new GregorianCalendar(2011,2,2,15,30);
 		Pray praysOfTheDay[] = new Pray[3];
-		List<String> j = new ArrayList<String>();
-		j.add(user.getName());
+		List<GeneralUser> j = new ArrayList<GeneralUser>();
+		j.add(user);
 		if (prays[0]) {
 			
 			Pray pray = new Pray(prayTimes[0], c, "Shaharit", j);

@@ -11,13 +11,13 @@
         <TextView android:layout_width="wrap_content" android:text="" android:layout_height="wrap_content" android:id="@+id/RTextMsg2"></TextView>
         
         <TableRow android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <CheckBox android:text="Shaharit" android:id="@+id/checkBoxPlace1" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
+            <CheckBox android:text="Shaharit" android:id="@+id/checkBoxPlace1" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
         </TableRow>
         <TableRow android:id="@+id/tableRow2" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <CheckBox android:text="Minha" android:id="@+id/checkBoxPlace2" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
+            <CheckBox android:text="Minha" android:id="@+id/checkBoxPlace2" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
         </TableRow>
         <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <CheckBox android:text="Arvit" android:id="@+id/checkBoxPlace3" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
+            <CheckBox android:text="Arvit" android:id="@+id/checkBoxPlace3" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
         </TableRow>
         
         <TableRow android:id="@+id/tableRow5" android:layout_width="fill_parent" android:layout_height="wrap_content" android:weightSum = "1.0">

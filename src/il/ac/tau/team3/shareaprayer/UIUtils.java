@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
@@ -138,7 +140,25 @@ public class UIUtils {
 
 	}
 	
-	/*package*/ static void createRegisterDialog(String message1, String message2, String message3, final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
+	static class PrayUIObj	{
+		public TextView prayText;
+		public CheckBox prayCheckBox;
+		public boolean	wish = false;
+		public boolean  exists = false;
+		public PrayUIObj(TextView prayText, CheckBox prayCheckBox) {
+			super();
+			this.prayText = prayText;
+			this.prayCheckBox = prayCheckBox;
+		}
+		
+		
+	}
+	
+	private static boolean[] toPrayerWishes(Map<String, PrayUIObj> ui)	{
+		return new boolean[]{ui.get("Shaharit").wish, ui.get("Minha").wish, ui.get("Arvit").wish};
+	}
+	
+	/*package*/ static void createRegisterDialog(Map<String,String> msgs, final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
 	{
 		if (placeOverlay == null || placeOverlay.getThisUser() == null || place == null) 
 		{
@@ -147,7 +167,6 @@ public class UIUtils {
 			return;
 		}
 
-		final boolean praysWishes[] = new boolean[3];
  
 		final Dialog dialog = new Dialog(placeOverlay.getActivity());
 //		dialog.setContentView(R.layout.dialog_place_registration);
@@ -247,90 +266,49 @@ public class UIUtils {
 //		
 //		
 		
-		
-		
 		dialog.setContentView(R.layout.place_dialog);
-		if (place.getPrays()[0]) {
-			
-			TextView text = (TextView) dialog.findViewById(R.id.RTextMsg);
-			//String msg = message1 + _sWantToRegisterQues;
-			text.setText(message1);
-		}
-		if (place.getPrays()[1]) {
-			TextView text2 = (TextView) dialog.findViewById(R.id.RTextMsg1);
-			//String msg2 = message2 + _sWantToRegisterQues;
-			text2.setText(message2);
-		}
-		if (place.getPrays()[2]) {
-			TextView text3 = (TextView) dialog.findViewById(R.id.RTextMsg2);
-			//String msg3 = message3 + _sWantToRegisterQues;
-			text3.setText(message3);
-		}
+		
+		final Map<String, PrayUIObj> JoinersUI = new HashMap<String, PrayUIObj>();
+		JoinersUI.put("Shaharit", new PrayUIObj((TextView) dialog.findViewById(R.id.RTextMsg), 
+				(CheckBox) dialog.findViewById(R.id.checkBoxPlace1)));
+		JoinersUI.put("Minha", new PrayUIObj((TextView) dialog.findViewById(R.id.RTextMsg1), 
+				(CheckBox) dialog.findViewById(R.id.checkBoxPlace2)));
+		JoinersUI.put("Arvit", new PrayUIObj((TextView) dialog.findViewById(R.id.RTextMsg2), 
+				(CheckBox) dialog.findViewById(R.id.checkBoxPlace3)));
 
-		CheckBox pray1 = (CheckBox) dialog.findViewById(R.id.checkBoxPlace1);
-		if (!place.getPrays()[0]) {
-			pray1.setVisibility(View.INVISIBLE);
-		}
-
-		CheckBox pray2 = (CheckBox) dialog.findViewById(R.id.checkBoxPlace2);
-		if (!place.getPrays()[1]) {
-			pray2.setVisibility(View.INVISIBLE);
-		}
-		CheckBox pray3 = (CheckBox) dialog.findViewById(R.id.checkBoxPlace3);
-		if (!place.getPrays()[2]) {
-			pray3.setVisibility(View.INVISIBLE);
-		}
-
-		pray1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				if (isChecked) {
-					praysWishes[0] = true;
-				} else {
-					praysWishes[0] = false;
+		
+		
+		
+		for (Pray p : place.getPraysOfTheDay())	{
+			if (null != p)	{
+				final PrayUIObj uiObj = JoinersUI.get(p.getName());
+				if (uiObj == null)	{
+					continue;
 				}
+				uiObj.exists = true;
+				uiObj.prayText.setText(msgs.get(p.getName()));
+				uiObj.prayCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if (isChecked) {
+							uiObj.wish = true;
+						} else {
+							uiObj.wish = false;
+						}
+
+					}
+				});
+				uiObj.prayCheckBox.setVisibility(View.VISIBLE);
 			}
-		});
+		}
 
-		pray2.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				if (isChecked) {
-					praysWishes[1] = true;
-				} else {
-					praysWishes[1] = false;
-				}
-
-			}
-		});
-
-		pray3.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				if (isChecked) {
-					praysWishes[2] = true;
-				} else {
-					praysWishes[2] = false;
-				}
-
-			}
-		});
 
 		Button regButton = (Button) dialog.findViewById(R.id.button1);
 		regButton.setText("Reg");
-		// if(place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-		// regButton.setVisibility(View.INVISIBLE);
-		// }
 
 		Button unregButton = (Button) dialog.findViewById(R.id.button2);
 		unregButton.setText("Unreg");
-		// if(!place.IsJoinerSigned(placeOverlay.getThisUser().getName())){
-		// unregButton.setVisibility(View.INVISIBLE);
-		// }
 
 		Button deleteButton = (Button) dialog.findViewById(R.id.button3);
 		deleteButton.setText("Delete");
@@ -347,7 +325,7 @@ public class UIUtils {
 
 			public void onClick(View view) {
 
-				RegisterClick(place, placeOverlay, praysWishes);
+				RegisterClick(place, placeOverlay, toPrayerWishes(JoinersUI));
 				dialog.dismiss();
 
 			};
@@ -358,7 +336,7 @@ public class UIUtils {
 
 			public void onClick(View view) {
 
-				UnregisterClick(place, placeOverlay, praysWishes);
+				UnregisterClick(place, placeOverlay, toPrayerWishes(JoinersUI));
 				dialog.dismiss();
 
 			};

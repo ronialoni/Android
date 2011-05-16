@@ -22,8 +22,8 @@ import android.util.Log;
 
 public class RestTemplateFacade {
 	
-	static final String _sServerHeader = "http://share-a-prayer.appspot.com/resources/prayerjersy/";
-	//static final String _sServerHeader = "http://10.0.2.2:8888/resources/prayerjersy/";
+	//static final String _sServerHeader = "http://share-a-prayer.appspot.com/resources/prayerjersy/";
+	static final String _sServerHeader = "http://10.0.2.2:8888/resources/prayerjersy/";
 	
 	private RestTemplate restTemplate;
 	private   List<HttpMessageConverter<?>>      mc;

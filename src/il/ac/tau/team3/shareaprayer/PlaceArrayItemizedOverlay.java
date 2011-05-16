@@ -79,7 +79,7 @@ extends PrayerArrayItemizedOverlay
 	    
 		final PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
 		
-		Map<String, String> msgs = new HashMap<String, String>();
+		final Map<String, String> msgs = new HashMap<String, String>();
 		try{
 		
 			for (Pray p : placeItem.getPlace().getPraysOfTheDay())	{
@@ -107,14 +107,11 @@ extends PrayerArrayItemizedOverlay
 		
 		
 		final PlaceArrayItemizedOverlay p = this;
-		final String cmsg1=msgs.get("Shaharit");
-		final String cmsg2=msgs.get("Minha");
-		final String cmsg3=msgs.get("Arvit");
 		
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-				UIUtils.createRegisterDialog(cmsg1,cmsg2,cmsg3, placeItem.getPlace(), p);
+				UIUtils.createRegisterDialog(msgs, placeItem.getPlace(), p);
 				
 			}
 		});

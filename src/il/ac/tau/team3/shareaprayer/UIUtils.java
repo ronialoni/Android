@@ -43,9 +43,9 @@ import android.widget.QuickContactBadge;
 import android.widget.RemoteViews.ActionException;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
+ 
 public class UIUtils {
-
+ 
 	static String _sNewPlaceQues = "Do you want to create a public praying place?";
 	static String _sNoPraySelected = "Please select at least one pray before creating a new place.";
 	static String _sAlreadyRegisterAlertMsg = "You are already registered to this place.";
@@ -59,11 +59,12 @@ public class UIUtils {
 		public UpdateUI(FindPrayer a_activity) {
 			activity = a_activity;
 		}
-
+ 
 		@Override
 		public void onRecv(T Obj) {
 			synchronized (activity.getRefreshTask()) {
 				activity.getRefreshTask().notify();
+			
 			}
 		}
 
@@ -150,7 +151,7 @@ public class UIUtils {
 			this.prayText = prayText;
 			this.prayCheckBox = prayCheckBox;
 		}
-		
+	
 		
 	}
 	
@@ -169,114 +170,42 @@ public class UIUtils {
 
  
 		final Dialog dialog = new Dialog(placeOverlay.getActivity());
-//		dialog.setContentView(R.layout.dialog_place_registration);
- 
-
-//		//dialog.setTitle(removeAtGmailDotCom(place.getName()));
-//		
-//		//People Button:
-//		Button peopleButton = (Button) dialog.findViewById(R.id.DPRShowPeople);
-//		
-//		// Address and Dates
-//		TextView placeAddress = (TextView) dialog.findViewById(R.id.DPRaddress);
-//		placeAddress.setText(place.getAddress());
-//		
-//		TextView placeDates = (TextView) dialog.findViewById(R.id.DPRdates);
-//		//TODO placeDates.setText(place.getClosingDate());
-//		
-//		// Checkboxes:
-//		CheckBox[] praysCB = new CheckBox[3];
-//		praysCB[0] = (CheckBox) dialog.findViewById(R.id.DPRcheckboxShaharit);
-//		praysCB[1] = (CheckBox) dialog.findViewById(R.id.DPRcheckboxMinha);
-//		praysCB[2] = (CheckBox) dialog.findViewById(R.id.DPRcheckboxArvit);
-//		
-//		for (int i=0; i<3 ; i++)
-//		{
-//			final int temp = i;
-//			praysCB[i].setClickable(place.getPrays()[i]);
-//			praysCB[i].setTextColor(place.getPrays()[i] ? Color.WHITE : Color.GRAY);
-//			praysCB[i].setOnCheckedChangeListener(new OnCheckedChangeListener() 
-//			{
-//				public void onCheckedChanged(CompoundButton buttonView,	boolean isChecked) 
-//				{
-//					praysWishes[temp] = isChecked;
-//				}
-//			});
-//		}
-//		for (int i=0; i<3 ; i++)
-//		{		
-//			try 
-//			{
-//				//praysCB[i].setChecked(place.IsJoinerSigned(i+1, placeOverlay.getThisUser()));
-//			} catch (NullPointerException e){}
-//					
-//		}
-////		praysCB[1].setChecked(place.IsJoinerSigned(2, placeOverlay.getThisUser()));
-////		praysCB[2].setChecked(place.IsJoinerSigned(3, placeOverlay.getThisUser()));
-////		praysCB[0].setChecked(place.IsJoinerSigned(placeOverlay.getThisUser().getName()));
-////		praysCB[1].setChecked(place.IsJoinerSigned2(placeOverlay.getThisUser().getName()));
-////		praysCB[2].setChecked(place.IsJoinerSigned3(placeOverlay.getThisUser().getName()));
-//
-//		//Prayers times:
-//		TextView[] prayersTimes = new TextView[3];
-//		prayersTimes[0] = (TextView) dialog.findViewById(R.id.DPRtimeShaharit);
-//		prayersTimes[1] = (TextView) dialog.findViewById(R.id.DPRtimeMinha);
-//		prayersTimes[2] = (TextView) dialog.findViewById(R.id.DPRtimeArvit);
-//		// TODO get times of prayers and set the texts
-//		
-//		
-//		// Number of registered users:
-//		TextView[] numberOfUsers = new TextView[3];
-//		numberOfUsers[0] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersShaharit);
-//		numberOfUsers[1] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersMinha);
-//		numberOfUsers[2] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersArvit);
-//		
-//		numberOfUsers[0].setText(String.valueOf(place.getNumberOfPrayers(0)));
-//		numberOfUsers[1].setText(String.valueOf(place.getNumberOfPrayers(1)));
-//		numberOfUsers[2].setText(String.valueOf(place.getNumberOfPrayers(2)));
-//			
-//		
-//		// Set and Cancel Buttons:
-//		Button setButton = (Button) dialog.findViewById(R.id.DPRSetButton);
-//		Button cancelButton = (Button) dialog.findViewById(R.id.DPRCancelButton);
-//
-//		setButton.setOnClickListener(new OnClickListener() 
-//		{
-//			public void onClick(View view) 
-//			{
-//				//TODO Check for problems
-//				UnregisterClick(place, placeOverlay, praysWishes);
-//				RegisterClick(place, placeOverlay, praysWishes);
-//				dialog.dismiss();
-//			};
-//		});
-//		
-//		cancelButton.setOnClickListener(new OnClickListener() 
-//		{
-//			public void onClick(View view) 
-//			{
-//				dialog.dismiss();
-//			};
-//		});
-//				
-//		dialog.show();
-//		
-//		
-//		
-//		
-//		
+		//dialog.setContentView(R.layout.place_dialog);
+		dialog.setContentView(R.layout.dialog_place_registration);
+		dialog.setTitle(place.getName());
 		
-		dialog.setContentView(R.layout.place_dialog);
+		// Address and Dates
+		TextView placeAddress = (TextView) dialog.findViewById(R.id.DPRaddress);
+		placeAddress.setText(place.getAddress());
+		// TODO Date is wrong
+		TextView placeDates = (TextView) dialog.findViewById(R.id.DPRdates);
+		placeDates.setText(printDateFromDate(place.getEndDate()));
+		
+		// Number of registered users:
+		TextView[] numberOfUsers = new TextView[3];
+		numberOfUsers[0] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersShaharit);
+		numberOfUsers[1] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersMinha);
+		numberOfUsers[2] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersArvit);
 		
 		final Map<String, PrayUIObj> JoinersUI = new HashMap<String, PrayUIObj>();
-		JoinersUI.put("Shaharit", new PrayUIObj((TextView) dialog.findViewById(R.id.RTextMsg), 
-				(CheckBox) dialog.findViewById(R.id.checkBoxPlace1)));
-		JoinersUI.put("Minha", new PrayUIObj((TextView) dialog.findViewById(R.id.RTextMsg1), 
-				(CheckBox) dialog.findViewById(R.id.checkBoxPlace2)));
-		JoinersUI.put("Arvit", new PrayUIObj((TextView) dialog.findViewById(R.id.RTextMsg2), 
-				(CheckBox) dialog.findViewById(R.id.checkBoxPlace3)));
-
 		
+		JoinersUI.put("Shaharit", new PrayUIObj((TextView) dialog.findViewById(R.id.DPRtimeShaharit), 
+												(CheckBox) dialog.findViewById(R.id.DPRcheckboxShaharit)));
+		
+		JoinersUI.put("Minha", 	  new PrayUIObj((TextView) dialog.findViewById(R.id.DPRtimeMinha), 
+											    (CheckBox) dialog.findViewById(R.id.DPRcheckboxMinha)));
+		
+		JoinersUI.put("Arvit",    new PrayUIObj((TextView) dialog.findViewById(R.id.DPRtimeArvit), 
+											    (CheckBox) dialog.findViewById(R.id.DPRcheckboxArvit)));
+		
+		// Temporary solution - Sets all checkboxes to unclickable 
+		JoinersUI.get("Shaharit").prayCheckBox.setClickable(false);
+		JoinersUI.get("Shaharit").prayCheckBox.setTextColor(Color.GRAY);
+		JoinersUI.get("Minha").prayCheckBox.setClickable(false);
+		JoinersUI.get("Minha").prayCheckBox.setTextColor(Color.GRAY);
+		JoinersUI.get("Arvit").prayCheckBox.setClickable(false);
+		JoinersUI.get("Arvit").prayCheckBox.setTextColor(Color.GRAY);
+		//
 		
 		
 		for (Pray p : place.getPraysOfTheDay())	{
@@ -286,7 +215,8 @@ public class UIUtils {
 					continue;
 				}
 				uiObj.exists = true;
-				uiObj.prayText.setText(msgs.get(p.getName()));
+				//uiObj.prayText.setText(msgs.get(p.getName()));
+				uiObj.prayText.setText(printTimeFromCalendar(p.getStartTime()));
 				uiObj.prayCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 					public void onCheckedChanged(CompoundButton buttonView,
@@ -299,74 +229,69 @@ public class UIUtils {
 
 					}
 				});
-				uiObj.prayCheckBox.setVisibility(View.VISIBLE);
+				
+				//uiObj.prayCheckBox.setVisibility(View.VISIBLE);
+				Boolean isSigned = p.isJoinerSigned(placeOverlay.getThisUser());
+				uiObj.prayCheckBox.setChecked(isSigned);
+				uiObj.prayCheckBox.setClickable(true);
+				uiObj.prayCheckBox.setTextColor(Color.WHITE);
 			}
 		}
-
-
-		Button regButton = (Button) dialog.findViewById(R.id.button1);
-		regButton.setText("Reg");
-
-		Button unregButton = (Button) dialog.findViewById(R.id.button2);
-		unregButton.setText("Unreg");
-
-		Button deleteButton = (Button) dialog.findViewById(R.id.button3);
-		deleteButton.setText("Delete");
+		// Number of registered users:
+		// TODO make it work
+		for (int i=0; i<3; i++){
+			numberOfUsers[i].setText("");
+		}
+		//People Button: Temporary
+		final String prayersList = msgs.get("Shaharit") + msgs.get("Minha") +  msgs.get("Arvit"); 
+		Button peopleButton = (Button) dialog.findViewById(R.id.DPRShowPeople);
+		peopleButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				createAlertDialog(prayersList, placeOverlay.getActivity());
+				dialog.dismiss();
+			};
+		});
+		
+		// Delete Set and Cancel Buttons:
+		Button setButton = (Button) dialog.findViewById(R.id.DPRSetButton);
+		Button cancelButton = (Button) dialog.findViewById(R.id.DPRCancelButton);
+		Button deleteButton = (Button) dialog.findViewById(R.id.DPRDeleteButton);
+		 
+		deleteButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View view) {
+				DeleteClick(place, placeOverlay);
+				dialog.dismiss();
+			};
+		});
 		if (place.getOwner() != null && placeOverlay.getThisUser() != null) {
 			if (!(place.getOwner().getName().equals(placeOverlay.getThisUser().getName()))) {
 				deleteButton.setVisibility(View.INVISIBLE);
 			}
 		}
-
-		Button cancelButton = (Button) dialog.findViewById(R.id.button4);
-		cancelButton.setText("Cancel");
-
-		regButton.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View view) {
-
+		final boolean allTrues[] = new boolean[3];
+		for (int i=0; i<3; i++){ allTrues[i] = true;}
+		setButton.setOnClickListener(new OnClickListener() 
+		{
+			public void onClick(View view) 
+			{
+				UnregisterClick(place, placeOverlay, allTrues);
 				RegisterClick(place, placeOverlay, toPrayerWishes(JoinersUI));
 				dialog.dismiss();
-
 			};
-
 		});
-
-		unregButton.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View view) {
-
-				UnregisterClick(place, placeOverlay, toPrayerWishes(JoinersUI));
+		
+		cancelButton.setOnClickListener(new OnClickListener() 
+		{
+			public void onClick(View view) 
+			{
 				dialog.dismiss();
-
 			};
-
-		});
-
-		deleteButton.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View view) {
-
-				DeleteClick(place, placeOverlay);
-				dialog.dismiss();
-
-			};
-
-		});
-
-		cancelButton.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View view) {
-				dialog.dismiss();
-
-			};
-
 		});
 
 		dialog.show();
-		// regButton.setVisibility(visibility)
-
 	}
+
+	
 
 	static void createAlertDialog(String msg, Context context) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -636,6 +561,7 @@ public class UIUtils {
 		
 	}
 
+	
 	public static String printDateFromCalendar(Calendar c) {
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int month = (c.get(Calendar.MONTH)+1);
@@ -643,8 +569,23 @@ public class UIUtils {
 		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
 	}
 
+	private static String printDateFromDate(Date d) {
+		int day = d.getDay();
+		int month = d.getMonth();
+		int year = d.getYear();
+		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
+	}
 
+	private static String printTimeFromDate(Date time) {
+		int hour = time.getHours();
+		int minutes = time.getMinutes();
+		return ((hour < 10 ? "0" : "") + hour + ":" + (minutes < 10 ? "0" : "") + minutes + " ");
+	}
     
-    
+	private static String printTimeFromCalendar(Calendar cal) {
+		int hour = cal.getTime().getHours();
+		int minutes = cal.getTime().getMinutes();
+		return ((hour < 10 ? "0" : "") + hour + ":" + (minutes < 10 ? "0" : "") + minutes + " ");
+	}
     
 }

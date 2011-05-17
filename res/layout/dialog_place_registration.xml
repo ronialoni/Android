@@ -206,5 +206,9 @@
                android:layout_weight = ".2"
                />
         </LinearLayout>
-        <GridView android:id="@+id/gridView1" android:layout_width="wrap_content" android:layout_height="wrap_content"></GridView>
+        <Button android:id				="@+id/DPRDeleteButton"  
+        		android:text			="Delete Place" 
+        		android:layout_width	="fill_parent" 
+        		android:layout_height	="wrap_content"
+        		></Button>
     </TableLayout>

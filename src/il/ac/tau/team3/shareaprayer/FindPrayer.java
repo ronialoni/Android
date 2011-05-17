@@ -259,6 +259,8 @@ extends MapActivity
 										e.printStackTrace();
 									}
     					        	closestPlaceOverlay.changeItems(closestPlacesOverlayList);
+    					        } else	{
+    					        	closestPlaceOverlay.clear();
     					        }
     					        
     					        if (null != places)

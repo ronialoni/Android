@@ -1,6 +1,7 @@
 package il.ac.tau.team3.shareaprayer;
 
 import il.ac.tau.team3.common.GeneralPlace;
+import il.ac.tau.team3.common.Pray;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -24,35 +25,15 @@ public class BitmapDrawableNumbered extends BitmapDrawable {
 		int max = 0;
 		
 		try	{
-			if (max < place.getPraysOfTheDay()[0].numberOfJoiners())	{
-				max = place.getPraysOfTheDay()[0].numberOfJoiners();
+			for (Pray p : place.getPraysOfTheDay())	{
+				if (max < p.numberOfJoiners())	{
+					max = p.numberOfJoiners();
+				}
 			}
 		} catch (NullPointerException e)	{
-			
+			// no prays for place
 		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
-		}
-		try	{
-			if (max < place.getPraysOfTheDay()[1].numberOfJoiners())	{
-				max = place.getPraysOfTheDay()[1].numberOfJoiners();
-			}
-		} catch (NullPointerException e)	{
-			
-		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
-		}
-		try	{
-			if (max < place.getPraysOfTheDay()[2].numberOfJoiners())	{
-				max = place.getPraysOfTheDay()[2].numberOfJoiners();
-			}
-		} catch (NullPointerException e)	{
-			
-		}
-		catch(ArrayIndexOutOfBoundsException e){
-			
-		}
+		
 		
 		return max;
 	}

@@ -611,10 +611,9 @@ public class UIUtils {
 			FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes) {
 		GeneralPlace newMinyan = new GeneralPlace(user, user.getName()
 				+ "'s Minyan Place", "", point, startDate,endDate);
-		newMinyan.setPrays(prays);
+		//newMinyan.setPrays(prays);
 		//Calendar c = new GregorianCalendar(2011,2,2,15,30);
 		Calendar c = new GregorianCalendar();
-		Pray praysOfTheDay[] = new Pray[3];
 		List<GeneralUser> j = new ArrayList<GeneralUser>();
 		j.add(user);
 		if (prays[0]) {

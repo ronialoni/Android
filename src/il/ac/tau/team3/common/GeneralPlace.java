@@ -20,21 +20,24 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
         private String address;
         private GeneralUser owner;
 
-        private Pray praysOfTheDay[];
+        private List<Pray> praysOfTheDay;
 
-        private boolean prays[];
         private Date startDate;
         private Date endDate;
 
 
 
 
-
+        private void initializePraysOfTheDay()	{
+    		this.praysOfTheDay = new ArrayList<Pray>(3);
+    		this.praysOfTheDay.add(null);
+    		this.praysOfTheDay.add(null);
+    		this.praysOfTheDay.add(null);
+    	}
 
         public GeneralPlace(){
                 super();
-                this.praysOfTheDay = new Pray[3];
-                this.prays = new boolean[3];
+                initializePraysOfTheDay();
                 this.startDate = new Date();
                 this.endDate = new Date();
         }
@@ -42,8 +45,7 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
         public GeneralPlace(String name, String address , SPGeoPoint spGeoPoint){
                 super(spGeoPoint,name);
                 this.address = address;
-                this.praysOfTheDay = new Pray[3];
-                this.prays = new boolean[3];
+                initializePraysOfTheDay();
                 this.startDate = new Date();
                 this.endDate = new Date();
         }
@@ -51,8 +53,7 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
         public GeneralPlace(GeneralUser owner, String name, String address , SPGeoPoint spGeoPoint, Date startDate,Date endDate){
                 super(spGeoPoint,name);
                 this.address = address;
-                this.praysOfTheDay = new Pray[3];
-                this.prays = new boolean[3];
+                initializePraysOfTheDay();
                 this.owner = owner;
                 this.startDate = startDate;
                 this.endDate = endDate;
@@ -70,20 +71,48 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 //
 //        }
 
-        public Pray[] getPraysOfTheDay() {
+        public List<Pray> getPraysOfTheDay() {
                 return praysOfTheDay;
         }
 
-        public void setPraysOfTheDay(Pray[] praysOfTheDay) {
+        public void setPraysOfTheDay(List<Pray> praysOfTheDay) {
                 this.praysOfTheDay = praysOfTheDay;
         }
 
-        public void setPraysOfTheDay(int prayNumber, Pray praysOfTheDay) {
-                if(prayNumber < 0 || prayNumber >= this.praysOfTheDay.length){
-                        return ;
-                }
-                this.praysOfTheDay[prayNumber] = praysOfTheDay;
-        }
+        @JsonIgnore
+    	public void setPraysOfTheDay(int prayNumber, Pray praysOfTheDay) {
+        	try	{
+        		this.praysOfTheDay.set(prayNumber, praysOfTheDay);
+        	} catch (IndexOutOfBoundsException e){
+        		
+        	}
+        	
+    		
+    	}
+        
+    	@JsonIgnore
+    	public void setPraysOfTheDay(String prayName, Pray praysOfTheDay) {
+    		for (int i = 0; i < this.praysOfTheDay.size(); i++)	{
+    			if ( this.praysOfTheDay.get(i).getName().equals(praysOfTheDay.getName()))	{
+    				this.praysOfTheDay.set(i, praysOfTheDay);
+    			}
+    		}
+        	
+    	}
+        
+        @JsonIgnore
+    	public Pray getPrayByName(String prayName)	{
+    		for (int i = 0; i < this.praysOfTheDay.size(); i++)	{
+    			if ( this.praysOfTheDay.get(i).getName().equals(prayName))	{
+    				return this.praysOfTheDay.get(i); 
+    			}
+    		}
+    		
+    		return null;
+    		
+    	}
+        
+        
 
 
         public Date getStartDate() {
@@ -111,13 +140,6 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
                 this.owner = owner;
         }
 
-        public boolean[] getPrays() {
-                return prays;
-        }
-
-        public void setPrays(boolean[] prays) {
-                this.prays = prays;
-        }
 
 
 
@@ -133,15 +155,25 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 
         @JsonIgnore
         public boolean IsJoinerSigned(int prayNumber, GeneralUser joiner){
-                if(prayNumber < 0 || prayNumber >= praysOfTheDay.length){
-                        return false;
+                try	{
+                	return (this.praysOfTheDay.get(prayNumber).isJoinerSigned(joiner));
+                } catch (IndexOutOfBoundsException e)	{	
+                	return false;
+                } catch (NullPointerException e)	{
+                	return false;
                 }
-                return (this.praysOfTheDay[prayNumber].isJoinerSigned(joiner));
+                
         }
 
         @JsonIgnore  
         public int getNumberOfPrayers(int prayNumber){
-                return this.praysOfTheDay[prayNumber].numberOfJoiners();
+        	try	{
+                return this.praysOfTheDay.get(prayNumber).numberOfJoiners();
+        	}  catch (IndexOutOfBoundsException e)	{	
+            	return 0;
+            } catch (NullPointerException e)	{
+            	return 0;
+            }
         }
 
 

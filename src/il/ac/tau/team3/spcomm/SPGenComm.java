@@ -79,10 +79,10 @@ public class SPGenComm {
 
 			public void run() {
 				T response = null;
-			       
+					String url = "";
 			       try 
 			       {
-			    	   String url;
+			    	   
 			    	   if (request.startsWith("http"))	{
 			    		    url = request + "?"; 
 			    	   } else {
@@ -98,9 +98,9 @@ public class SPGenComm {
 			       {
 			    	   if (null != retObj)
 			    		   retObj.onError(null);
-			           Log.e("ShareAPrayer", "Exception in call to requestGet(...)" + rce.getMessage(), rce);
+			           Log.e("ShareAPrayer", "Exception in call to requestGet(...) of URL" + url + " Message:" + rce.getMessage(), rce);
 			       } catch (NullPointerException e)	{
-			        	Log.e("ShareAPrayer", "NULL Exception in call to requestGet(...)" + e.getMessage(), e);
+			        	Log.e("ShareAPrayer", "NULL Exception in call to requestGet(...) of URL" + url + " Message:"  + e.getMessage(), e);
 			        }
 			       
 			       if (null != retObj)

@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.spcomm.RestTemplateFacade;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Dialog;

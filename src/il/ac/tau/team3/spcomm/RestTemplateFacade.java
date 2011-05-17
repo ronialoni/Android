@@ -1,4 +1,4 @@
-package il.ac.tau.team3.shareaprayer;
+package il.ac.tau.team3.spcomm;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import android.util.Log;
 public class RestTemplateFacade {
 	
 	//static final String _sServerHeader = "http://share-a-prayer.appspot.com/resources/prayerjersy/";
-	static final String _sServerHeader = "http://10.0.2.2:8888/resources/prayerjersy/";
+	static final String _sServerHeader = SPGenComm.SERVER_URL;
 	
 	private RestTemplate restTemplate;
 	private   List<HttpMessageConverter<?>>      mc;
@@ -81,7 +81,7 @@ public class RestTemplateFacade {
 	 }
 	 
 	 
-	 Long UpdateUserByName(GeneralUser user){
+	 public Long UpdateUserByName(GeneralUser user){
 		 Long id;
 		 try{
 			id = restTemplate.postForObject(_sServerHeader + "updateuserbyname", user, Long.class);

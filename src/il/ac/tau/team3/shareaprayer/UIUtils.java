@@ -142,16 +142,22 @@ public class UIUtils {
 	}
 	
 	static class PrayUIObj	{
-		public TextView prayText;
+		public TextView prayTime;
 		public CheckBox prayCheckBox;
+		public TextView prayNumOfUsers;
 		public boolean	wish = false;
 		public boolean  exists = false;
-		public PrayUIObj(TextView prayText, CheckBox prayCheckBox) {
+		public PrayUIObj(TextView prayTime, CheckBox prayCheckBox) {
 			super();
-			this.prayText = prayText;
+			this.prayTime = prayTime;
 			this.prayCheckBox = prayCheckBox;
 		}
-	
+		public PrayUIObj(TextView prayTime, CheckBox prayCheckBox, TextView prayNumOfUsers) {
+			super();
+			this.prayTime = prayTime;
+			this.prayCheckBox = prayCheckBox;
+			this.prayNumOfUsers = prayNumOfUsers;
+		}
 		
 	}
 	
@@ -170,7 +176,6 @@ public class UIUtils {
 
  
 		final Dialog dialog = new Dialog(placeOverlay.getActivity());
-		//dialog.setContentView(R.layout.place_dialog);
 		dialog.setContentView(R.layout.dialog_place_registration);
 		dialog.setTitle(place.getName());
 		
@@ -181,32 +186,19 @@ public class UIUtils {
 		TextView placeDates = (TextView) dialog.findViewById(R.id.DPRdates);
 		placeDates.setText(printDateFromDate(place.getEndDate()));
 		
-		// Number of registered users:
-		TextView[] numberOfUsers = new TextView[3];
-		numberOfUsers[0] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersShaharit);
-		numberOfUsers[1] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersMinha);
-		numberOfUsers[2] = (TextView) dialog.findViewById(R.id.DPRnumberOfUsersArvit);
-		
 		final Map<String, PrayUIObj> JoinersUI = new HashMap<String, PrayUIObj>();
 		
 		JoinersUI.put("Shaharit", new PrayUIObj((TextView) dialog.findViewById(R.id.DPRtimeShaharit), 
-												(CheckBox) dialog.findViewById(R.id.DPRcheckboxShaharit)));
+												(CheckBox) dialog.findViewById(R.id.DPRcheckboxShaharit),
+												(TextView) dialog.findViewById(R.id.DPRnumberOfUsersShaharit)));
 		
 		JoinersUI.put("Minha", 	  new PrayUIObj((TextView) dialog.findViewById(R.id.DPRtimeMinha), 
-											    (CheckBox) dialog.findViewById(R.id.DPRcheckboxMinha)));
+											    (CheckBox) dialog.findViewById(R.id.DPRcheckboxMinha),
+											    (TextView) dialog.findViewById(R.id.DPRnumberOfUsersMinha)));
 		
 		JoinersUI.put("Arvit",    new PrayUIObj((TextView) dialog.findViewById(R.id.DPRtimeArvit), 
-											    (CheckBox) dialog.findViewById(R.id.DPRcheckboxArvit)));
-		
-		// Temporary solution - Sets all checkboxes to unclickable 
-		JoinersUI.get("Shaharit").prayCheckBox.setClickable(false);
-		JoinersUI.get("Shaharit").prayCheckBox.setTextColor(Color.GRAY);
-		JoinersUI.get("Minha").prayCheckBox.setClickable(false);
-		JoinersUI.get("Minha").prayCheckBox.setTextColor(Color.GRAY);
-		JoinersUI.get("Arvit").prayCheckBox.setClickable(false);
-		JoinersUI.get("Arvit").prayCheckBox.setTextColor(Color.GRAY);
-		//
-		
+											    (CheckBox) dialog.findViewById(R.id.DPRcheckboxArvit),
+											    (TextView) dialog.findViewById(R.id.DPRnumberOfUsersArvit)));
 		
 		for (Pray p : place.getPraysOfTheDay())	{
 			if (null != p)	{
@@ -215,8 +207,8 @@ public class UIUtils {
 					continue;
 				}
 				uiObj.exists = true;
-				//uiObj.prayText.setText(msgs.get(p.getName()));
-				uiObj.prayText.setText(printTimeFromCalendar(p.getStartTime()));
+				uiObj.prayTime.setText(printTimeFromCalendar(p.getStartTime()));
+				uiObj.prayTime.setTextColor(Color.WHITE);
 				uiObj.prayCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 					public void onCheckedChanged(CompoundButton buttonView,
@@ -226,22 +218,17 @@ public class UIUtils {
 						} else {
 							uiObj.wish = false;
 						}
-
 					}
 				});
-				
-				//uiObj.prayCheckBox.setVisibility(View.VISIBLE);
 				Boolean isSigned = p.isJoinerSigned(placeOverlay.getThisUser());
 				uiObj.prayCheckBox.setChecked(isSigned);
 				uiObj.prayCheckBox.setClickable(true);
 				uiObj.prayCheckBox.setTextColor(Color.WHITE);
+				uiObj.prayNumOfUsers.setText(Integer.toString(p.numberOfJoiners()));
+				uiObj.prayNumOfUsers.setTextColor(Color.WHITE);
 			}
 		}
-		// Number of registered users:
-		// TODO make it work
-		for (int i=0; i<3; i++){
-			numberOfUsers[i].setText("");
-		}
+
 		//People Button: Temporary
 		final String prayersList = msgs.get("Shaharit") + msgs.get("Minha") +  msgs.get("Arvit"); 
 		Button peopleButton = (Button) dialog.findViewById(R.id.DPRShowPeople);
@@ -426,14 +413,10 @@ public class UIUtils {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
                 SPUtils.debugFuncStart("pray1.onCheckedChanged", buttonView, isChecked);
-                
                 if (isChecked)
                 {
-                                        
                     (new PrayTimePickDialog(timeTextView, defHour, defMinutes, checkBox, index, resIcon)).show();
-                    
                 }
-                
                 else
                 {
                     prays[index] = false;
@@ -487,7 +470,7 @@ public class UIUtils {
 			checkBoxes[2] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
 			timeTextViews[2] = (TextView) dialog.findViewById(R.id.CPDarvitTime);
 			checkBoxes[2].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[2], 
-					2, checkBoxes[2], 19, 0, R.drawable.arvit_small));
+					2, checkBoxes[0], 19, 0, R.drawable.arvit_small));
 			
 			Button createButton = (Button) dialog.findViewById(R.id.CPDCreateButton);
 	        Button cancelButton = (Button) dialog.findViewById(R.id.CPDCancelButton);
@@ -535,10 +518,10 @@ public class UIUtils {
 	static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user,
 			FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes) {
 		GeneralPlace newMinyan = new GeneralPlace(user, user.getName()
-				+ "'s Minyan Place", "", point, startDate,endDate);
+				+ "'s Place", "", point, startDate,endDate);
 		//newMinyan.setPrays(prays);
-		//Calendar c = new GregorianCalendar(2011,2,2,15,30);
-		Calendar c = new GregorianCalendar();
+		Calendar c = new GregorianCalendar(2011,2,2,15,30);
+		//Calendar c = new GregorianCalendar();
 		List<GeneralUser> j = new ArrayList<GeneralUser>();
 		j.add(user);
 		if (prays[0]) {
@@ -570,8 +553,8 @@ public class UIUtils {
 	}
 
 	private static String printDateFromDate(Date d) {
-		int day = d.getDay();
-		int month = d.getMonth();
+		int day = d.getDate();
+		int month = d.getMonth()+1;
 		int year = d.getYear();
 		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
 	}

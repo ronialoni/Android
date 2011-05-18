@@ -50,7 +50,7 @@
         	android:layout_height	="wrap_content">
             
             <TextView 
-            	android:text			="Select prayers:" 
+            	android:text			="Prayers:" 
             	android:layout_height	="wrap_content" 
             	android:layout_width	="fill_parent" 
            		android:typeface		= "serif"
@@ -91,6 +91,8 @@
             	android:layout_height	="wrap_content" 
             	android:layout_width	="wrap_content" 
             	android:layout_weight	= "1"
+            	android:clickable		= "false"
+            	android:textColor		= "#808080"
             	android:id				="@+id/DPRcheckboxShaharit"
             	android:text			="Shaharit"></CheckBox>
             
@@ -99,13 +101,15 @@
             	android:id				="@+id/DPRtimeShaharit" 
             	android:layout_width	="wrap_content" 
             	android:layout_weight	= "1"
+            	android:textColor		= "#808080"
             	android:gravity			="center_vertical" 
             	android:layout_height	="wrap_content"></TextView>
             	
             <TextView 
-            	android:text			="#" 
+            	android:text			="0" 
             	android:gravity			="center" 
-            	android:layout_height	="wrap_content" 
+            	android:layout_height	="wrap_content"
+            	android:textColor		= "#808080" 
             	android:layout_width	="fill_parent" 
             	android:id				="@+id/DPRnumberOfUsersShaharit"></TextView>
             
@@ -126,6 +130,8 @@
             	android:layout_height	="wrap_content" 
             	android:layout_width	="wrap_content" 
             	android:layout_weight 	= "1"
+            	android:clickable		= "false"
+            	android:textColor		= "#808080"
             	android:id				="@+id/DPRcheckboxMinha" 
             	android:text			="Minha"></CheckBox>
             
@@ -134,14 +140,16 @@
             	android:id				="@+id/DPRtimeMinha" 
             	android:layout_width	="wrap_content" 
             	android:layout_weight	= "1"
+            	android:textColor		= "#808080"
             	android:gravity			="center_vertical" 
             	android:layout_height	="wrap_content" 
             	></TextView>
             
             <TextView 
-            	android:text			="#" 
+            	android:text			="0" 
             	android:layout_height	="wrap_content" 
             	android:layout_width	="wrap_content" 
+            	android:textColor		= "#808080"
             	android:id				="@+id/DPRnumberOfUsersMinha" 
             	android:gravity			="center"></TextView>
             
@@ -161,6 +169,8 @@
             	android:layout_height	="wrap_content" 
             	android:layout_width	="wrap_content" 
             	android:layout_weight 	= "1"
+            	android:clickable		= "false"
+            	android:textColor		= "#808080"
             	android:id				="@+id/DPRcheckboxArvit" 
             	android:text			="Arvit"></CheckBox>
 
@@ -169,13 +179,15 @@
             	android:id				="@+id/DPRtimeArvit" 
             	android:layout_width	="wrap_content" 
             	android:layout_weight	= "1"
+            	android:textColor		= "#808080"
             	android:gravity			="center_vertical" 
             	android:layout_height	="wrap_content"></TextView>
                         
             <TextView 
-            	android:text			="#" 
+            	android:text			="0" 
             	android:layout_height	="wrap_content" 
-            	android:layout_width	="wrap_content" 
+            	android:layout_width	="wrap_content"
+            	android:textColor		= "#808080" 
             	android:id				="@+id/DPRnumberOfUsersArvit" 
             	android:gravity			="center"></TextView>
             

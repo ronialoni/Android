@@ -108,6 +108,14 @@ public class SPComm {
     	final String URL = "http://maps.googleapis.com/maps/api/geocode/json"; 
     	com.requestGet(parameters, MapsQueryLocation.class, URL, callback);
     }
+    
+    public void getAddressObj(double latitude, double longitude, ICommHandler<MapsQueryLocation> callback)	{
+    	Map<String, String> parameters = new HashMap<String, String>();
+    	parameters.put("latlng", String.valueOf(latitude)+","+String.valueOf(longitude));
+    	parameters.put("sensor", "false");
+    	final String URL = "http://maps.googleapis.com/maps/api/geocode/json"; 
+    	com.requestGet(parameters, MapsQueryLocation.class, URL, callback);
+    }
 
 
 	public void requestGetOwnerPlaces(String ownerEmailAccount, ICommHandler<GeneralPlace[]> callback)

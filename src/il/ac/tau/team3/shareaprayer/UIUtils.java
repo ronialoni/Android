@@ -2,6 +2,7 @@ package il.ac.tau.team3.shareaprayer;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -15,9 +16,11 @@ import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.spcomm.ACommHandler;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -37,10 +41,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.QuickContactBadge;
 import android.widget.RemoteViews.ActionException;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
  
@@ -55,7 +61,7 @@ public class UIUtils {
 
 	static class UpdateUI<T> extends ACommHandler<T> {
 		FindPrayer activity;
-
+ 
 		public UpdateUI(FindPrayer a_activity) {
 			activity = a_activity;
 		}
@@ -165,7 +171,7 @@ public class UIUtils {
 		return new boolean[]{ui.get("Shaharit").wish, ui.get("Minha").wish, ui.get("Arvit").wish};
 	}
 	
-	/*package*/ static void createRegisterDialog(Map<String,String> msgs, final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
+	/*package*/ static void createRegisterDialog(Map<String, Integer> joinersMap, final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
 	{
 		if (placeOverlay == null || placeOverlay.getThisUser() == null || place == null) 
 		{
@@ -230,12 +236,31 @@ public class UIUtils {
 		}
 
 		//People Button: Temporary
-		final String prayersList = msgs.get("Shaharit") + msgs.get("Minha") +  msgs.get("Arvit"); 
+		final Map<String, Integer> finalJoinersMap = joinersMap;
 		Button peopleButton = (Button) dialog.findViewById(R.id.DPRShowPeople);
 		peopleButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				createAlertDialog(prayersList, placeOverlay.getActivity());
-				dialog.dismiss();
+				final Dialog listDialog = new Dialog(placeOverlay.getActivity());
+				listDialog.setContentView(R.layout.dialog_registered_users_list);
+				listDialog.setTitle("Users Registered:");
+				ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
+				
+				ArrayList<HashMap<String, String>> prayersList = new ArrayList<HashMap<String, String>>();
+				
+				for (String joiner : finalJoinersMap.keySet()){
+					HashMap<String, String> tempmap = new HashMap<String, String>();
+					tempmap.put("User", joiner);
+					tempmap.put("int", Integer.toString(finalJoinersMap.get(joiner)));
+					prayersList.add(tempmap);
+				}
+				
+				SimpleAdapter mPrays = new SimpleAdapter(placeOverlay.getActivity(), prayersList, R.layout.dialog_registered_users_row,
+				            new String[] {"User", "int"}, new int[] {R.id.DRUUsername1, R.id.DRUInteger});
+				try{
+					lv.setAdapter(mPrays);
+				}catch (NullPointerException npe){}
+				listDialog.show();			
+
 			};
 		});
 		
@@ -279,6 +304,20 @@ public class UIUtils {
 	}
 
 	
+	static class ListDialog extends ListActivity
+	{
+		private Map map;
+		private Activity activity;
+		
+		public ListDialog(Map<String, Integer> map, Activity activity ){
+			super();
+			this.map = map;
+			this.activity = activity;
+		}
+	}
+			
+	
+
 
 	static void createAlertDialog(String msg, Context context) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -292,6 +331,10 @@ public class UIUtils {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
+	
+	
+	
+	
 	
 	static class CreatePlaceDialog	{		private Dialog dialog;
 		private EditText editAddress;

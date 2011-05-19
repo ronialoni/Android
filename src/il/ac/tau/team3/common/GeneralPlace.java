@@ -28,12 +28,12 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 
 
 
-        private void initializePraysOfTheDay()	{
-    		this.praysOfTheDay = new ArrayList<Pray>(3);
-    		this.praysOfTheDay.add(null);
-    		this.praysOfTheDay.add(null);
-    		this.praysOfTheDay.add(null);
-    	}
+        private void initializePraysOfTheDay()  {
+                this.praysOfTheDay = new ArrayList<Pray>(3);
+                this.praysOfTheDay.add(null);
+                this.praysOfTheDay.add(null);
+                this.praysOfTheDay.add(null);
+        }
 
         public GeneralPlace(){
                 super();
@@ -80,37 +80,37 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
         }
 
         @JsonIgnore
-    	public void setPraysOfTheDay(int prayNumber, Pray praysOfTheDay) {
-        	try	{
-        		this.praysOfTheDay.set(prayNumber, praysOfTheDay);
-        	} catch (IndexOutOfBoundsException e){
-        		
-        	}
-        	
-    		
-    	}
-        
-    	@JsonIgnore
-    	public void setPraysOfTheDay(String prayName, Pray praysOfTheDay) {
-    		for (int i = 0; i < this.praysOfTheDay.size(); i++)	{
-    			if ( this.praysOfTheDay.get(i).getName().equals(praysOfTheDay.getName()))	{
-    				this.praysOfTheDay.set(i, praysOfTheDay);
-    			}
-    		}
-        	
-    	}
+        public void setPraysOfTheDay(int prayNumber, Pray praysOfTheDay) {
+                try     {
+                        this.praysOfTheDay.set(prayNumber, praysOfTheDay);
+                } catch (IndexOutOfBoundsException e){
+                        
+                }
+                
+                
+        }
         
         @JsonIgnore
-    	public Pray getPrayByName(String prayName)	{
-    		for (int i = 0; i < this.praysOfTheDay.size(); i++)	{
-    			if ( this.praysOfTheDay.get(i).getName().equals(prayName))	{
-    				return this.praysOfTheDay.get(i); 
-    			}
-    		}
-    		
-    		return null;
-    		
-    	}
+        public void setPraysOfTheDay(String prayName, Pray praysOfTheDay) {
+                for (int i = 0; i < this.praysOfTheDay.size(); i++)     {
+                        if ( this.praysOfTheDay.get(i).getName().equals(praysOfTheDay.getName()))       {
+                                this.praysOfTheDay.set(i, praysOfTheDay);
+                        }
+                }
+                
+        }
+        
+        @JsonIgnore
+        public Pray getPrayByName(String prayName)      {
+                for (int i = 0; i < this.praysOfTheDay.size(); i++)     {
+                        if ( this.praysOfTheDay.get(i).getName().equals(prayName))      {
+                                return this.praysOfTheDay.get(i); 
+                        }
+                }
+                
+                return null;
+                
+        }
         
         
 
@@ -155,24 +155,24 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
 
         @JsonIgnore
         public boolean IsJoinerSigned(int prayNumber, GeneralUser joiner){
-                try	{
-                	return (this.praysOfTheDay.get(prayNumber).isJoinerSigned(joiner));
-                } catch (IndexOutOfBoundsException e)	{	
-                	return false;
-                } catch (NullPointerException e)	{
-                	return false;
+                try     {
+                        return (this.praysOfTheDay.get(prayNumber).isJoinerSigned(joiner));
+                } catch (IndexOutOfBoundsException e)   {       
+                        return false;
+                } catch (NullPointerException e)        {
+                        return false;
                 }
                 
         }
 
         @JsonIgnore  
         public int getNumberOfPrayers(int prayNumber){
-        	try	{
+                try     {
                 return this.praysOfTheDay.get(prayNumber).numberOfJoiners();
-        	}  catch (IndexOutOfBoundsException e)	{	
-            	return 0;
-            } catch (NullPointerException e)	{
-            	return 0;
+                }  catch (IndexOutOfBoundsException e)  {       
+                return 0;
+            } catch (NullPointerException e)    {
+                return 0;
             }
         }
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- row.xml -->
+<LinearLayout
+     xmlns:android="http://schemas.android.com/apk/res/android" 
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:orientation="vertical">
+    
+    <LinearLayout 
+    android:layout_height="wrap_content" 
+    android:layout_width="match_parent" 
+    android:id="@+id/linearLayout1">
+    
+	    <TextView 
+	    android:text="Users:" 
+	    android:id="@+id/DRUHead" 
+	    android:layout_width="wrap_content" 
+	    android:layout_height="wrap_content" android:layout_weight="1">
+	    </TextView>
+    
+	    <ImageView 
+	    android:layout_height="wrap_content" 
+	    android:layout_width="wrap_content" 
+	    android:src="@drawable/shaharit_small" 
+	    android:id="@+id/DRUIcon">
+	    </ImageView>
+        
+    
+    </LinearLayout>
+    
+    <ListView android:id="@+id/DRUList" android:layout_width="fill_parent" android:layout_height="wrap_content"></ListView>
+
+</LinearLayout>

@@ -65,7 +65,9 @@ import android.graphics.drawable.Drawable;
 public class FindPrayer 
 extends MapActivity 
 {
-    
+	public final static int SHAHARIT = 4;
+	public final static int MINHA = 2;
+	public final static int ARVIT = 1;
     	
 	private Drawable userDefaultMarker; 
 	private Drawable othersDefaultMarker;
@@ -387,7 +389,7 @@ extends MapActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		//mapView = new SPMapView(this);
-		mapView = (SPMapView) findViewById(R.id.view1);
+		mapView = (SPMapView) findViewById(R.id.MAINview1);
 		editText = (EditText) findViewById(R.id.addressBar);
 		
         mapView.registerTapListener(new IMapTapDetect()	

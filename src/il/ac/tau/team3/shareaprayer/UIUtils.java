@@ -178,8 +178,8 @@ public class UIUtils {
 			Log.d("UIUtils::createRegisterDialog",
 					"placeOverlay == null || placeOverlay.getThisUser() == null || place == null");
 			return;
-		}
-
+		} 
+ 
  
 		final Dialog dialog = new Dialog(placeOverlay.getActivity());
 		dialog.setContentView(R.layout.dialog_place_registration);
@@ -188,7 +188,7 @@ public class UIUtils {
 		// Address and Dates
 		TextView placeAddress = (TextView) dialog.findViewById(R.id.DPRaddress);
 		placeAddress.setText(place.getAddress());
-		// TODO Date is wrong
+
 		TextView placeDates = (TextView) dialog.findViewById(R.id.DPRdates);
 		placeDates.setText(printDateFromDate(place.getEndDate()));
 		
@@ -219,11 +219,7 @@ public class UIUtils {
 
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
-						if (isChecked) {
-							uiObj.wish = true;
-						} else {
-							uiObj.wish = false;
-						}
+						uiObj.wish = isChecked;
 					}
 				});
 				Boolean isSigned = p.isJoinerSigned(placeOverlay.getThisUser());
@@ -242,7 +238,7 @@ public class UIUtils {
 			public void onClick(View view) {
 				final Dialog listDialog = new Dialog(placeOverlay.getActivity());
 				listDialog.setContentView(R.layout.dialog_registered_users_list);
-				listDialog.setTitle("Users Registered:");
+				listDialog.setTitle("Users Registered");
 				ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
 				
 				ArrayList<HashMap<String, String>> prayersList = new ArrayList<HashMap<String, String>>();
@@ -271,7 +267,24 @@ public class UIUtils {
 		 
 		deleteButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				DeleteClick(place, placeOverlay);
+				AlertDialog.Builder builder = new AlertDialog.Builder(placeOverlay.getActivity());
+				builder.setMessage("Are you sure you want to delete this Minyan place?");
+				builder.setCancelable(true);
+				builder.setNegativeButton("No",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								//dialog.dismiss();
+							}
+						});
+				builder.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								DeleteClick(place, placeOverlay);
+								//dialog.dismiss();
+							}
+						});
+				AlertDialog alert = builder.create();
+				alert.show();
 				dialog.dismiss();
 			};
 		});
@@ -331,7 +344,6 @@ public class UIUtils {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
-	
 	
 	
 	
@@ -400,7 +412,9 @@ public class UIUtils {
     					CreatePlaceDialog.this.prays[a_prayIndex] = true;
     					prayTimes[a_prayIndex].set(2000, 1, 1, hourOfDay, minute, 0);
     					// TODO: CLEAN THIS
-    					a_timeStr.setText((hourOfDay < 10 ? "0" : "") + hourOfDay + ":" + (minute < 10 ? "0" : "") + minute + " ");
+//    					a_timeStr.setText((hourOfDay < 10 ? "0" : "") + hourOfDay + ":" + (minute < 10 ? "0" : "") + minute + " ");
+    					Date time = new Date(0,0,0,hourOfDay, minute);
+    					a_timeStr.setText(printTimeFromDate(time));
     					
     				}
         			
@@ -504,12 +518,12 @@ public class UIUtils {
 			timeTextViews[0] = (TextView) dialog.findViewById(R.id.CPDshahritTime);
 			checkBoxes[0].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[0], 
 					0, checkBoxes[0], 7, 0, R.drawable.shaharit_small));
-			
+			// TODO find out what's working, checkBoxes[0] or checkBoxes[1]
 			checkBoxes[1] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);
 			timeTextViews[1] = (TextView) dialog.findViewById(R.id.CPDminhaTime);
 			checkBoxes[1].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[1], 
 					1, checkBoxes[0], 15, 0, R.drawable.minha_small));
-			
+			// TODO find out what's working, checkBoxes[0] or checkBoxes[2]
 			checkBoxes[2] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
 			timeTextViews[2] = (TextView) dialog.findViewById(R.id.CPDarvitTime);
 			checkBoxes[2].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[2], 
@@ -532,20 +546,12 @@ public class UIUtils {
 			});
 
 			cancelButton.setOnClickListener(new OnClickListener() {
-
 				public void onClick(View view) {
-
 					dialog.dismiss();
-
 				};
-
 			});
-
-			
 			dialog.show();
-			
 		}
-
 	};
 
 	static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
@@ -553,18 +559,14 @@ public class UIUtils {
 		try {
 			new CreatePlaceDialog(point, activity, user);
 		} catch (NullPointerException e)	{
-			
 		}
-		
      }
 	
 	static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user,
 			FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes) {
 		GeneralPlace newMinyan = new GeneralPlace(user, user.getName()
 				+ "'s Place", "", point, startDate,endDate);
-		//newMinyan.setPrays(prays);
-		Calendar c = new GregorianCalendar(2011,2,2,15,30);
-		//Calendar c = new GregorianCalendar();
+		Calendar c = new GregorianCalendar();
 		List<GeneralUser> j = new ArrayList<GeneralUser>();
 		j.add(user);
 		if (prays[0]) {
@@ -591,14 +593,16 @@ public class UIUtils {
 	public static String printDateFromCalendar(Calendar c) {
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int month = (c.get(Calendar.MONTH)+1);
-		int year = c.get(Calendar.YEAR);
+		// Because of server issues, needs to add 1900
+		int year = c.get(Calendar.YEAR) + 1900;
 		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
 	}
 
 	private static String printDateFromDate(Date d) {
 		int day = d.getDate();
 		int month = d.getMonth()+1;
-		int year = d.getYear();
+		// Because of server issues, needs to add 1900
+		int year = d.getYear()+1900;
 		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
 	}
 

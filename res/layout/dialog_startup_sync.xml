@@ -70,7 +70,7 @@
             android:padding       = "10dp"
 	        android:textColor     = "#000000"
 	        android:textSize      = "15sp"
-	        android:text          = "//TODO: ? "
+	        android:text          = ""
 	        />        
     </TableRow>
     
@@ -97,7 +97,7 @@
             android:padding       = "10dp"
             android:textColor     = "#000000"
             android:textSize      = "15sp"
-            android:text          = "//TODO: ? "
+            android:text          = ""
             />        
     </TableRow>
     

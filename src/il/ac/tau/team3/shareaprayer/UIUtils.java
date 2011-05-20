@@ -16,6 +16,7 @@ import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.spcomm.ACommHandler;
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -26,6 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Color;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -58,6 +62,8 @@ public class UIUtils {
 	static String _sWantToRegisterQues = "Would you like to register to this place?";
 	static String _sUserNotRegisterMsg = "You are not register to this place.";
 	static String _sUserNotOwnerMsg = "You can't delete this place, because you are not the owner.";
+	
+	static FindPrayer activity;
 
 	static class UpdateUI<T> extends ACommHandler<T> {
 		FindPrayer activity;
@@ -81,6 +87,112 @@ public class UIUtils {
 			}
 		}
 	}
+	
+	
+	
+	static String[] HandleFirstTimeDialog(Account[] accounts){
+		if (accounts.length == 0){
+			CreateNoAccountsDialog();
+			return null;
+		}else{
+			return CreateChooseAccountsDialog(accounts);
+		}
+	}
+	
+	static void CreateNoAccountsDialog(){
+		final Dialog dialog = new Dialog(activity);
+		  dialog.setContentView(R.layout.dialog_startup_async);
+          dialog.setTitle("Welcome to Share-A-Prayer!");
+          Button exitButton = (Button) dialog.findViewById(R.id.dsa_button_exit);
+          Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
+          
+          exitButton.setOnClickListener(new OnClickListener()
+          {                
+              public void onClick(View v)
+              {
+                 dialog.dismiss();
+                 activity.onDestroy();
+              }
+          });
+          
+          syncButton.setOnClickListener(new OnClickListener()
+          {                
+              public void onClick(View v)
+              {
+                  // TODO Open Sync Center.
+              }
+          });
+          dialog.show();
+		
+	}
+	
+	static String[] CreateChooseAccountsDialog(final Account[] accounts){
+		final Dialog dialog = new Dialog(activity);
+		 dialog.setContentView(R.layout.dialog_startup_sync);
+		 final EditText editTextFirstName = (EditText)dialog.findViewById(R.id.startup_name_first);
+         EditText editTextLastName = (EditText)dialog.findViewById(R.id.startup_name_last);
+         dialog.setTitle("Welcome to Share-A-Prayer!");
+         Button exitButton = (Button) dialog.findViewById(R.id.startup_button_exit);
+         Button startButton = (Button) dialog.findViewById(R.id.startup_button_start);
+         final int accountId[] = new int[1];
+         final String names[] = new String[3];
+         
+         exitButton.setOnClickListener(new OnClickListener()
+         {                
+             public void onClick(View v)
+             {
+                dialog.dismiss();
+                activity.onDestroy();
+             }
+         });
+         
+         startButton.setOnClickListener(new OnClickListener()
+         {                
+             public void onClick(View v)
+             {
+            	 names[0] = editTextFirstName.getText().toString();
+            	 names[1] = editTextFirstName.getText().toString();
+            	 names[2] = accounts[accountId[0]].name;
+            	 
+            	 dialog.dismiss();
+             }
+         });
+         
+         RadioGroup  accountsRadioGroup = (RadioGroup) dialog.findViewById(R.id.startup_accounts_radios);
+         RadioButton tempRadioButton;
+         
+         for (int i = 0; i < accounts.length; i++)
+         {
+             tempRadioButton = new RadioButton(activity);
+             tempRadioButton.setId(i);
+             tempRadioButton.setText(accounts[i].name);
+                     
+             accountsRadioGroup.addView(tempRadioButton);
+         }
+         
+          
+         
+         accountsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+         {
+             //@Override
+             public void onCheckedChanged(RadioGroup group, int checkedId)
+             {
+                 accountId[0] = checkedId;
+             }
+			
+         });
+         
+             
+     
+     
+     
+     dialog.show();
+
+     return names;
+		
+	}
+	
+	
 	
 	static void RegisterClick(final GeneralPlace place,
 			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {

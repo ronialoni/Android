@@ -28,6 +28,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -52,13 +53,16 @@ extends Service
 	private GeneralUser   user;
 	private String        userId;
 	private RestTemplateFacade  restTemplateFacade; 
-	
+	private SharedPreferences settings;
+	private SharedPreferences.Editor edit;
+	private Account[] accounts;
+	private String[] names = new String[3];
+	public boolean isUserReady = true;
 	
 	public static final String ACTION_SERVICE = "il.ac.tau.team3.shareaprayer.MAIN";
 
 	
 	private LocationManager locMgr;
-	
 	
 	
 	public class LocalBinder 
@@ -90,9 +94,40 @@ extends Service
 			}
 			return user;
 		}
+
+		public Account[] getAccounts() {
+			// TODO Auto-generated method stub
+			return accounts;
+		}
+
+		public void setNames(String[] new_names) {
+			names=new_names;
+			
+		}
+
+		public void isUserReady(boolean is) {
+			isUserReady = is;
+			
+		}
+
+		public boolean isUserReady() {
+			// TODO Auto-generated method stub
+			return isUserReady;
+		}
     }
 	
-	
+	private void HandleAppStartUp(Account[] accounts){
+		 settings =  getSharedPreferences("ShareAPrayerPrefs", 0);       
+		 Long key = settings.getLong("UserKey", 0);
+		 if(key == 0){
+			 isUserReady = false;
+			//names = UIUtils.HandleFirstTimeDialog(accounts);
+			
+		 }else{
+			 //start activity as usual
+		 }
+		
+	}
 	
 	
 	@Override
@@ -102,25 +137,40 @@ extends Service
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.
 		
+		
 		queryCurrentLocation();
 		
 		return START_STICKY;
 	}
 	
 	
+	public String[] getNames() {
+		return names;
+	}
+
+
+	public void setNames(String[] names) {
+		this.names = names;
+	}
+
+
 	private void queryCurrentLocation()	
 	{
 		Location loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER );
 		if (null != loc)	
 		{	
         	curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
-        	user = new GeneralUser(userId, curr_loc, "bla");
+        	user = (isUserReady ? new GeneralUser(names[2], curr_loc, "my status" , names[0], names[1]): null);
         	Long id = null;
+        	if(null != user){
 			try	{
 				id = restTemplateFacade.UpdateUserByName(user);
+				edit = settings.edit(); 
+				edit.putLong("UserKey", id);
 			} catch (RestClientException e)	{
 				
 			};
+        	}
         	if (id != null)	
         	{
         		user.setId(id);
@@ -129,6 +179,11 @@ extends Service
 	}
 	
 	
+
+
+	public Account[] getAccounts() {
+		return accounts;
+	}
 
 
 	@Override
@@ -146,11 +201,13 @@ extends Service
         
 		
 		
-		Account[] accounts = AccountManager.get(this).getAccounts();
+		accounts = AccountManager.get(this).getAccounts();
+		this.HandleAppStartUp(accounts);
+		
 		if (accounts.length != 0)	
 		{	
 			userId = accounts[0].name;
-			user = new GeneralUser(null, null, null);
+			//user = new GeneralUser(null, null, null);
 			
 			//userId = "miki@gmail.com";
 		} 
@@ -173,22 +230,8 @@ extends Service
     	    { 	
     	    	// create a GeoPoint with the latitude and longitude coordinates
     			curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
-    			user = new GeneralUser(userId, curr_loc, "bla");
-    			/*StringWriter sw = new StringWriter();
-				ObjectMapper mapper = new ObjectMapper();
-				MappingJsonFactory jsonFactory = new MappingJsonFactory();
-				try
-				{
-					JsonGenerator jsonGenerator = jsonFactory.createJsonGenerator(sw);
-					mapper.writeValue(jsonGenerator, user);
-					sw.close();
-				} 
-				catch (Throwable T)
-				{
-					
-				}
-				
-				Log.e("post message", sw.getBuffer().toString());*/
+    			user = new GeneralUser(userId, curr_loc, "");
+    			
     			Long id = null;
     			try	{
     				id = restTemplateFacade.UpdateUserByName(user);

@@ -20,6 +20,7 @@ import il.ac.tau.team3.spcomm.ICommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log; 
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -297,7 +298,7 @@ extends MapActivity
     	
 	private ServiceConnector  svcGetter = new ServiceConnector();;
 	private ILocationProv locationListener;
-	
+	private StatusBarOverlay statusBar; 
 	
 	
 	
@@ -326,6 +327,7 @@ extends MapActivity
 	    				{
 	    					updateUsersOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
 	    					updatePlacesOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
+	    					statusBar.write("refreshing...", 4000);
 	    				}
     				} catch (NullPointerException e)	{
     					
@@ -413,6 +415,7 @@ extends MapActivity
         				(event.getAction() == KeyEvent.ACTION_DOWN) && 
         				(event.getKeyCode() == KeyEvent.KEYCODE_ENTER)))
         		    {
+        			statusBar.write("searching for the place...", 2000);
 					comm.searchForAddress(v.getText().toString(), new ACommHandler<MapsQueryLocation>() {
 						public void onRecv(final MapsQueryLocation Obj)	{
 							FindPrayer.this.runOnUiThread(new Runnable() {
@@ -433,6 +436,7 @@ extends MapActivity
 										searchQueryOverlay.addItem(new OverlayItem(gp, "Search query result", v.getText().toString()));
 										Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
 										toast.show();
+										statusBar.write("place found!", 2000);
 									} catch (NullPointerException e)	{
 										
 									} catch (ArrayIndexOutOfBoundsException e)	{
@@ -460,7 +464,7 @@ extends MapActivity
          */ 
         //Creates the user's map-icon
         userDefaultMarker = this.getResources().getDrawable(R.drawable.user_red_sruga);
-        // create an PrayerArrayItemizedOverlay for the user
+        // create objectan PrayerArrayItemizedOverlay for the user
 		userOverlay       = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
 		 // add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(userOverlay);
@@ -469,6 +473,10 @@ extends MapActivity
         searchQueryOverlay = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
 		 // add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(searchQueryOverlay);
+        
+        
+        statusBar = new StatusBarOverlay(mapView.getPaddingTop() + 24, mapView.getWidth() / 100, 24);
+        mapView.getOverlays().add(statusBar);
         
         /*
          * Synagouge overlay
@@ -705,7 +713,7 @@ extends MapActivity
         }
         
         else
-        {            
+        {           
             dialog.setContentView(R.layout.dialog_startup_sync);
             // this.requestWindowFeature(Window.);
             // dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,

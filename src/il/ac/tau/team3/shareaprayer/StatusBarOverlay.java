@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.Paint.Style;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -17,17 +18,74 @@ public class StatusBarOverlay extends Overlay {
 
 	   
 	    private String currentMessage = "Test";
-	    private int offset;
+	    private int yoffset;
+	    private int xoffset;
+	    private int textSz;
+	    
+	    private HandlerThread ht;
+	    private Handler h;
+	    
+	    public final static String MESSAGE_KEY = "MESSAGE";
+	    public final static String TIME_KEY = "TIME";
 	   
 	    
-	    StatusBarOverlay(int a_offset)	{
+	    StatusBarOverlay(int a_offset, int a_xoffset, int a_textSize)	{
 	    	super();
-	    	offset = a_offset;
+	    	yoffset = a_offset;
+	    	xoffset = a_xoffset;
+	    	textSz = a_textSize;
 	 	  
+	    	ht = new HandlerThread("status bar thread");
+	        
+	        ht.start();
+	        
+	        h = new Handler(ht.getLooper())	{
+	        	@Override
+	        	public void handleMessage(Message msg)	{
+	        		String s = msg.getData().getString(MESSAGE_KEY);
+	        		synchronized(currentMessage)	{
+	        			currentMessage = s;
+	        		}
+	        		StatusBarOverlay.this.requestRedraw();
+	        		long time_to_wait = msg.getData().getLong(TIME_KEY);
+
+	        		synchronized(this)	{
+	        		if (0 != time_to_wait)	{
+	        			try {
+							this.wait(time_to_wait);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	        					
+	        		}
+	        		}
+	        		synchronized(currentMessage)	{
+	        			currentMessage = "";
+	        		}
+	        		StatusBarOverlay.this.requestRedraw();
+	        	}
+	        };
+	        
+	        
 	    	
 	    }
 	    
 	    Paint pFront = new Paint();
+	    
+	public Handler getHandler()	{
+		return h;
+		
+	}
+	
+	public void write(String s, long time)	{
+		Bundle b = new Bundle();
+		b.putString(StatusBarOverlay.MESSAGE_KEY, s);
+		b.putLong(StatusBarOverlay.TIME_KEY, time);
+		Message m = new Message();
+		m.setData(b);
+		getHandler().sendMessage(m);
+	}
 	
 	@Override
 	protected void drawOverlayBitmap(Canvas canvas, Point drawPosition,
@@ -38,11 +96,13 @@ public class StatusBarOverlay extends Overlay {
         
         //p.setARGB(255, 255, 0, 0);
 		pFront.setTypeface(Typeface.DEFAULT);
-		pFront.setTextSize(16);
+		pFront.setTextSize(textSz);
 
 		pFront.setAntiAlias(true);
+		synchronized(currentMessage)	{
     		canvas.drawText(currentMessage , 
-            0,offset , pFront);
+            xoffset,yoffset , pFront);
+		}
 		
 		
 	}

@@ -522,8 +522,8 @@ public class UIUtils {
 			createButton.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View view) {
-					final Date finalstartDate = new Date(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
-					final Date finalendDate = new Date(endDate.get(Calendar.YEAR),endDate.get(Calendar.MONTH),endDate.get(Calendar.DAY_OF_MONTH));
+					final Date finalstartDate = new Date(startDate.get(Calendar.YEAR)-1900,startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
+					final Date finalendDate = new Date(endDate.get(Calendar.YEAR)-1900,endDate.get(Calendar.MONTH),endDate.get(Calendar.DAY_OF_MONTH));
 					CreateNewPlace_YesClick(prays, user, activity, point, finalstartDate, finalendDate, prayTimes);
 					dialog.dismiss();
 

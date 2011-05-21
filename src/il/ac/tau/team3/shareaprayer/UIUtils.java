@@ -62,6 +62,7 @@ public class UIUtils {
 	static String _sWantToRegisterQues = "Would you like to register to this place?";
 	static String _sUserNotRegisterMsg = "You are not register to this place.";
 	static String _sUserNotOwnerMsg = "You can't delete this place, because you are not the owner.";
+	static String _sWelcomeMsg = "Welcome to Share-A-Prayer!";
 	
 	static FindPrayer activity;
 
@@ -102,9 +103,9 @@ public class UIUtils {
 	static void CreateNoAccountsDialog(){
 		final Dialog dialog = new Dialog(activity);
 		  dialog.setContentView(R.layout.dialog_startup_async);
-          dialog.setTitle("Welcome to Share-A-Prayer!");
+          dialog.setTitle(_sWelcomeMsg);
           Button exitButton = (Button) dialog.findViewById(R.id.dsa_button_exit);
-          Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
+         // Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
           
           exitButton.setOnClickListener(new OnClickListener()
           {                
@@ -115,13 +116,13 @@ public class UIUtils {
               }
           });
           
-          syncButton.setOnClickListener(new OnClickListener()
-          {                
-              public void onClick(View v)
-              {
-                  // TODO Open Sync Center.
-              }
-          });
+//          syncButton.setOnClickListener(new OnClickListener()
+//          {                
+//              public void onClick(View v)
+//              {
+//                  // TODO Open Sync Center.
+//              }
+//          });
           dialog.show();
 		
 	}
@@ -130,8 +131,8 @@ public class UIUtils {
 		final Dialog dialog = new Dialog(activity);
 		 dialog.setContentView(R.layout.dialog_startup_sync);
 		 final EditText editTextFirstName = (EditText)dialog.findViewById(R.id.startup_name_first);
-         EditText editTextLastName = (EditText)dialog.findViewById(R.id.startup_name_last);
-         dialog.setTitle("Welcome to Share-A-Prayer!");
+         final EditText editTextLastName = (EditText)dialog.findViewById(R.id.startup_name_last);
+         dialog.setTitle(_sWelcomeMsg);
          Button exitButton = (Button) dialog.findViewById(R.id.startup_button_exit);
          Button startButton = (Button) dialog.findViewById(R.id.startup_button_start);
          final int accountId[] = new int[1];
@@ -151,7 +152,7 @@ public class UIUtils {
              public void onClick(View v)
              {
             	 names[0] = editTextFirstName.getText().toString();
-            	 names[1] = editTextFirstName.getText().toString();
+            	 names[1] = editTextLastName.getText().toString();
             	 names[2] = accounts[accountId[0]].name;
             	 activity.setUser(names);
             	 

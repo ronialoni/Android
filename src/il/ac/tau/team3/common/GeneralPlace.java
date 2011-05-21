@@ -17,7 +17,7 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
          * 
          */
         private static final long serialVersionUID = 3680632953183211194L;
-        private String address;
+      
         private GeneralUser owner;
 
         private List<Pray> praysOfTheDay;
@@ -43,33 +43,20 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
         }
 
         public GeneralPlace(String name, String address , SPGeoPoint spGeoPoint){
-                super(spGeoPoint,name);
-                this.address = address;
+                super(spGeoPoint,name,address);
                 initializePraysOfTheDay();
                 this.startDate = new Date();
                 this.endDate = new Date();
         }
 
         public GeneralPlace(GeneralUser owner, String name, String address , SPGeoPoint spGeoPoint, Date startDate,Date endDate){
-                super(spGeoPoint,name);
-                this.address = address;
+                super(spGeoPoint,name,address);
                 initializePraysOfTheDay();
                 this.owner = owner;
                 this.startDate = startDate;
                 this.endDate = endDate;
         }
-//        public GeneralPlace(PlaceLocation serverPlace){
-//                this(serverPlace.getOwner(),serverPlace.getName(),serverPlace.getAddress(),
-//                                new SPGeoPoint((int)(serverPlace.getLatitude()*1000000), (int)(serverPlace.getLongitude()*1000000)),serverPlace.getStartDate(),  serverPlace.getEndDate());
-//                this.prays = serverPlace.getPrays();
-//                if(null != serverPlace.getPraysOfTheDay()){
-//                        for(int i = 0 ; i < 3 ; ++i){
-//                                this.praysOfTheDay[i] = serverPlace.getPraysOfTheDay().get(i);
-//                        }
-//                }
-//
-//
-//        }
+
 
         public List<Pray> getPraysOfTheDay() {
                 return praysOfTheDay;
@@ -140,16 +127,6 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
                 this.owner = owner;
         }
 
-
-
-
-        public String getAddress() {
-                return address;
-        }
-
-        public void setAddress(String address) {
-                this.address = address;
-        }
 
 
 

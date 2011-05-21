@@ -24,9 +24,9 @@ extends OverlayItem
 
     
     
-    public UserOverlayItem(GeneralUser user, String title, String snippet) throws UnknownLocationException
+    public UserOverlayItem(GeneralUser user) throws UnknownLocationException
     {
-        super(SPUtils.toGeoPoint(user.getSpGeoPoint()), title, snippet);
+        super(SPUtils.toGeoPoint(user.getSpGeoPoint()), user.getFullName(), user.getAddress());
         this.user = user;
         // TODO Auto-generated constructor stub
     }

@@ -206,29 +206,9 @@ extends Service
 		iFilter.addAction(LocationManager.GPS_PROVIDER);
 		iFilter.addAction(LocationManager.NETWORK_PROVIDER);
 		
-		
-        
-		
-		
 		accounts = AccountManager.get(this).getAccounts();
 		this.HandleAppStartUp(accounts);
 		
-		if (accounts.length != 0)	
-		{	
-			userId = accounts[0].name;
-			//user = new GeneralUser(null, null, null);
-			
-			//userId = "miki@gmail.com";
-		} 
-		else
-		{
-			userId = "NoGmailAccount@gmail.com";
-		}
-        
-        
-        
-        
-        
         restTemplateFacade = new RestTemplateFacade();
     		    
 		
@@ -239,14 +219,16 @@ extends Service
     	    { 	
     	    	// create a GeoPoint with the latitude and longitude coordinates
     			curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
-    			user = new GeneralUser(userId, curr_loc, "");
+    			user = (isUserReady ? new GeneralUser(names[2], curr_loc, "my status" , names[0], names[1]): null);
     			
     			Long id = null;
+    			if(null != user){
     			try	{
     				id = restTemplateFacade.UpdateUserByName(user);
     			} catch (RestClientException e)	{
     				
     			};
+    			}
     			
     			if(id !=null){
     				user.setId(id);

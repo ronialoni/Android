@@ -171,8 +171,7 @@ extends MapActivity
     	                    .getService().getUser();
     	                    List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
     	                    userOverlayList.add(new UserOverlayItem(
-    	                            thisUser, thisUser.getName(),
-    	                            thisUser.getStatus()));
+    	                            thisUser));
                                     userOverlay.changeItems(userOverlayList);
     	                }
     	                catch (UserNotFoundException e)
@@ -209,7 +208,7 @@ extends MapActivity
     	                            GeneralUser thisUser = svcGetter.getService().getUser();
     	                            if (!thisUser.getName().equals(user.getName()))
     	                            {
-    	                                usersOverlayList.add(new UserOverlayItem(user, user.getName(), user.getStatus()));
+    	                                usersOverlayList.add(new UserOverlayItem(user));
     	                            }
     	                        }
     	                        catch (UserNotFoundException e)

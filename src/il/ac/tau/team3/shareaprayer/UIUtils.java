@@ -28,12 +28,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -217,7 +220,7 @@ public class UIUtils {
 				.getActivity()
 				.getSPComm()
 				.requestPostRegister(place, user, praysWishes,
-						new UpdateUI<String>(placeOverlay.getActivity()));
+						new UpdateUI<String>(activity));
 
 		
 
@@ -231,9 +234,9 @@ public class UIUtils {
 					.getActivity()
 					.getSPComm()
 					.deletePlace(place,
-							new UpdateUI<String>(placeOverlay.getActivity()));
+							new UpdateUI<String>(activity));
 		} else {
-			createAlertDialog(_sUserNotOwnerMsg, placeOverlay.getActivity());
+			createAlertDialog(_sUserNotOwnerMsg, activity, "Close");
 		}
 	}
 
@@ -256,7 +259,7 @@ public class UIUtils {
 				.getActivity()
 				.getSPComm()
 				.removeJoiner(place, user, praysWishes,
-						new UpdateUI<Void>(placeOverlay.getActivity()));
+						new UpdateUI<Void>(activity));
 
 	
 
@@ -285,12 +288,20 @@ public class UIUtils {
 	private static boolean[] toPrayerWishes(Map<String, PrayUIObj> ui)	{
 		return new boolean[]{ui.get("Shaharit").wish, ui.get("Minha").wish, ui.get("Arvit").wish};
 	}
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
 	
 	
 	
 	
 	
-	/*package*/ static void createRegisterDialog(final Map<String, StringArray> msgs, final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
+	/*package*/ static void createRegisterDialog(final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
 	{
 		if (placeOverlay == null || placeOverlay.getThisUser() == null || place == null) 
 		{
@@ -299,8 +310,8 @@ public class UIUtils {
 			return;
 		} 
  
- 
-		final Dialog dialog = new Dialog(placeOverlay.getActivity());
+		final Context activity = placeOverlay.getActivity();
+		final Dialog dialog = new Dialog(activity);
 		dialog.setContentView(R.layout.dialog_place_registration);
 		dialog.setTitle(place.getName());
 		
@@ -348,72 +359,48 @@ public class UIUtils {
 				uiObj.prayNumOfUsers.setText(Integer.toString(p.numberOfJoiners()));
 				uiObj.prayNumOfUsers.setTextColor(Color.BLACK);
 				uiObj.prayNumOfUsers.setOnClickListener(new OnClickListener(){
-					
-					
 					public void onClick(View view) {
-						AlertDialog.Builder builder = new AlertDialog.Builder(placeOverlay.getActivity());
-						String users = msgs.get(p.getName()).getEverything();
-						builder.setMessage("Users registered to " + p.getName() + " are:\n\n" + users);
-						builder.setCancelable(true);
-						builder.setNegativeButton("Close",
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog, int id) {
-										dialog.dismiss();
-									}
-								});
-						AlertDialog alert = builder.create();
-						alert.show();
-					
-//						final Dialog listDialog = new Dialog(placeOverlay.getActivity());
-//						listDialog.setContentView(R.layout.dialog_registered_users_list);
-//						//listDialog.setTitle("Users Registered");
-//						//listDialog.setCancelable(true);
-//						//listDialog.setFeatureDrawable(0, null);
-//						ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
-//						lv.setTextFilterEnabled(true);
-//						lv.setAdapter(new ArrayAdapter<String>(placeOverlay.getActivity(), R.layout.dialog_registered_users_row, msgs.get(p.getName()).getStringArray()));
-//						
-//						//Close button
-//						Button closeButton = (Button) listDialog.findViewById(R.id.DRUCloseButton);
-//						closeButton.setOnClickListener(new OnClickListener() {
-//							public void onClick(View view) {
-//								listDialog.dismiss();
-//											}
-//										});
-//						listDialog.show();	
+						final Dialog listDialog = new Dialog(placeOverlay.getActivity());
+						listDialog.setCancelable(true);
+						listDialog.setCanceledOnTouchOutside(true);
+						listDialog.setContentView(R.layout.dialog_registered_users_list);
+						listDialog.setTitle("Users registered to " + p.getName() + " are:");
+						ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
+						
+						lv.setTextFilterEnabled(true);
+						lv.setOnItemClickListener(new OnItemClickListener() {
+						    public void onItemClick(AdapterView<?> parent, View view,
+						        int position, long id) {
+						      createAlertDialog(((String) ((TextView) view).getText()) + "\n\n We should really have a Profile dialog for each user...", activity, "Close");
+						    	
+						    	// When clicked, show a toast with the TextView text
+//						      Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
+//						          Toast.LENGTH_SHORT).show();
+						    }
+						  });
+						
+						Button closebutton = (Button) listDialog.findViewById(R.id.DRUCloseButton);
+						closebutton.setOnClickListener(new OnClickListener(){ public void onClick(View view){ listDialog.dismiss();	};});
+						
+						ArrayList<HashMap<String, String>> prayersList = new ArrayList<HashMap<String, String>>();
+						
+						for (GeneralUser joiner : p.getJoiners()){
+							HashMap<String, String> tempmap = new HashMap<String, String>();
+							// TODO Change back to Full name once it's not buggy
+							tempmap.put("User", joiner.getName());
+							prayersList.add(tempmap);
+						}
+						
+						SimpleAdapter mPrays = new SimpleAdapter(placeOverlay.getActivity(), prayersList, R.layout.dialog_registered_users_row,
+						            new String[] {"User"}, new int[] {R.id.DRUUsername});
+						try{
+							lv.setAdapter(mPrays);
+						}catch (NullPointerException npe){}
+						listDialog.show();
 					}
 				});
 			}
 		}
-
-		//People Button: Temporary
-//		final Map<String, Integer> finalJoinersMap = joinersMap;
-//		Button peopleButton = (Button) dialog.findViewById(R.id.DPRShowPeople);
-//		peopleButton.setOnClickListener(new OnClickListener() {
-//			public void onClick(View view) {
-//				final Dialog listDialog = new Dialog(placeOverlay.getActivity());
-//				listDialog.setContentView(R.layout.dialog_registered_users_list);
-//				listDialog.setTitle("Users Registered");
-//				ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
-//				
-//				ArrayList<HashMap<String, String>> prayersList = new ArrayList<HashMap<String, String>>();
-//				
-//				for (String joiner : finalJoinersMap.keySet()){
-//					HashMap<String, String> tempmap = new HashMap<String, String>();
-//					tempmap.put("User", joiner);
-//					tempmap.put("int", Integer.toString(finalJoinersMap.get(joiner)));
-//					prayersList.add(tempmap);
-//				}
-//				
-//				SimpleAdapter mPrays = new SimpleAdapter(placeOverlay.getActivity(), prayersList, R.layout.dialog_registered_users_row,
-//				            new String[] {"User", "int"}, new int[] {R.id.DRUUsername1, R.id.DRUInteger});
-//				try{
-//					lv.setAdapter(mPrays);
-//				}catch (NullPointerException npe){}
-//				listDialog.show();			
-//
-//			};
-//		});
 		
 		// Delete Set and Cancel Buttons:
 		Button setButton = (Button) dialog.findViewById(R.id.DPRSetButton);
@@ -422,7 +409,7 @@ public class UIUtils {
 		 
 		deleteButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(placeOverlay.getActivity());
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 				builder.setMessage("Are you sure you want to delete this Minyan place?");
 				builder.setCancelable(true);
 				builder.setNegativeButton("No",
@@ -488,11 +475,11 @@ public class UIUtils {
 	
 
 
-	static void createAlertDialog(String msg, Context context) {
+	static void createAlertDialog(String msg, Context context, String buttonText) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(msg);
 		builder.setCancelable(true);
-		builder.setNegativeButton("Cancel",
+		builder.setNegativeButton(buttonText,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 					}
@@ -504,7 +491,8 @@ public class UIUtils {
 	
 	
 	
-	static class CreatePlaceDialog	{		private Dialog dialog;
+	static class CreatePlaceDialog	{		
+		private Dialog dialog;
 		private EditText editAddress;
 		private Calendar startDate = new GregorianCalendar(); 
 		private Calendar endDate = new GregorianCalendar(); 
@@ -536,9 +524,7 @@ public class UIUtils {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
                     {
                     	cal.set(year, monthOfYear, dayOfMonth);
-                        //monthOfYear++;
                     	textStr.setText(printDateFromCalendar(cal,0));
-                        // TODO Send dates to server
                     }
                 };
                 DatePickerDialog datePickerDialog = 
@@ -751,26 +737,33 @@ public class UIUtils {
 		int month = (c.get(Calendar.MONTH)+1);
 		// Because of server issues, needs to add 1900
 		int year = c.get(Calendar.YEAR) + yearAddon;
-		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
+		return ((day < 10 ? "0" : "") + day + "/" + (month < 10 ? "0" : "") + month + "/" + year);
 	}
 
-	private static String printDateFromDate(Date d, int yearAddon) {
+	public static String printDateFromDate(Date d, int yearAddon) {
 		int day = d.getDate();
 		int month = d.getMonth()+1;
 		// Because of server issues, needs to add 1900
 		int year = d.getYear()+yearAddon;
-		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
+		return ((day < 10 ? "0" : "") + day + "/" + (month < 10 ? "0" : "") + month + "/" + year);
 	}
     
-	private static String printTimeFromCalendar(Calendar cal) {
+	public static String printTimeFromCalendar(Calendar cal) {
 		int hour = cal.getTime().getHours();
 		int minutes = cal.getTime().getMinutes();
 		return ((hour < 10 ? "0" : "") + hour + ":" + (minutes < 10 ? "0" : "") + minutes + " ");
 	}
 
-	private static String printTimeFromDate(Date time) {
+	public static String printTimeFromDate(Date time) {
 		int hour = time.getHours();
 		int minutes = time.getMinutes();
 		return ((hour < 10 ? "0" : "") + hour + ":" + (minutes < 10 ? "0" : "") + minutes + " ");
-	}    
+	} 
+	
+	public static int getPrayerIconID(String prayer){
+		if (prayer.equals("Shaharit")) return R.drawable.shaharit_small;
+		if (prayer.equals("Minha")) return R.drawable.minha_small;
+		if (prayer.equals("Arvit")) return R.drawable.arvit_small;
+		return 0;
+	}
 }

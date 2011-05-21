@@ -2,6 +2,7 @@ package il.ac.tau.team3.shareaprayer;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,58 +81,14 @@ extends PrayerArrayItemizedOverlay
 	{
 	    
 		final PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
-		final Map<String, StringArray> msgs = new HashMap<String, StringArray>();
-
-		// A map containing users and their prays
-//		final Map<String, Integer> joinersMap = new HashMap<String, Integer>();
-//		try{
-//		
-//			for (Pray p : placeItem.getPlace().getPraysOfTheDay())	{
-//				for (GeneralUser joiner : p.getJoiners()){
-//					String name = joiner.getName();
-//					// If the user isn't listed, insert him without prays
-//					if (!joinersMap.containsKey(name)) joinersMap.put(joiner.getName(), 0);
-//					final int i = fromPrayNameToInteger(p.getName()) + joinersMap.get(name);
-//					joinersMap.put(name, i);
-//				}
-//			}
-		
-		try{
-			for (Pray p : placeItem.getPlace().getPraysOfTheDay())	{
-				StringArray msg = new StringArray(p.getJoiners().size() + 1);
-				try	{
-					if (p.getJoiners().size() == 0)	{
-						msg.insert("No prayers are listed.");
-					} else	{
-						for (GeneralUser joiner : p.getJoiners())	{
-							String str = (joiner.getFullName()== null || joiner.getFullName() == "" ? joiner.getName() : joiner.getFullName());
-							if (!(str.equals("null"))) msg.insert(str); 
-						}
-					}
-				} catch (NullPointerException e)	{
-					if (null != p){ 
-						msg.getStringArray()[0] = "No prayers are listed.";
-					}
-				}
-				if (null != p){ 
-					msgs.put(p.getName(), msg);
-				}
-			}
-		} catch (NullPointerException e)	{
-		}
-		
-		
+		final Map<String, List<String>> msgs = new HashMap<String, List<String>>();
 		final PlaceArrayItemizedOverlay p = this;
 		
 		activity.runOnUiThread(new Runnable() {
-			
 			public void run() {
-				UIUtils.createRegisterDialog(msgs, placeItem.getPlace(), p);
-				
+				UIUtils.createRegisterDialog(placeItem.getPlace(), p);
 			}
 		});
-		
-		
 	    return true;
 	}
 
@@ -141,12 +98,7 @@ extends PrayerArrayItemizedOverlay
 		if (prayName.equals(R.string.Arvit)) return 2;
 		return -1;
 	}
-//	public int fromPrayNameToInteger(String prayName){
-//		if (prayName.equals(R.string.Shaharit)) return FindPrayer.SHAHARIT;
-//		if (prayName.equals(R.string.Minha)) return FindPrayer.MINHA;
-//		if (prayName.equals(R.string.Arvit)) return FindPrayer.ARVIT;
-//		return -1;
-//	}
+
 	public int fromPrayNameToInteger(String prayName){
 		if (prayName.equals("Shaharit")) return FindPrayer.SHAHARIT;
 		if (prayName.equals("Minha")) return FindPrayer.MINHA;

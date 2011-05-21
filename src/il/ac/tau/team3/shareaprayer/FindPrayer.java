@@ -386,6 +386,17 @@ extends MapActivity
         //refreshTask.destroy();   - @Depricated !!!! & throws (on exit of course).
         super.onDestroy();
     }
+	
+	@Override
+	protected void onStart ()	{
+		super.onStart();
+		
+		bindService(new Intent(LocServ.ACTION_SERVICE), svcConn, BIND_AUTO_CREATE);
+        
+        Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
+        toast.show();
+		
+	}
         
     	
 		
@@ -525,6 +536,9 @@ extends MapActivity
 				try	{
 					publicPlaceOverlay.setThisUser(svcGetter.getService().getUser());
 					closestPlaceOverlay.setThisUser(svcGetter.getService().getUser());
+					if (!refreshTask.isAlive())	{
+						refreshTask.start();
+					}
 				} catch (UserNotFoundException e)	{
 				                                 	 
 				} catch (ServiceNotConnected e) {
@@ -535,11 +549,6 @@ extends MapActivity
     	};
     	
 
-
-   	
-   	
-    	refreshTask.start();
-    	
    	
    	
         svcConn = new ServiceConnection()
@@ -563,18 +572,22 @@ extends MapActivity
                                   
                  
             		if(!(service.isUserReady())){
-            				String[] names = UIUtils.HandleFirstTimeDialog(service.getAccounts());
+            				String[] names = UIUtils.HandleFirstTimeDialog(service.getAccounts(), FindPrayer.this);
             				service.setNames(names);
             				service.isUserReady(true);
-            		}
+            		} 
             		
-            		 publicPlaceOverlay.setThisUser(service.getUser());
-                     closestPlaceOverlay.setThisUser(service.getUser());
-                    if (gp == null)
-                    {
-                        return;
-                    }
-                    mapView.getController().setCenter(SPUtils.toGeoPoint(gp));
+            		try	{
+	            		 publicPlaceOverlay.setThisUser(service.getUser());
+	                     closestPlaceOverlay.setThisUser(service.getUser());
+	                     refreshTask.start();
+	                     mapView.getController().setCenter(SPUtils.toGeoPoint(gp)); 
+	 				
+            		} catch	(UserNotFoundException e)	{
+            			
+            		} catch (NullPointerException e)	{
+            			// unknown location
+            		}
                     
                   
                     
@@ -640,16 +653,6 @@ extends MapActivity
             
             
         };
-        
-        bindService(new Intent(LocServ.ACTION_SERVICE), svcConn, BIND_AUTO_CREATE);
-        
-        
-
-        Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
-        toast.show();
-     
-       
-        
 
 	}
 	
@@ -786,6 +789,22 @@ extends MapActivity
         
         return super.onMenuItemSelected(featureId, item);
     }
+
+
+
+
+
+
+	public void setUser(String[] names) {
+		// TODO Auto-generated method stub
+		try	{
+			ILocationSvc service = svcGetter.getService();
+			service.setNames(names);
+		} catch (ServiceNotConnected e) {
+			
+		}
+		
+	}
 	
     
     

@@ -90,12 +90,12 @@ public class UIUtils {
 	
 	
 	
-	static String[] HandleFirstTimeDialog(Account[] accounts){
+	static String[] HandleFirstTimeDialog(Account[] accounts, FindPrayer activity){
 		if (accounts.length == 0){
 			CreateNoAccountsDialog();
 			return null;
 		}else{
-			return CreateChooseAccountsDialog(accounts);
+			return CreateChooseAccountsDialog(accounts, activity);
 		}
 	}
 	
@@ -126,7 +126,7 @@ public class UIUtils {
 		
 	}
 	
-	static String[] CreateChooseAccountsDialog(final Account[] accounts){
+	static String[] CreateChooseAccountsDialog(final Account[] accounts, final FindPrayer activity){
 		final Dialog dialog = new Dialog(activity);
 		 dialog.setContentView(R.layout.dialog_startup_sync);
 		 final EditText editTextFirstName = (EditText)dialog.findViewById(R.id.startup_name_first);
@@ -153,6 +153,7 @@ public class UIUtils {
             	 names[0] = editTextFirstName.getText().toString();
             	 names[1] = editTextFirstName.getText().toString();
             	 names[2] = accounts[accountId[0]].name;
+            	 activity.setUser(names);
             	 
             	 dialog.dismiss();
              }

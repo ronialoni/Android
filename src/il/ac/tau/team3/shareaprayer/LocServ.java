@@ -102,6 +102,15 @@ extends Service
 
 		public void setNames(String[] new_names) {
 			names=new_names;
+			user = new GeneralUser(names[2], curr_loc == null ? new SPGeoPoint() : curr_loc, "my status" , names[0], names[1]);
+        	
+			try	{
+				long id = restTemplateFacade.UpdateUserByName(user);
+				edit = settings.edit(); 
+				edit.putLong("UserKey", id);
+			} catch (RestClientException e)	{
+				
+			}
 			
 		}
 

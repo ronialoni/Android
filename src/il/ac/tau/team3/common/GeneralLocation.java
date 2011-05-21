@@ -11,7 +11,6 @@ public class GeneralLocation implements Serializable{
 	private Long id;
 	private SPGeoPoint spGeoPoint;
 	private String name;
-	private String address;
 	
 	public GeneralLocation(){
 	
@@ -20,16 +19,6 @@ public class GeneralLocation implements Serializable{
 	
 	public Long getId() {
 		return id;
-	}
-
-	
-	public String getAddress() {
-		return address;
-	}
-
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 
@@ -42,13 +31,6 @@ public class GeneralLocation implements Serializable{
 		this.spGeoPoint = spGeoPoint;
 		this.name = name;
 	}
-	
-	public GeneralLocation(SPGeoPoint spGeoPoint, String name, String address) {
-		this.spGeoPoint = spGeoPoint;
-		this.name = name;
-		this.address = address;
-	}
-	
 	public void setSpGeoPoint(SPGeoPoint spGeoPoint) {
 		this.spGeoPoint = spGeoPoint;
 	}

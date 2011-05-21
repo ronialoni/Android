@@ -10,6 +10,7 @@ import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.Pray;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
+import il.ac.tau.team3.shareaprayer.FindPrayer.StringArray;
 
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapView;
@@ -79,41 +80,43 @@ extends PrayerArrayItemizedOverlay
 	{
 	    
 		final PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
-		//final Map<String, String> msgs = new HashMap<String, String>();
+		final Map<String, StringArray> msgs = new HashMap<String, StringArray>();
 
 		// A map containing users and their prays
-		final Map<String, Integer> joinersMap = new HashMap<String, Integer>();
-		try{
-		
-			for (Pray p : placeItem.getPlace().getPraysOfTheDay())	{
-				for (GeneralUser joiner : p.getJoiners()){
-					String name = joiner.getName();
-					// If the user isn't listed, insert him without prays
-					if (!joinersMap.containsKey(name)) joinersMap.put(joiner.getName(), 0);
-					final int i = fromPrayNameToInteger(p.getName()) + joinersMap.get(name);
-					joinersMap.put(name, i);
-				}
-			}
+//		final Map<String, Integer> joinersMap = new HashMap<String, Integer>();
+//		try{
+//		
 //			for (Pray p : placeItem.getPlace().getPraysOfTheDay())	{
-//				String msg = null;
-//				try	{
-//					if (p.getJoiners().size() == 0)	{
-//						msg = "No prayers are listed to " + p.getName() + ".\n";
-//					} else	{
-//						msg = "Prayer listed to " + p.getName() + " are:\n";
-//					}
-//					for (GeneralUser joiner : p.getJoiners())	{
-//						msg += (joiner.getFullName()== null || joiner.getFullName() == "" ? joiner.getName() : joiner.getFullName()) + "\n";
-//					}
-//				} catch (NullPointerException e)	{
-//					if (null != p){ 
-//						msg = "No prayers are listed to " + p.getName() + ".\n";
-//					}
-//				}
-//				if (null != p){ 
-//					msgs.put(p.getName(), msg);
+//				for (GeneralUser joiner : p.getJoiners()){
+//					String name = joiner.getName();
+//					// If the user isn't listed, insert him without prays
+//					if (!joinersMap.containsKey(name)) joinersMap.put(joiner.getName(), 0);
+//					final int i = fromPrayNameToInteger(p.getName()) + joinersMap.get(name);
+//					joinersMap.put(name, i);
 //				}
 //			}
+		
+		try{
+			for (Pray p : placeItem.getPlace().getPraysOfTheDay())	{
+				StringArray msg = new StringArray(p.getJoiners().size() + 1);
+				try	{
+					if (p.getJoiners().size() == 0)	{
+						msg.insert("No prayers are listed.");
+					} else	{
+						for (GeneralUser joiner : p.getJoiners())	{
+							String str = (joiner.getFullName()== null || joiner.getFullName() == "" ? joiner.getName() : joiner.getFullName());
+							if (!(str.equals("null"))) msg.insert(str); 
+						}
+					}
+				} catch (NullPointerException e)	{
+					if (null != p){ 
+						msg.getStringArray()[0] = "No prayers are listed.";
+					}
+				}
+				if (null != p){ 
+					msgs.put(p.getName(), msg);
+				}
+			}
 		} catch (NullPointerException e)	{
 		}
 		
@@ -123,7 +126,7 @@ extends PrayerArrayItemizedOverlay
 		activity.runOnUiThread(new Runnable() {
 			
 			public void run() {
-				UIUtils.createRegisterDialog(joinersMap, placeItem.getPlace(), p);
+				UIUtils.createRegisterDialog(msgs, placeItem.getPlace(), p);
 				
 			}
 		});

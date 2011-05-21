@@ -75,7 +75,7 @@ extends MapActivity
 	private Drawable userDefaultMarker; 
 	private Drawable othersDefaultMarker;
 	private Drawable synagougeMarker;
-	private Drawable synagougeClosestMarker;
+	private Drawable synagougeClosestMarker; 
 	
 	private PrayerArrayItemizedOverlay userOverlay;
 	private PrayerArrayItemizedOverlay searchQueryOverlay;
@@ -137,6 +137,9 @@ extends MapActivity
 		} catch (UnknownLocationException e)	{
 			return null;
 		} catch (ServiceNotConnected e) {
+			// TODO Auto-generated catch block
+			return null;
+		} catch (NullPointerException e) {
 			// TODO Auto-generated catch block
 			return null;
 		}
@@ -225,7 +228,8 @@ extends MapActivity
     	                        {
     	                            // TODO Auto-generated catch block
     	                            e.printStackTrace();
-    	                        }
+    	                        }catch (NullPointerException e)
+    	                        {}
     	                    }
     	                    otherUsersOverlay.changeItems(usersOverlayList);
     	                }
@@ -805,7 +809,50 @@ extends MapActivity
 		
 	}
 	
-    
+    public static class StringArray{
+    	private String[] stringArray;
+    	private int index;
+
+    	public StringArray(){
+    		this.stringArray = new String[1];
+    		this.index = 0;
+    	}
+    	
+    	public StringArray(int size){
+    		this.stringArray = new String[size];
+    		this.index = 0;
+    	}
+    	
+		public void setStringArray(String[] stringArray) {
+			this.stringArray = stringArray;
+		}
+
+		public String[] getStringArray() {
+			return stringArray;
+		}
+
+		public void setIndex(int index) {
+			this.index = index;
+		}
+		// Same as getSize()
+		public int getIndex() {
+			return index;
+		}
+    	
+		public void insert(String str){
+			this.stringArray[this.index] = str;
+			this.index++;
+		}
+    	
+    	public String getEverything(){
+    		String result = "";
+    		for (int i=0; i<this.index; i++){
+    			result = result + this.stringArray[i] + "\n";
+    		}
+    		return result;
+    	}
+    	
+    }
     
 }
 

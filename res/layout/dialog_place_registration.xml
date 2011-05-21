@@ -8,12 +8,6 @@
         <LinearLayout android:id	="@+id/linearLayout1" 
         	android:layout_width	="fill_parent" 
         	android:layout_height	="wrap_content">
-            
-             <Button 
-            	android:layout_height	="wrap_content" 
-            	android:layout_width	="fill_parent" 
-            	android:text			="Show registered users" 
-            	android:id				="@+id/DPRShowPeople"></Button>
         </LinearLayout>
         
         <TextView 
@@ -105,13 +99,13 @@
             	android:gravity			="center_vertical" 
             	android:layout_height	="wrap_content"></TextView>
             	
-            <TextView 
+            <Button 
             	android:text			="0" 
             	android:gravity			="center" 
             	android:layout_height	="wrap_content"
             	android:textColor		= "#808080" 
             	android:layout_width	="fill_parent" 
-            	android:id				="@+id/DPRnumberOfUsersShaharit"></TextView>
+            	android:id				="@+id/DPRnumberOfUsersShaharit"></Button>
             
             <ImageView 
             	android:layout_width	="fill_parent" 
@@ -145,13 +139,13 @@
             	android:layout_height	="wrap_content" 
             	></TextView>
             
-            <TextView 
+            <Button 
             	android:text			="0" 
             	android:layout_height	="wrap_content" 
             	android:layout_width	="wrap_content" 
             	android:textColor		= "#808080"
             	android:id				="@+id/DPRnumberOfUsersMinha" 
-            	android:gravity			="center"></TextView>
+            	android:gravity			="center"></Button>
             
             <ImageView 
             	android:layout_width	="wrap_content" 
@@ -183,13 +177,13 @@
             	android:gravity			="center_vertical" 
             	android:layout_height	="wrap_content"></TextView>
                         
-            <TextView 
+            <Button 
             	android:text			="0" 
             	android:layout_height	="wrap_content" 
             	android:layout_width	="wrap_content"
             	android:textColor		= "#808080" 
             	android:id				="@+id/DPRnumberOfUsersArvit" 
-            	android:gravity			="center"></TextView>
+            	android:gravity			="center"></Button>
             
             <ImageView 
             	android:layout_width	="wrap_content" 

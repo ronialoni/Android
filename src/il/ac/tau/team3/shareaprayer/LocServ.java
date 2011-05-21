@@ -110,8 +110,8 @@ extends Service
 				edit.putLong("UserKey", id);
 			} catch (RestClientException e)	{
 				
+			} catch (NullPointerException npe)	{
 			}
-			
 		}
 
 		public void isUserReady(boolean is) {

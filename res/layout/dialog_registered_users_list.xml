@@ -6,28 +6,7 @@
      android:layout_height="wrap_content"
      android:orientation="vertical">
     
-    <LinearLayout 
-    android:layout_height="wrap_content" 
-    android:layout_width="match_parent" 
-    android:id="@+id/linearLayout1">
-    
-	    <TextView 
-	    android:text="Users:" 
-	    android:id="@+id/DRUHead" 
-	    android:layout_width="wrap_content" 
-	    android:layout_height="wrap_content" android:layout_weight="1">
-	    </TextView>
-    
-	    <ImageView 
-	    android:layout_height="wrap_content" 
-	    android:layout_width="wrap_content" 
-	    android:src="@drawable/shaharit_small" 
-	    android:id="@+id/DRUIcon">
-	    </ImageView>
-        
-    
-    </LinearLayout>
-    
     <ListView android:id="@+id/DRUList" android:layout_width="fill_parent" android:layout_height="wrap_content"></ListView>
+    <Button android:text="Close" android:layout_gravity="center" android:id="@+id/DRUCloseButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 
 </LinearLayout>

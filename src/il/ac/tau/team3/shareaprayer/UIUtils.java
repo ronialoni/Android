@@ -15,6 +15,7 @@ import il.ac.tau.team3.common.Pray;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
+import il.ac.tau.team3.shareaprayer.FindPrayer.StringArray;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import android.accounts.Account;
 import android.app.Activity;
@@ -285,7 +286,11 @@ public class UIUtils {
 		return new boolean[]{ui.get("Shaharit").wish, ui.get("Minha").wish, ui.get("Arvit").wish};
 	}
 	
-	/*package*/ static void createRegisterDialog(Map<String, Integer> joinersMap, final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
+	
+	
+	
+	
+	/*package*/ static void createRegisterDialog(final Map<String, StringArray> msgs, final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
 	{
 		if (placeOverlay == null || placeOverlay.getThisUser() == null || place == null) 
 		{
@@ -304,23 +309,23 @@ public class UIUtils {
 		placeAddress.setText(place.getAddress());
 
 		TextView placeDates = (TextView) dialog.findViewById(R.id.DPRdates);
-		placeDates.setText(printDateFromDate(place.getEndDate()));
+		placeDates.setText(printDateFromDate(place.getEndDate(),0));
 		
 		final Map<String, PrayUIObj> JoinersUI = new HashMap<String, PrayUIObj>();
 		
 		JoinersUI.put("Shaharit", new PrayUIObj((TextView) dialog.findViewById(R.id.DPRtimeShaharit), 
 												(CheckBox) dialog.findViewById(R.id.DPRcheckboxShaharit),
-												(TextView) dialog.findViewById(R.id.DPRnumberOfUsersShaharit)));
+												(Button) dialog.findViewById(R.id.DPRnumberOfUsersShaharit)));
 		
 		JoinersUI.put("Minha", 	  new PrayUIObj((TextView) dialog.findViewById(R.id.DPRtimeMinha), 
 											    (CheckBox) dialog.findViewById(R.id.DPRcheckboxMinha),
-											    (TextView) dialog.findViewById(R.id.DPRnumberOfUsersMinha)));
+											    (Button) dialog.findViewById(R.id.DPRnumberOfUsersMinha)));
 		
 		JoinersUI.put("Arvit",    new PrayUIObj((TextView) dialog.findViewById(R.id.DPRtimeArvit), 
 											    (CheckBox) dialog.findViewById(R.id.DPRcheckboxArvit),
-											    (TextView) dialog.findViewById(R.id.DPRnumberOfUsersArvit)));
+											    (Button) dialog.findViewById(R.id.DPRnumberOfUsersArvit)));
 		
-		for (Pray p : place.getPraysOfTheDay())	{
+		for (final Pray p : place.getPraysOfTheDay())	{
 			if (null != p)	{
 				final PrayUIObj uiObj = JoinersUI.get(p.getName());
 				if (uiObj == null)	{
@@ -341,38 +346,74 @@ public class UIUtils {
 				uiObj.prayCheckBox.setClickable(true);
 				uiObj.prayCheckBox.setTextColor(Color.WHITE);
 				uiObj.prayNumOfUsers.setText(Integer.toString(p.numberOfJoiners()));
-				uiObj.prayNumOfUsers.setTextColor(Color.WHITE);
+				uiObj.prayNumOfUsers.setTextColor(Color.BLACK);
+				uiObj.prayNumOfUsers.setOnClickListener(new OnClickListener(){
+					
+					
+					public void onClick(View view) {
+						AlertDialog.Builder builder = new AlertDialog.Builder(placeOverlay.getActivity());
+						String users = msgs.get(p.getName()).getEverything();
+						builder.setMessage("Users registered to " + p.getName() + " are:\n\n" + users);
+						builder.setCancelable(true);
+						builder.setNegativeButton("Close",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int id) {
+										dialog.dismiss();
+									}
+								});
+						AlertDialog alert = builder.create();
+						alert.show();
+					
+//						final Dialog listDialog = new Dialog(placeOverlay.getActivity());
+//						listDialog.setContentView(R.layout.dialog_registered_users_list);
+//						//listDialog.setTitle("Users Registered");
+//						//listDialog.setCancelable(true);
+//						//listDialog.setFeatureDrawable(0, null);
+//						ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
+//						lv.setTextFilterEnabled(true);
+//						lv.setAdapter(new ArrayAdapter<String>(placeOverlay.getActivity(), R.layout.dialog_registered_users_row, msgs.get(p.getName()).getStringArray()));
+//						
+//						//Close button
+//						Button closeButton = (Button) listDialog.findViewById(R.id.DRUCloseButton);
+//						closeButton.setOnClickListener(new OnClickListener() {
+//							public void onClick(View view) {
+//								listDialog.dismiss();
+//											}
+//										});
+//						listDialog.show();	
+					}
+				});
 			}
 		}
 
 		//People Button: Temporary
-		final Map<String, Integer> finalJoinersMap = joinersMap;
-		Button peopleButton = (Button) dialog.findViewById(R.id.DPRShowPeople);
-		peopleButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View view) {
-				final Dialog listDialog = new Dialog(placeOverlay.getActivity());
-				listDialog.setContentView(R.layout.dialog_registered_users_list);
-				listDialog.setTitle("Users Registered");
-				ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
-				
-				ArrayList<HashMap<String, String>> prayersList = new ArrayList<HashMap<String, String>>();
-				
-				for (String joiner : finalJoinersMap.keySet()){
-					HashMap<String, String> tempmap = new HashMap<String, String>();
-					tempmap.put("User", joiner);
-					tempmap.put("int", Integer.toString(finalJoinersMap.get(joiner)));
-					prayersList.add(tempmap);
-				}
-				
-				SimpleAdapter mPrays = new SimpleAdapter(placeOverlay.getActivity(), prayersList, R.layout.dialog_registered_users_row,
-				            new String[] {"User", "int"}, new int[] {R.id.DRUUsername1, R.id.DRUInteger});
-				try{
-					lv.setAdapter(mPrays);
-				}catch (NullPointerException npe){}
-				listDialog.show();			
-
-			};
-		});
+//		final Map<String, Integer> finalJoinersMap = joinersMap;
+//		Button peopleButton = (Button) dialog.findViewById(R.id.DPRShowPeople);
+//		peopleButton.setOnClickListener(new OnClickListener() {
+//			public void onClick(View view) {
+//				final Dialog listDialog = new Dialog(placeOverlay.getActivity());
+//				listDialog.setContentView(R.layout.dialog_registered_users_list);
+//				listDialog.setTitle("Users Registered");
+//				ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
+//				
+//				ArrayList<HashMap<String, String>> prayersList = new ArrayList<HashMap<String, String>>();
+//				
+//				for (String joiner : finalJoinersMap.keySet()){
+//					HashMap<String, String> tempmap = new HashMap<String, String>();
+//					tempmap.put("User", joiner);
+//					tempmap.put("int", Integer.toString(finalJoinersMap.get(joiner)));
+//					prayersList.add(tempmap);
+//				}
+//				
+//				SimpleAdapter mPrays = new SimpleAdapter(placeOverlay.getActivity(), prayersList, R.layout.dialog_registered_users_row,
+//				            new String[] {"User", "int"}, new int[] {R.id.DRUUsername1, R.id.DRUInteger});
+//				try{
+//					lv.setAdapter(mPrays);
+//				}catch (NullPointerException npe){}
+//				listDialog.show();			
+//
+//			};
+//		});
 		
 		// Delete Set and Cancel Buttons:
 		Button setButton = (Button) dialog.findViewById(R.id.DPRSetButton);
@@ -403,7 +444,7 @@ public class UIUtils {
 			};
 		});
 		if (place.getOwner() != null && placeOverlay.getThisUser() != null) {
-			if (!(place.getOwner().getName().equals(placeOverlay.getThisUser().getName()))) {
+			if (!(place.getOwner().getId() == placeOverlay.getThisUser().getId())) {
 				deleteButton.setVisibility(View.INVISIBLE);
 			}
 		}
@@ -433,14 +474,15 @@ public class UIUtils {
 	
 	static class ListDialog extends ListActivity
 	{
-		private Map map;
+		private Map<String, StringArray> map;
 		private Activity activity;
 		
-		public ListDialog(Map<String, Integer> map, Activity activity ){
+		public ListDialog(Map<String, StringArray> map, Activity activity ){
 			super();
 			this.map = map;
 			this.activity = activity;
 		}
+
 	}
 			
 	
@@ -495,7 +537,7 @@ public class UIUtils {
                     {
                     	cal.set(year, monthOfYear, dayOfMonth);
                         //monthOfYear++;
-                    	textStr.setText(printDateFromCalendar(cal));
+                    	textStr.setText(printDateFromCalendar(cal,0));
                         // TODO Send dates to server
                     }
                 };
@@ -618,8 +660,8 @@ public class UIUtils {
 			
 			fromDate = (TextView) dialog.findViewById(R.id.CPDFromDatetextView);
 			toDate   = (TextView) dialog.findViewById(R.id.CPDToDatetextView);
-			fromDate.setText(printDateFromCalendar(startDate)); 
-	        toDate.setText(printDateFromCalendar(endDate)); 
+			fromDate.setText(printDateFromCalendar(startDate,0)); 
+	        toDate.setText(printDateFromCalendar(endDate,0)); 
 	        
 	        changeStartDate = (Button) dialog.findViewById(R.id.CPDChange1button);
 	        changeEndDate = (Button) dialog.findViewById(R.id.CPDChange2button);
@@ -704,26 +746,20 @@ public class UIUtils {
 	}
 
 	
-	public static String printDateFromCalendar(Calendar c) {
+	public static String printDateFromCalendar(Calendar c, int yearAddon) {
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int month = (c.get(Calendar.MONTH)+1);
 		// Because of server issues, needs to add 1900
-		int year = c.get(Calendar.YEAR) + 1900;
+		int year = c.get(Calendar.YEAR) + yearAddon;
 		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
 	}
 
-	private static String printDateFromDate(Date d) {
+	private static String printDateFromDate(Date d, int yearAddon) {
 		int day = d.getDate();
 		int month = d.getMonth()+1;
 		// Because of server issues, needs to add 1900
-		int year = d.getYear()+1900;
+		int year = d.getYear()+yearAddon;
 		return ((month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day + "/" + year);
-	}
-
-	private static String printTimeFromDate(Date time) {
-		int hour = time.getHours();
-		int minutes = time.getMinutes();
-		return ((hour < 10 ? "0" : "") + hour + ":" + (minutes < 10 ? "0" : "") + minutes + " ");
 	}
     
 	private static String printTimeFromCalendar(Calendar cal) {
@@ -731,5 +767,10 @@ public class UIUtils {
 		int minutes = cal.getTime().getMinutes();
 		return ((hour < 10 ? "0" : "") + hour + ":" + (minutes < 10 ? "0" : "") + minutes + " ");
 	}
-    
+
+	private static String printTimeFromDate(Date time) {
+		int hour = time.getHours();
+		int minutes = time.getMinutes();
+		return ((hour < 10 ? "0" : "") + hour + ":" + (minutes < 10 ? "0" : "") + minutes + " ");
+	}    
 }

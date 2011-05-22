@@ -76,8 +76,6 @@ public class UIUtils {
 	static String _sUserNotRegisterMsg = "You are not register to this place.";
 	static String _sUserNotOwnerMsg = "You can't delete this place, because you are not the owner.";
 	static String _sWelcomeMsg = "Welcome to Share-A-Prayer!";
-	
-	static FindPrayer activity;
 
 	static class UpdateUI<T> extends ACommHandler<T> {
 		FindPrayer activity;
@@ -229,7 +227,8 @@ public class UIUtils {
 				.getActivity()
 				.getSPComm()
 				.requestPostRegister(place, user, praysWishes,
-						new UpdateUI<String>(activity));
+						new UpdateUI<String>(placeOverlay
+								.getActivity()));
 
 		
 
@@ -243,9 +242,11 @@ public class UIUtils {
 					.getActivity()
 					.getSPComm()
 					.deletePlace(place,
-							new UpdateUI<String>(activity));
+							new UpdateUI<String>(placeOverlay
+									.getActivity()));
 		} else {
-			createAlertDialog(_sUserNotOwnerMsg, activity, "Close");
+			createAlertDialog(_sUserNotOwnerMsg, placeOverlay
+					.getActivity(), "Close");
 		}
 	}
 
@@ -268,7 +269,8 @@ public class UIUtils {
 				.getActivity()
 				.getSPComm()
 				.removeJoiner(place, user, praysWishes,
-						new UpdateUI<Void>(activity));
+						new UpdateUI<Void>(placeOverlay
+								.getActivity()));
 
 	
 

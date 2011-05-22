@@ -162,12 +162,19 @@ public class UIUtils {
          {                
              public void onClick(View v)
              {
+            	 if(editTextFirstName.getText() == null || editTextFirstName.getText().toString() == null ||
+            			 editTextFirstName.getText().toString() == "" || 
+            			 editTextLastName.getText() == null || editTextLastName.getText().toString() == null ||
+            			 editTextLastName.getText().toString() == ""){
+            		 createAlertDialog("Please enter your first and last name", activity, "OK");
+            	 }else{
             	 names[0] = editTextFirstName.getText().toString();
             	 names[1] = editTextLastName.getText().toString();
             	 names[2] = accounts[accountId[0]].name;
             	 activity.setUser(names);
             	 
             	 dialog.dismiss();
+            	 }
              }
          });
          
@@ -331,7 +338,7 @@ public class UIUtils {
 		placeAddress.setText(place.getAddress());
 
 		TextView placeDates = (TextView) dialog.findViewById(R.id.DPRdates);
-		placeDates.setText(printDateFromDate(place.getEndDate(),0));
+		placeDates.setText(printDateFromDate(place.getEndDate(),1900));
 		
 		final Map<String, PrayUIObj> JoinersUI = new HashMap<String, PrayUIObj>();
 		
@@ -375,7 +382,11 @@ public class UIUtils {
 						listDialog.setCancelable(true);
 						listDialog.setCanceledOnTouchOutside(true);
 						listDialog.setContentView(R.layout.dialog_registered_users_list);
-						listDialog.setTitle("Users registered to " + p.getName() + " are:");
+						if(p.getJoiners()== null || p.getJoiners().size() == 0 ){
+							listDialog.setTitle("No prayers registered for this pray.");
+						}else{
+							listDialog.setTitle("Currently registered for " + p.getName() + ":");
+						}
 						ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
 						
 						lv.setTextFilterEnabled(true);
@@ -394,7 +405,8 @@ public class UIUtils {
 						for (GeneralUser joiner : p.getJoiners()){
 							HashMap<String, String> tempmap = new HashMap<String, String>();
 							// TODO Change back to Full name once it's not buggy
-							tempmap.put("User", joiner.getName());
+							String userName = (joiner.getFullName()==null || joiner.getFullName()=="" ? joiner.getName() : joiner.getFullName());
+							tempmap.put("User", userName);
 							prayersList.add(tempmap);
 						}
 						
@@ -411,7 +423,7 @@ public class UIUtils {
 		
 		// Delete Set and Cancel Buttons:
 		Button setButton = (Button) dialog.findViewById(R.id.DPRSetButton);
-		Button cancelButton = (Button) dialog.findViewById(R.id.DPRCancelButton);
+		Button closeButton = (Button) dialog.findViewById(R.id.DPRCloseButton);
 		Button deleteButton = (Button) dialog.findViewById(R.id.DPRDeleteButton);
 		 
 		deleteButton.setOnClickListener(new OnClickListener() {
@@ -454,7 +466,7 @@ public class UIUtils {
 			};
 		});
 		
-		cancelButton.setOnClickListener(new OnClickListener() 
+		closeButton.setOnClickListener(new OnClickListener() 
 		{
 			public void onClick(View view) 
 			{
@@ -683,10 +695,16 @@ public class UIUtils {
 			createButton.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View view) {
-					final Date finalstartDate = new Date(startDate.get(Calendar.YEAR)-1900,startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
-					final Date finalendDate = new Date(endDate.get(Calendar.YEAR)-1900,endDate.get(Calendar.MONTH),endDate.get(Calendar.DAY_OF_MONTH));
-					CreateNewPlace_YesClick(prays, user, activity, point, finalstartDate, finalendDate, prayTimes);
-					dialog.dismiss();
+					if(!prays[0] && !prays[1] && !prays[2]){
+						createAlertDialog("You must choose at least one pray", activity, "Cancel");
+					}
+					else{
+						final Date finalstartDate = new Date(startDate.get(Calendar.YEAR)-1900,startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
+						final Date finalendDate = new Date(endDate.get(Calendar.YEAR)-1900,endDate.get(Calendar.MONTH),endDate.get(Calendar.DAY_OF_MONTH));
+						CreateNewPlace_YesClick(prays, user, activity, point, finalstartDate, finalendDate, prayTimes);
+						dialog.dismiss();
+					}
+					
 
 				};
 
@@ -711,8 +729,8 @@ public class UIUtils {
 	
 	static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user,
 			FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes) {
-		GeneralPlace newMinyan = new GeneralPlace(user, user.getName()
-				+ "'s Place", "", point, startDate,endDate);
+		String placeName = (user.getFullName()==null || user.getFullName()=="" ? user.getName() : user.getFullName()) + "'s Place";
+		GeneralPlace newMinyan = new GeneralPlace(user, placeName, "", point, startDate,endDate);
 		Calendar c = new GregorianCalendar();
 		List<GeneralUser> j = new ArrayList<GeneralUser>();
 		j.add(user);

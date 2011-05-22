@@ -205,9 +205,9 @@
                android:layout_weight = ".2"
             ></Button>
             <Button 
-               android:text="Cancel" 
+               android:text="Close" 
                android:layout_height="wrap_content" 
-               android:id="@+id/DPRCancelButton" 
+               android:id="@+id/DPRCloseButton" 
                android:layout_width="fill_parent"
                android:layout_weight = ".2"
                />

@@ -7,7 +7,6 @@ import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import il.ac.tau.team3.spcomm.ICommHandler;
-import il.ac.tau.team3.spcomm.RestTemplateFacade;
 import il.ac.tau.team3.spcomm.SPComm;
 
 import java.util.ArrayList;
@@ -278,8 +277,6 @@ extends Service
         
         updateHandler = new Handler(updateThread.getLooper());
 		
-        //restTemplateFacade = new RestTemplateFacade();
-    		    
 		
 		LocationListener locationListener = new LocationListener() 
     	{

@@ -64,17 +64,26 @@ public class SPUtils
         }
     }
     
-    public static void debug(Object o)
+    public static String debugSafeToString(Object o)
     {
-        debug(o.toString());
+        return (null == o  ?  "<null>"  :  o.toString());
     }
     
+    public static void debug(Object o)
+    {
+        debug(debugSafeToString(null == o  ?  "<null>"  :  o.toString()));
+    }    
     
     public static void debugFuncStart(String funcName, Object... params)
     {
         StringBuffer buff = new StringBuffer();
         String       temp;
         boolean      isFirst = true;
+        if (null == params || 0 == params.length)
+        {
+            buff.append(debugSafeToString(params));
+        }
+        
         for (Object param : params)
         {
             if (isFirst)
@@ -104,7 +113,6 @@ public class SPUtils
     {
         Log.e("ShareAPrayer", message, throwable);
     }
-    
     
     
     

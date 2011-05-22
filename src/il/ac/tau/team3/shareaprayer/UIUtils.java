@@ -1,5 +1,6 @@
 package il.ac.tau.team3.shareaprayer;
 
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -30,11 +31,16 @@ import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -55,11 +61,15 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.QuickContactBadge;
 import android.widget.RemoteViews.ActionException;
 import android.widget.SimpleAdapter;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TimePicker;
- 
-public class UIUtils {
- 
+
+
+
+public class UIUtils 
+{ 
 	static String _sNewPlaceQues = "Do you want to create a public praying place?";
 	static String _sNoPraySelected = "Please select at least one pray before creating a new place.";
 	static String _sAlreadyRegisterAlertMsg = "You are already registered to this place.";
@@ -766,4 +776,204 @@ public class UIUtils {
 		if (prayer.equals("Arvit")) return R.drawable.arvit_small;
 		return 0;
 	}
+	
+	
+	
+	
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////// Menu: /////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	public static int getContextWidth(Context context)
+	{
+	    return ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
+	}
+	
+	
+	
+	
+	
+	public interface ISPMenuItem
+	{
+	    abstract public int    getItemId();
+	    abstract public int    getResIconId();
+	    abstract public String getTitle();
+	}
+	
+	
+	public interface ISPOnMenuItemSelectedListener<E_MenuItem extends Enum<E_MenuItem> & ISPMenuItem>
+	{
+	    abstract public void onMenuItemSelected(E_MenuItem item, View view);
+	}
+	
+	
+	static public class SPMenu<  E_MenuItem  extends  Enum<E_MenuItem>  &  ISPMenuItem  >
+	{
+	    public static boolean isShowing(SPMenu<?> menu)
+	    {
+	        return null != menu && menu.isInitialized() && menu.isShowing();
+	    }
+	    
+	    private static final int SP_MENU_RES_ROOT    = R.layout.menu_options_main;
+	    private static final int SP_MENU_ITEM_RES_ID = R.id.mom_items_row;
+	    
+	    
+	    private final E_MenuItem[] items;
+	    private final ISPOnMenuItemSelectedListener<E_MenuItem> menuListener;
+	    private       PopupWindow  menuWindow;
+	    
+	    
+	    /** @constructor */
+	    public SPMenu(E_MenuItem[] items, ISPOnMenuItemSelectedListener<E_MenuItem> menuListener)
+	    {
+	        this.items        = items;
+	        this.menuListener = menuListener;
+	        this.menuWindow   = null;
+	    }
+	    
+	    
+	    
+
+        /**
+	     * @pre    this.isInitialized()
+	     * @return true:  There a Window/Layout allocated and inflated.
+	     *         false: Not even allocated (counting on Garbage-Collector).
+	     */
+	    private boolean isShowing()
+	    {
+	        return null != this.menuWindow && this.menuWindow.isShowing();
+	    }
+	    
+	    public boolean isInitialized()
+	    {
+	        return null != this.items && 0 != this.items.length && null != this.menuListener;
+	    }
+	    
+	    /** @main */
+	    public void handleMenuButtonClick(Activity activity, int buttomViewResId)
+	    {
+	        /*
+	         * Second push on menu button will hide.
+	         */
+	        if (isShowing())
+	        {
+	            this.hide();
+	        }
+	        else
+	        {
+	            this.show(activity, buttomViewResId);
+	        }
+	    }
+	    
+	    
+	    
+	    public synchronized void show(Activity activity, int buttomViewResId)
+	    {
+	        if (! this.isInitialized())
+	        {
+	            Log.w("*SPMenu*", "Trying to show() an uninitialized one.");
+	            return;
+	        }
+	        
+	        TableLayout menu = (TableLayout) activity.getLayoutInflater().inflate(R.layout.menu_options_main, null);
+	        
+	        menuWindow = new PopupWindow(menu, LayoutParams.FILL_PARENT,  LayoutParams.WRAP_CONTENT, false);
+	        menuWindow.setAnimationStyle(android.R.style.Animation_Dialog);
+	        menuWindow.setWidth(getContextWidth(activity));
+	        
+	        //menuWindow.setOutsideTouchable(true);
+	        menuWindow.setTouchInterceptor(new OnTouchListener()
+	        {                
+	            public boolean onTouch(View v, MotionEvent event)
+	            {
+	                SPUtils.debugFuncStart("**!!** menuWindow.OnTouchListener.onTouch", v, event);
+	                // This method should invoke only if the menu isShowing(), so no check.
+	                SPMenu.this.hide(); // For any Event
+	                
+	                // Tell the world that we took care of the touch event.
+	                return true;
+	            }
+
+	        });
+	        
+	        
+	        
+	        menuWindow.showAtLocation(activity.findViewById(buttomViewResId), Gravity.BOTTOM, 0, 0);
+	        
+	        
+	        TableRow itemTableRow = (TableRow) menu.findViewById(R.id.mom_items_row);
+	        itemTableRow.removeAllViews();
+	        
+//	        View      itemLayout;
+	        TextView  itemTitle  = null;
+//	        ImageView itemIcon   = null;
+	        
+	        for (final E_MenuItem item : this.items)
+	        {
+//	            itemLayout = activity.getLayoutInflater().inflate(R.layout.menu_item, null);
+//	            itemLayout.setMinimumWidth(getContextWidth(activity) / this.items.length);
+	            
+	            
+	            
+//	            itemTitle = (TextView) itemLayout.findViewById(R.id.moi_caption);
+	            itemTitle = new TextView(activity);
+	            
+	            
+	            
+	            itemTitle.setClickable(true);
+	            itemTitle.setGravity(Gravity.CENTER);
+	            itemTitle.setWidth(getContextWidth(activity) / this.items.length);
+	            
+	            itemTitle.setText(item.getTitle());
+	            
+	            itemTitle.setCompoundDrawablesWithIntrinsicBounds(0, item.getResIconId(), 0, 0);
+	            itemTitle.setBackgroundResource(R.drawable.selector_menu_item);
+	            
+//	            itemIcon = (ImageView) itemLayout.findViewById(R.id.moi_icon);
+//	            itemIcon.setImageResource(item.getResIconId());
+	            
+	            
+	            
+	            itemTitle.setOnClickListener(new OnClickListener()
+	            {                    
+	                public void onClick(View v)
+	                {
+	                    SPMenu.this.menuListener.onMenuItemSelected(item, v);
+	                }
+	            });
+	            
+	            itemTableRow.addView(itemTitle);
+	      
+	        
+	        }
+	        
+	    }
+	    
+	    
+	    
+	    /**
+	     * @post !this.isShowing()
+	     * @imp  Garbage-Collector will finish the job.
+	     *       It's good to free, because menu is not often pressed.
+	     *       The rest doesn't sum to a lot of memory. 
+	     */
+	    public synchronized void hide()
+	    {
+	        if (SPMenu.this.isShowing())
+	        {                
+	            SPMenu.this.menuWindow.dismiss();
+	            SPMenu.this.menuWindow = null;
+	        }
+	        
+	    }
+	    
+	    
+	    
+	}//@END: class SPMenu
+	
+	
+	
+	
+	
 }

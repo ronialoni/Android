@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<TableLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+             android:id    = "@+id/mom_root"
+    android:layout_height  = "wrap_content"
+    android:layout_width   = "fill_parent" 
+    android:layout_gravity = "fill" 
+    android:padding        = "0dip"
+    android:background     = "#000000"
+    
+    android:clickable      = "true"
+    android:focusable      = "true"
+    android:focusableInTouchMode = "true" 
+    
+    >
+    
+    
+    <!-- 
+    Just a horizontal black line. 
+    --> 
+    <ImageView android:id="@+id/mom_top_image"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"      
+        android:gravity="center" 
+        android:scaleType="fitXY"
+        android:src="@drawable/menu_header" 
+        />
+    
+    
+    <!-- 
+    One row of menu items. 
+    --> 
+    <TableRow android:id      = "@+id/mom_items_row"
+        android:layout_width  = "fill_parent" 
+        android:layout_height = "wrap_content"
+        >
+        <!-- Empty. -->
+    </TableRow> 
+    
+    
+</TableLayout>

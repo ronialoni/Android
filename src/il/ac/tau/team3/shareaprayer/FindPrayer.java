@@ -5,6 +5,7 @@ package il.ac.tau.team3.shareaprayer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,6 +17,9 @@ import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
+import il.ac.tau.team3.shareaprayer.UIUtils.ISPMenuItem;
+import il.ac.tau.team3.shareaprayer.UIUtils.SPMenu;
+import il.ac.tau.team3.shareaprayer.UIUtils.ISPOnMenuItemSelectedListener;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import il.ac.tau.team3.spcomm.ICommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
@@ -29,6 +33,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -390,6 +395,7 @@ extends MapActivity
         super.onDestroy();
     }
 	
+	
 	@Override
 	protected void onStart ()	{
 		super.onStart();
@@ -412,7 +418,8 @@ extends MapActivity
 		mapView = (SPMapView) findViewById(R.id.MAINview1);
 		editText = (EditText) findViewById(R.id.addressBar);
 		//UIUtils.activity = this;
-        mapView.registerTapListener(new IMapTapDetect()	
+        		
+		mapView.registerTapListener(new IMapTapDetect()	
         {
 			public void onTouchEvent(SPGeoPoint sp) 
 			{
@@ -657,145 +664,314 @@ extends MapActivity
             
         };
 
-	}
-	
-	
-	
-	
-	/**
-	 * @menu
-	 * 
-	 * 
-	 */
-		
+        
 
-	private String[]   menuItemesNames;
-    private MenuItem[] menuItems;
-	private Runnable[] menuListeners;
-  
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+        //FIXME @Matan: IMapTapDetect doesn't seem to invoke ANYTHING when the there is NO MOVEMENT.
+        
+        /**
+         * TODO Decide where this should be:  
+         *          1) return correct booleans, thus onTouchEvent(MotionEvent) will handle.
+         *          2) built in Matan's design.
+         *          3) in initializeMenu().  - because we KNOW it will be called once, one first menu show.
+         *          4) here.  - because No.3 is not a good reason.
+         *          5) maybe it belongs earlier in onCreate... don't know!   
+         */
+        mapView.registerTapListener(new IMapTapDetect()
+        {
+            
+            public void onMoveEvent(SPGeoPoint sp)
+            {
+                SPUtils.debugFuncStart("**?** mapView.IMapTapDetect.onMoveEvent", sp);
+                if (SPMenu.isShowing(FindPrayer.this.menu))
+                {
+                    FindPrayer.this.menu.hide();
+                }
+            }
+            
+            public void onTouchEvent(SPGeoPoint sp)
+            {
+                SPUtils.debugFuncStart("**?** mapView.IMapTapDetect.onTouchEvent", sp);
+                if (SPMenu.isShowing(FindPrayer.this.menu))
+                {
+                    FindPrayer.this.menu.hide();
+                }
+            }
+            
+        });        
+        
+        
+	}//@END: onCreate(..)
+	
+	
+	
+	
+    /**
+     * @menu
+     * 
+     * 
+     */
+    
+    
+    public enum ESPMenuItem
+    implements ISPMenuItem
     {
-        this.menuItemesNames = new String[]
+        FIND_ME (0, R.drawable.menu_item_searchmap_compas),
+        EXIT    (1, R.drawable.menu_item_exit_door_greener),
+        ;
+                
+        private final int itemId;
+        private final int resIconId;
+                
+        private ESPMenuItem(int itemId, int resIconId)
         {
-                "Find Me!", // 0
-                "My Place"  // 1
-        };
-        
-        int numOfMenuItems = this.menuItemesNames.length;
-        
-        this.menuItems = new MenuItem[numOfMenuItems];
-        
-        for (int i = 0; i < numOfMenuItems; i++)
-        {
-            this.menuItems[i] = menu.add(Menu.NONE, i, Menu.NONE, this.menuItemesNames[i]);
+            this.itemId    = itemId;
+            this.resIconId = resIconId;
         }
         
         
+        public String getTitle()
+        {
+            return this.toString().replace('_', ' ').toUpperCase();
+        }
+        
+        public int getItemId()
+        {
+            return itemId;
+        }
+        
+        public int getResIconId()
+        {
+            
+            return resIconId;
+        }
+        
+    }
+
+    
+    
+    
+    private void centerMap()
+    {
+        ILocationSvc service;
+        try
+        {
+            service = this.svcGetter.getService();
+        }
+        catch (ServiceNotConnected sne)
+        {
+            SPUtils.error("centerMap", sne);
+            sne.printStackTrace();
+            return;
+        }
+        
+        GeneralUser user;
+        try
+        {
+            user = service.getUser();
+        }
+        catch (UserNotFoundException unfe)
+        {
+            SPUtils.error("centerMap", unfe);
+            unfe.printStackTrace();
+            return;
+        }
+        
+        SPGeoPoint center;
+        try
+        {
+            center = user.getSpGeoPoint();
+        }
+        catch (UnknownLocationException ule)
+        {
+            SPUtils.error("centerMap", ule);
+            ule.printStackTrace();
+            return;
+        }
+        
+        this.mapView.getController().setCenter(SPUtils.toGeoPoint(center));
+        
+// I will enable if it happens.
+//
+//        catch (NullPointerException npe)
 //        {
-//                menu.add(Menu.NONE, 0, Menu.NONE, "Find Me!"),
-//                menu.add(Menu.NONE, 1, Menu.NONE, "My Place")
-//        };
+//            // XXX  (_FIXME_)
+//            SPUtils.error("NullPointerException - Should have been WRAPED !!!", npe);
+//            npe.printStackTrace();
+//        } 
         
-        this.menuListeners = new Runnable[numOfMenuItems];
         
-        this.menuListeners[0] = new Runnable()
-        {            
-            public void run()
+    }
+    
+    
+    
+    
+    
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////// Menu: /////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    
+    /**
+     * The custom Options-Menu for this Activity.
+     * @init  null:
+     *            Dew to @imp restrains.
+     * @imp   Lazy-initialization done via initializeMenu().
+     */
+    private SPMenu<ESPMenuItem> menu = null;
+    
+    
+    /**
+     * @imp Lazy-initialization.
+     */
+    private void initializeMenu()
+    {        
+        if (null == this.menu)
+        {   
+            this.menu = new SPMenu<ESPMenuItem>(ESPMenuItem.values(), new ISPOnMenuItemSelectedListener<ESPMenuItem>()
             {
-                // TODO Auto-generated method stub
-                try
+                public void onMenuItemSelected(ESPMenuItem item, View view)
                 {
-                    GeneralUser user = svcGetter.getService().getUser();
-                    mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
+                    switch (item)
+                    {
+                        case FIND_ME:
+                            FindPrayer.this.centerMap();
+                            FindPrayer.this.menu.hide();
+                            break;
+                            
+                        case EXIT:
+                            FindPrayer.this.menu.hide();
+                            FindPrayer.this.finish();   //FIXME Learn to end the activity !!!
+                            break;
+                        
+                    }
+                    
+                    //XXX Maybe hide the menu smarter.
                 }
-                catch (UserNotFoundException e)
-                {
-                }
-                catch (UnknownLocationException e)
-                {
-                }
-                catch (ServiceNotConnected e)
-                {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        };
-        
-        this.menuListeners[1] = new Runnable()
-        {            
-            public void run()
-            {
-                // TODO Auto-generated method stub
-            }
-        };
-           
-        
-      
-//        menuFindMe  = menu.add("Find Me!");
-//        menuMyPlace = menu.add("My Place");
-        
-        return super.onCreateOptionsMenu(menu);
-        
-    }	
+            });
+        }
+    }
     
     
     
+    
+    /**
+     * @callBack On first menu button push.
+     * @invokes  onPrepareOptionsMenu().
+     * @param    Menu menu: 
+     *               Ignored. 
+     *               TODO Try to make system release it.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        SPUtils.debugFuncStart("onCreateOptionsMenu", menu);
+        this.initializeMenu();
+        
+        //super.onCreateOptionsMenu(menu);
+        return true; 
+    }
+    
+    
+    /**
+     * Handles all about menu showing, even closing.
+     * @callBack On menu button push.
+     * @pre      onCreateOptionsMenu(menu).
+     * @param    Menu menu: 
+     *               Ignored. 
+     *               TODO Try to make system release it.
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        SPUtils.debugFuncStart("onPrepareOptionsMenu", menu);
+        
+        this.menu.handleMenuButtonClick(this, R.id.MAINview1);
+        //super.onPrepareOptionsMenu(menu);
+        return true; 
+    }
+    
+    
+    
+    
+     
+    
+    @Override   
+    public void onBackPressed()
+    {
+        if (SPMenu.isShowing(this.menu))
+        {
+            //@imp I can actually just hide, but I want to show the pattern.
+            this.menu.hide();
+        }
+        
+        else
+        {
+            super.onBackPressed(); 
+        }
+    }
+    
+ 
+    
+    
+    // DO NOT DELETE THE FOLLOWING...
+    
+    
+    
+    
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event)
+//    {
+//        if (keyCode == KeyEvent.KEYCODE_MENU)
+//        {
+//            SPUtils.debug("*** Menu Key pressed !!!!");
+//            
+//            this.onCreateOptionsMenu(null);
+//            return true; // always eat it!
+//        }
+//        
+//        return super.onKeyDown(keyCode, event);
+//    }
+    
+    
+   @Override
+   public boolean onTouchEvent(MotionEvent event)
+   {
+       SPUtils.debugFuncStart("**?** onTouchEvent", event);
+       return super.onTouchEvent(event);
+   }  
+   
+    
+////  Unused:
+//  
+    @Override
+    public void onOptionsMenuClosed(Menu menu)
+    {
+        SPUtils.debugFuncStart("**?** onOptionsMenuClosed", menu);
+        super.onOptionsMenuClosed(menu);
+    }
+     
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        // TODO Auto-generated method stub
+        SPUtils.debugFuncStart("**?** onOptionsItemSelected", item);
         return super.onOptionsItemSelected(item);
-    }
-    
+    }   
     
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item)
     {
-        int itemId = item.getItemId();         
-        
-        this.menuListeners[itemId].run();
-        
-        
-//        if (menuFindMe.getItemId() == itemId)
-//        {
-//            try
-//            {
-//                GeneralUser user = svcGetter.getService().getUser();
-//                mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
-//            }
-//            catch (UserNotFoundException e)
-//            {                
-//            }
-//            catch (UnknownLocationException e)
-//            {
-//            }
-//            catch (ServiceNotConnected e)
-//            {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-//        
-//        else if (menuMyPlace.getItemId() == itemId)
-//        {
-//            // TODO
-//            //GeneralPlace place;
-//        }
-//        
-//        else
-//        {
-//            // Should never get here!
-//            throw new RuntimeException("WTFException");
-//        }
-        
+        SPUtils.debugFuncStart("**?**  onMenuItemSelected", featureId, item);
         return super.onMenuItemSelected(featureId, item);
-    }
-
-
-
-
+    }   
+//
+////
+    
+    
+    
+    // THANK YOU.
+    
+    
+    
 
 
 	public void setUser(String[] names) {

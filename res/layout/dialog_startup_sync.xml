@@ -20,7 +20,7 @@
     
     
     <!-- Head -->
-            
+    
     <TextView android:id      = "@+id/startup_head"
         android:gravity       = "center_vertical"
         android:layout_width  = "fill_parent"

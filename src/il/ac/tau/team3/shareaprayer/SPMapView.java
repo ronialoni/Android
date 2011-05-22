@@ -152,7 +152,7 @@ extends MapView
             startPosY = event.getY();
             MaxPosX = 0;
             MaxPosY = 0;
-		} else if (event.getAction() == MotionEvent.ACTION_MOVE)	{
+		} else if ((event.getAction() == MotionEvent.ACTION_MOVE) || (event.getAction() == MotionEvent.ACTION_UP))	{
 			
 		} else	{
 			MaxPosX = Float.POSITIVE_INFINITY;
@@ -171,8 +171,9 @@ extends MapView
 		//if ((event.getX() == startPosX) && (event.getY() == startPosY))
 		{          
 			//timeElapsed = event.getEventTime() - startTime;
-			if (((event.getAction() == MotionEvent.ACTION_DOWN) || (event.getAction() == MotionEvent.ACTION_MOVE)) && 
-					(Math.abs(event.getEventTime() -  event.getDownTime()) > 300) && (MaxPosX < 100) && (MaxPosY < 100)) 
+			if (((event.getAction() == MotionEvent.ACTION_DOWN) || (event.getAction() == MotionEvent.ACTION_MOVE)
+					|| (event.getAction() == MotionEvent.ACTION_UP)) && 
+					(Math.abs(event.getEventTime() -  event.getDownTime()) > 300) && (MaxPosX < 20) && (MaxPosY < 20)) 
 			{
 				MaxPosX = Float.POSITIVE_INFINITY;
 				MaxPosY = Float.POSITIVE_INFINITY;
@@ -187,6 +188,11 @@ extends MapView
 				}
 				
 			}
+		}
+		
+		if (event.getAction() == MotionEvent.ACTION_UP)	{
+			MaxPosX = Float.POSITIVE_INFINITY;
+			MaxPosY = Float.POSITIVE_INFINITY;
 		}
 		
 		if (event.getAction() == MotionEvent.ACTION_MOVE)	{

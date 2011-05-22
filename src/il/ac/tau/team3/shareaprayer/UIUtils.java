@@ -450,7 +450,7 @@ public class UIUtils {
 			};
 		});
 		if (place.getOwner() != null && placeOverlay.getThisUser() != null) {
-			if (!(place.getOwner().getId() == placeOverlay.getThisUser().getId())) {
+			if (!(place.getOwner().getId().equals(placeOverlay.getThisUser().getId()))) {
 				deleteButton.setVisibility(View.INVISIBLE);
 			}
 		}

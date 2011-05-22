@@ -1,6 +1,5 @@
 package il.ac.tau.team3.shareaprayer;
 
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -40,6 +39,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,11 +66,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
-
-
-public class UIUtils 
-{ 
+ 
+public class UIUtils {
+ 
 	static String _sNewPlaceQues = "Do you want to create a public praying place?";
 	static String _sNoPraySelected = "Please select at least one pray before creating a new place.";
 	static String _sAlreadyRegisterAlertMsg = "You are already registered to this place.";
@@ -107,14 +106,14 @@ public class UIUtils
 	
 	static String[] HandleFirstTimeDialog(Account[] accounts, FindPrayer activity){
 		if (accounts.length == 0){
-			CreateNoAccountsDialog();
+			CreateNoAccountsDialog(activity);
 			return null;
 		}else{
 			return CreateChooseAccountsDialog(accounts, activity);
 		}
 	}
 	
-	static void CreateNoAccountsDialog(){
+	static void CreateNoAccountsDialog(final FindPrayer activity){
 		final Dialog dialog = new Dialog(activity);
 		  dialog.setContentView(R.layout.dialog_startup_async);
           dialog.setTitle(_sWelcomeMsg);

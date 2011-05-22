@@ -2,28 +2,19 @@ package il.ac.tau.team3.shareaprayer;
 
 
 
-import java.io.StringWriter;
+import il.ac.tau.team3.common.GeneralUser;
+import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.common.SPUtils;
+import il.ac.tau.team3.spcomm.ACommHandler;
+import il.ac.tau.team3.spcomm.ICommHandler;
+import il.ac.tau.team3.spcomm.RestTemplateFacade;
+import il.ac.tau.team3.spcomm.SPComm;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.MappingJsonFactory;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.mapsforge.android.maps.GeoPoint;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
-import il.ac.tau.team3.common.SPUtils;
-import il.ac.tau.team3.common.GeneralUser;
-import il.ac.tau.team3.common.SPGeoPoint;
-import il.ac.tau.team3.spcomm.RestTemplateFacade;
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.app.Dialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -34,11 +25,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 
 
 public class LocServ 
@@ -51,13 +41,10 @@ extends Service
 	List<ILocationProv>	  locationProvs = new ArrayList<ILocationProv>();
 	
 	private GeneralUser   user;
-	private String        userId;
-	private RestTemplateFacade  restTemplateFacade; 
+ 
 	private SharedPreferences settings;
-	private SharedPreferences.Editor edit;
-	private Account[] accounts;
-	private String[] names = new String[3];
-	public boolean isUserReady = true;
+	private SPComm	comm = new SPComm();
+	private Runnable lastCallback = null;
 	
 	public static final String ACTION_SERVICE = "il.ac.tau.team3.shareaprayer.MAIN";
 
@@ -65,9 +52,7 @@ extends Service
 	private LocationManager locMgr;
 	
 	
-	public class LocalBinder 
-	extends Binder 
-	implements ILocationSvc 
+	public class LocalBinder  extends Binder implements ILocationSvc 
 	{
 		public LocServ getService() {
             return LocServ.this;
@@ -94,49 +79,74 @@ extends Service
 			}
 			return user;
 		}
-
-		public Account[] getAccounts() {
-			// TODO Auto-generated method stub
-			return accounts;
-		}
-
-		public void setNames(String[] new_names) {
-			names=new_names;
-			user = new GeneralUser(names[2], curr_loc == null ? new SPGeoPoint() : curr_loc, "my status" , names[0], names[1]);
-        	
-			try	{
-				long id = restTemplateFacade.UpdateUserByName(user);
-				edit = settings.edit(); 
-				edit.putLong("UserKey", id);
-			} catch (RestClientException e)	{
-				
-			} catch (NullPointerException npe)	{
-			}
-		}
-
-		public void isUserReady(boolean is) {
-			isUserReady = is;
-			
-		}
-
-		public boolean isUserReady() {
-			// TODO Auto-generated method stub
-			return isUserReady;
-		}
-    }
-	
-	private void HandleAppStartUp(Account[] accounts){
-		 settings =  getSharedPreferences("ShareAPrayerPrefs", 0);       
-		 Long key = settings.getLong("UserKey", 0);
-		 if(key == 0){
-			 isUserReady = false;
-			//names = UIUtils.HandleFirstTimeDialog(accounts);
-			
-		 }else{
-			 //start activity as usual
-		 }
 		
-	}
+		private void scheduleUpdateUser(final String[] names)	{
+			if (null != lastCallback)	{
+				updateHandler.removeCallbacks(lastCallback);
+			}
+			updateHandler.postDelayed(lastCallback = new Runnable() {
+
+			public void run() {
+				setNames(names);
+				
+			}}, 4000);
+		}
+
+		public void setNames(final String[] names) {
+
+			final GeneralUser tempuser = new GeneralUser(names[2], curr_loc == null ? new SPGeoPoint() : curr_loc, "my status" , names[0], names[1]);
+        	
+			comm.updateUserByName(tempuser, new ICommHandler<Long>() {
+
+				public void onRecv(Long Obj) {
+					if (null != Obj)	{
+						tempuser.setId(Obj);
+						user = tempuser;
+						if (null != lastCallback)	{
+							updateHandler.removeCallbacks(lastCallback);
+						}
+						SharedPreferences.Editor edit = settings.edit();
+						edit.putBoolean("UserExists", true);
+						edit.putLong("UserKey", Obj);
+						edit.putString("UserAccount", user.getName());
+						edit.putString("UserStatus", user.getStatus());
+						edit.putString("UserFirstName", user.getFirstName());
+						edit.putString("UserLastName", user.getLastName());
+						edit.commit();
+						try	
+		    			{
+		    				for (ILocationProv locProv : locationProvs)
+		    				{
+		    					//locProv.LocationChanged(curr_loc);
+		    					locProv.OnUserChange(user);
+		    				}
+		    			} 
+		    			catch (Exception e)
+		    			{
+		    				Log.e("bind service", e.getMessage());
+		    				// Do nothing
+		    			}
+						
+					} else	{
+						scheduleUpdateUser(names);
+					}
+					
+				}
+
+				public void onTimeout(Long Obj) {
+					scheduleUpdateUser(names);
+				}
+
+				public void onError(Long Obj) {
+					scheduleUpdateUser(names);					
+					
+				}
+				
+			});
+			
+		}
+
+    }
 	
 	
 	@Override
@@ -152,48 +162,99 @@ extends Service
 		return START_STICKY;
 	}
 	
-	
-	public String[] getNames() {
-		return names;
-	}
+	private void updateUserLocation(GeoPoint loc)	{
+		if ((null == loc) || (null == user))	{
+			return;
+		}
+		
+		curr_loc = SPUtils.toSPGeoPoint(loc);
+    	user.setSpGeoPoint(curr_loc);
 
-
-	public void setNames(String[] names) {
-		this.names = names;
+		comm.updateUserByName(user, new ACommHandler<Long>() {
+			@Override
+			public void onRecv(Long Obj)	{
+				if (Obj == null)	{
+					// ERROR: SHOULD NOT BE NULL
+					return;
+				}
+				
+				if (Obj != user.getId())	{
+					// shouldn't happen !
+					user.setId(Obj);
+				}
+			}
+		});
+			
+		
 	}
 
 
 	private void queryCurrentLocation()	
 	{
+		if (null == user)	{
+			return;
+		}
+		
 		Location loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER );
-		if (null != loc)	
-		{	
-        	curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
-        	user = (isUserReady ? new GeneralUser(names[2], curr_loc, "my status" , names[0], names[1]): null);
-        	Long id = null;
-        	if(null != user){
-			try	{
-				id = restTemplateFacade.UpdateUserByName(user);
-				edit = settings.edit(); 
-				edit.putLong("UserKey", id);
-			} catch (RestClientException e)	{
-				
-			};
-        	}
-        	if (id != null)	
-        	{
-        		user.setId(id);
-        	}        	
-		}		
+		updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));		
 	}
 	
-	
+	private GeneralUser loadUserFromStorage()	{
+		String firstName;
+		String lastName;
+		String account;
+		String status;
+		GeneralUser user = null;
+		long id;
+		
+		try	{
+			if (!settings.contains("UserExists"))	{
+				throw new NullPointerException();
+			}
 
-
-	public Account[] getAccounts() {
-		return accounts;
+			if (settings.contains("UserKey"))	{
+				id = settings.getLong("UserKey", -1);
+			} else	{
+				throw new NullPointerException();
+			}
+			if (settings.contains("UserKey"))	{
+				id = settings.getLong("UserKey", -1);
+			} else	{
+				throw new NullPointerException();
+			}
+			
+			if (settings.contains("UserAccount"))	{
+				account = settings.getString("UserAccount", "");
+			} else	{
+				throw new NullPointerException();
+			}
+			
+			if (settings.contains("UserFirstName"))	{
+				firstName = settings.getString("UserFirstName", "");
+			} else	{
+				throw new NullPointerException();
+			}
+			if (settings.contains("UserLastName"))	{
+				lastName = settings.getString("UserLastName", "");
+			} else	{
+				throw new NullPointerException();
+			}
+			if (settings.contains("UserStatus"))	{
+				status = settings.getString("UserStatus", "");
+			} else	{
+				throw new NullPointerException();
+			}
+			user = new GeneralUser(account, null, status, firstName, lastName);
+			user.setId(id);
+		} catch (NullPointerException e)	{
+			user = null;
+		}
+		
+		return user;
 	}
 
+	private HandlerThread updateThread;
+	private Handler		  updateHandler;
 
 	@Override
 	public void onCreate()
@@ -206,10 +267,18 @@ extends Service
 		iFilter.addAction(LocationManager.GPS_PROVIDER);
 		iFilter.addAction(LocationManager.NETWORK_PROVIDER);
 		
-		accounts = AccountManager.get(this).getAccounts();
-		this.HandleAppStartUp(accounts);
+		settings = getSharedPreferences("ShareAPrayer", 0);
 		
-        restTemplateFacade = new RestTemplateFacade();
+		user = loadUserFromStorage();
+		
+		updateThread = new HandlerThread("send thread");
+        	
+        
+		updateThread.start();
+        
+        updateHandler = new Handler(updateThread.getLooper());
+		
+        //restTemplateFacade = new RestTemplateFacade();
     		    
 		
 		LocationListener locationListener = new LocationListener() 
@@ -217,29 +286,19 @@ extends Service
 	    	// Called when a new location is found by the network location provider.
     		public void onLocationChanged(Location loc) 
     	    { 	
-    	    	// create a GeoPoint with the latitude and longitude coordinates
-    			curr_loc = SPUtils.toSPGeoPoint(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
-    			user = (isUserReady ? new GeneralUser(names[2], curr_loc, "my status" , names[0], names[1]): null);
-    			
-    			Long id = null;
-    			if(null != user){
-    			try	{
-    				id = restTemplateFacade.UpdateUserByName(user);
-    			} catch (RestClientException e)	{
-    				
-    			};
+    			if (null == user)	{
+    				return;
     			}
-    			
-    			if(id !=null){
-    				user.setId(id);
-    			}
+    	    	
+
+    			updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
     			
     			try	
     			{
     				for (ILocationProv locProv : locationProvs)
     				{
     					locProv.LocationChanged(curr_loc);
-    					locProv.OnUserChange(user);
+    					//locProv.OnUserChange(user);
     				}
     			} 
     			catch (Exception e)

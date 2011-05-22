@@ -9,6 +9,8 @@ import il.ac.tau.team3.common.SPGeoPoint;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.util.Log;
+
 public class SPComm {
 
     private static final String GET_FOR_OBJECT_USERS  = "users";
@@ -19,6 +21,7 @@ public class SPComm {
     private static final String POST_FOR_OBJECT_ADD_JOINER = "addjoiner";
     private static final String POST_FOR_OBJECT_REMOVE_JOINER = "removejoiner";
     private static final String POST_FOR_OBJECT_DELETE_PLACE = "deleteplace";
+    private static final String POST_FOR_OBJECT_UPDATE_USER_BY_NAME = "updateuserbyname";
     
     
     private SPGenComm com = new SPGenComm();
@@ -98,6 +101,10 @@ public class SPComm {
     public void deletePlace(GeneralPlace place, ICommHandler<String> callback)	{
     	com.requestPost(place, String.class, POST_FOR_OBJECT_DELETE_PLACE, callback);
     }
+    
+    public void updateUserByName(GeneralUser user, ICommHandler<Long> callback){
+    	com.requestPost(user, Long.class, POST_FOR_OBJECT_UPDATE_USER_BY_NAME, callback);
+	 }
     
     
     

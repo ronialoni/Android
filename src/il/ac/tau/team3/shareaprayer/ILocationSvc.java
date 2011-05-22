@@ -13,13 +13,7 @@ public interface ILocationSvc {
 	public void UnRegisterListner(ILocationProv a_prov);
 	
 	public LocServ getService();
-	
-	public void isUserReady(boolean is);
-	
-	public boolean isUserReady();
-	
-	public Account[] getAccounts();
-	
+		
 	public void setNames(String[] new_names);
 
 	public GeneralUser getUser() throws UserNotFoundException;

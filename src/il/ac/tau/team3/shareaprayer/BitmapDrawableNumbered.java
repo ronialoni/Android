@@ -6,7 +6,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 
@@ -40,6 +42,8 @@ public class BitmapDrawableNumbered extends BitmapDrawable {
 	
     @Override
     public void draw(Canvas arg)    {
+    	
+    		setColorFilter(0xffff0000, Mode.MULTIPLY);
             
             arg.drawBitmap(getBitmap(), this.getBounds().left, this.getBounds().top, p);
             

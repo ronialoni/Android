@@ -80,7 +80,7 @@ extends MapActivity
 	private Drawable userDefaultMarker; 
 	private Drawable othersDefaultMarker;
 	private Drawable synagougeMarker;
-	private Drawable synagougeClosestMarker; 
+	private Drawable synagougeClosestMarker;
 	
 	private PrayerArrayItemizedOverlay userOverlay;
 	private PrayerArrayItemizedOverlay searchQueryOverlay;
@@ -395,7 +395,6 @@ extends MapActivity
         super.onDestroy();
     }
 	
-	
 	@Override
 	protected void onStart ()	{
 		super.onStart();
@@ -407,6 +406,21 @@ extends MapActivity
 		
 	}
         
+	private void registerUser(GeneralUser user)	{
+		 publicPlaceOverlay.setThisUser(user);
+         closestPlaceOverlay.setThisUser(user);
+         refreshTask.start();
+         try {
+			mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
+		} catch (UnknownLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+      
+         synchronized(refreshTask){
+         	refreshTask.notify();
+         };
+	}
     	
 		
 	@Override
@@ -418,8 +432,7 @@ extends MapActivity
 		mapView = (SPMapView) findViewById(R.id.MAINview1);
 		editText = (EditText) findViewById(R.id.addressBar);
 		//UIUtils.activity = this;
-        		
-		mapView.registerTapListener(new IMapTapDetect()	
+        mapView.registerTapListener(new IMapTapDetect()	
         {
 			public void onTouchEvent(SPGeoPoint sp) 
 			{
@@ -542,23 +555,16 @@ extends MapActivity
     	    }
 
 			public void OnUserChange(GeneralUser user) {
-				// TODO Auto-generated method stub
-				try	{
-					publicPlaceOverlay.setThisUser(svcGetter.getService().getUser());
-					closestPlaceOverlay.setThisUser(svcGetter.getService().getUser());
-					if (!refreshTask.isAlive())	{
-						refreshTask.start();
-					}
-				} catch (UserNotFoundException e)	{
-				                                 	 
-				} catch (ServiceNotConnected e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				// TODO Auto-generated method stub						
+                registerUser(user);
+				if (!refreshTask.isAlive())	{
+					refreshTask.start();
 				}
 			}
     	};
     	
-
+    	
+    	
    	
    	
         svcConn = new ServiceConnection()
@@ -573,96 +579,74 @@ extends MapActivity
             {
             	svcGetter.setService((ILocationSvc) arg1);
                 
-                
+            	ILocationSvc service = null;
+            	
                 try
                 {
-                	ILocationSvc service = svcGetter.getService(); 
+                	service = svcGetter.getService(); 
                     service.RegisterListner(locationListener);
-                    SPGeoPoint gp = service.getLocation();
-                                  
-                 
-            		if(!(service.isUserReady())){
-            				String[] names = UIUtils.HandleFirstTimeDialog(service.getAccounts(), FindPrayer.this);
-            				service.setNames(names);
-            				service.isUserReady(true);
-            		} 
-            		
-            		try	{
-	            		 publicPlaceOverlay.setThisUser(service.getUser());
-	                     closestPlaceOverlay.setThisUser(service.getUser());
-	                     refreshTask.start();
-	                     mapView.getController().setCenter(SPUtils.toGeoPoint(gp)); 
-	 				
-            		} catch	(UserNotFoundException e)	{
-            			
-            		} catch (NullPointerException e)	{
-            			// unknown location
-            		}
+                         
+                    GeneralUser user = service.getUser();
                     
-                  
+                    registerUser(user);
                     
-                    Thread t = new Thread()
-                    {
-                        
-                        @Override
-                        public void run()
-                        {
-                        	synchronized(refreshTask){
-                        		refreshTask.notify();
-                        	}
-                        }
-                    };
-                    t.run();
                     
-                   
                     // send the user to places overlay
                 }
-                catch (Throwable t)
+                catch (ServiceNotConnected e)
                 {
-                    Log.e("ShareAPrayer", "Exception in call to registerListner()", t);
+                    Log.e("ShareAPrayer", "Service is not connected", e);
+                } catch (UserNotFoundException e)	{
+                		
+                		String[] names; 
+	                    Account[] accounts = AccountManager.get(FindPrayer.this).getAccounts();
+	                    try	{
+	                    	names = UIUtils.HandleFirstTimeDialog(accounts, FindPrayer.this);
+	                    	service.setNames(names);
+	                    } catch (NullPointerException e_)	{
+	                    	// no accounts
+	                    }
                 }
-   
-                mapView.registerTapListener(new IMapTapDetect() 
-                {
-                	
-                	class TimerRefreshTask 
-                    extends TimerTask
-                    {
-                        
-                        @Override
-                        public void run()
-                        {
-                            synchronized (refreshTask)
-                            {
-                                refreshTask.notify();
-                            }
-                        }
-                        
-                    };
-                    
-                    private Timer     t  = new Timer();                    
-                    private TimerTask ts = new TimerRefreshTask();
-
-					public void onMoveEvent(SPGeoPoint sp) {
-						// TODO Auto-generated method stub
-						ts.cancel();
-                        t.purge();
-                        ts = new TimerRefreshTask();
-                        t.schedule(ts, 1000);
-					}
-
-					public void onTouchEvent(SPGeoPoint sp) {
-						// TODO Auto-generated method stub
-						
-					}
-                	
-                });
-              
+	          
             }
-            
-            
-            
+           
         };
+        
+        mapView.registerTapListener(new IMapTapDetect() 
+        {
+        	
+        	class TimerRefreshTask 
+            extends TimerTask
+            {
+                
+                @Override
+                public void run()
+                {
+                    synchronized (refreshTask)
+                    {
+                        refreshTask.notify();
+                    }
+                }
+                
+            };
+            
+            private Timer     t  = new Timer();                    
+            private TimerTask ts = new TimerRefreshTask();
+
+			public void onMoveEvent(SPGeoPoint sp) {
+				// TODO Auto-generated method stub
+				ts.cancel();
+                t.purge();
+                ts = new TimerRefreshTask();
+                t.schedule(ts, 1000);
+			}
+
+			public void onTouchEvent(SPGeoPoint sp) {
+				// TODO Auto-generated method stub
+				
+			}
+        	
+        });
 
         
 

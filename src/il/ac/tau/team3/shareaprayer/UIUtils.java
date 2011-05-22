@@ -83,7 +83,7 @@ public class UIUtils {
 		public UpdateUI(FindPrayer a_activity) {
 			activity = a_activity;
 		}
- 
+  
 		@Override
 		public void onRecv(T Obj) {
 			synchronized (activity.getRefreshTask()) {
@@ -383,10 +383,6 @@ public class UIUtils {
 						    public void onItemClick(AdapterView<?> parent, View view,
 						        int position, long id) {
 						      createAlertDialog(((String) ((TextView) view).getText()) + "\n\n We should really have a Profile dialog for each user...", activity, "Close");
-						    	
-						    	// When clicked, show a toast with the TextView text
-//						      Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-//						          Toast.LENGTH_SHORT).show();
 						    }
 						  });
 						
@@ -564,8 +560,6 @@ public class UIUtils {
     					SPUtils.debugFuncStart("timePickerDialog.onTimeSet", view, hourOfDay, minute);
     					CreatePlaceDialog.this.prays[a_prayIndex] = true;
     					prayTimes[a_prayIndex].set(2000, 1, 1, hourOfDay, minute, 0);
-    					// TODO: CLEAN THIS
-//    					a_timeStr.setText((hourOfDay < 10 ? "0" : "") + hourOfDay + ":" + (minute < 10 ? "0" : "") + minute + " ");
     					Date time = new Date(0,0,0,hourOfDay, minute);
     					a_timeStr.setText(printTimeFromDate(time));
     					

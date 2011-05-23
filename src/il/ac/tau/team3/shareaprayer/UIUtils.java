@@ -456,12 +456,12 @@ public class UIUtils {
 			}
 		}
 		final boolean allTrues[] = new boolean[3];
-		for (int i=0; i<3; i++){ allTrues[i] = true;}
+		//for (int i=0; i<3; i++){ allTrues[i] = true;}
 		setButton.setOnClickListener(new OnClickListener() 
 		{
 			public void onClick(View view) 
 			{
-				UnregisterClick(place, placeOverlay, allTrues);
+				//UnregisterClick(place, placeOverlay, allTrues);
 				RegisterClick(place, placeOverlay, toPrayerWishes(JoinersUI));
 				dialog.dismiss();
 			};

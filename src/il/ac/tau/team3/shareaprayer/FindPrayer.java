@@ -309,7 +309,7 @@ extends MapActivity
     }
     
     	
-	private ServiceConnector  svcGetter = new ServiceConnector();;
+	private ServiceConnector  svcGetter = new ServiceConnector();
 	private ILocationProv locationListener;
 	private StatusBarOverlay statusBar; 
 	

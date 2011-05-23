@@ -9,6 +9,9 @@ import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.Pray;
 import il.ac.tau.team3.common.SPUtils;
+import il.ac.tau.team3.shareaprayer.FindPrayer;
+import il.ac.tau.team3.shareaprayer.ServiceConnector;
+import il.ac.tau.team3.shareaprayer.ServiceNotConnected;
 import il.ac.tau.team3.spcomm.ICommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
 
@@ -126,7 +129,7 @@ public class MenuUtils {
 		return returnVal;
 	}
 	
-	public void UpdateServerWithNewNames(final GeneralUser user, String newFirstName, String newLastName){
+	public void UpdateServerWithNewNames(final GeneralUser user, final String newFirstName, final String newLastName){
 		user.setFirstName(newFirstName);
 		user.setLastName(newLastName);
 		SPComm comm = new SPComm();
@@ -134,15 +137,13 @@ public class MenuUtils {
 
 			public void onRecv(Long Obj) {
 				if (null != Obj && -1 != Obj)	{
-					SharedPreferences settings = getSharedPreferences("ShareAPrayer", 0);
-					SharedPreferences.Editor edit = settings.edit();
-					edit.putBoolean("UserExists", true);
-					edit.putLong("UserKey", Obj);
-					edit.putString("UserAccount", user.getName());
-					edit.putString("UserStatus", user.getStatus());
-					edit.putString("UserFirstName", user.getFirstName());
-					edit.putString("UserLastName", user.getLastName());
-					edit.commit();
+					ServiceConnector  svcGetter = new ServiceConnector();
+					try {
+						svcGetter.getService().setNames(new String[]{newFirstName, newLastName});
+					} catch (ServiceNotConnected e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				
 			}

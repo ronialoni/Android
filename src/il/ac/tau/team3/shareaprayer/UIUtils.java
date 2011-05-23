@@ -455,7 +455,6 @@ public class UIUtils {
 			}
 		}
 		
-		
 		setButton.setOnClickListener(new OnClickListener() 
 		{
 			public void onClick(View view) 

@@ -17,6 +17,7 @@ public class SPComm {
     private static final String GET_FOR_OBJECT_PLACES = "places";
     private static final String GET_USER_BY_ACCOUNT = "getuserbymail";
     private static final String GET_PLACES_OF_OWNER = "placesbyowner";  
+    private static final String GET_PLACES_OF_JOINER = "placesbyjoiner";
     private static final String POST_FOR_OBJECT_NEW_PLACE  = "updateplacebylocation";
     private static final String POST_FOR_OBJECT_ADD_JOINER = "addjoiner";
     private static final String POST_FOR_OBJECT_REMOVE_JOINER = "removejoiner";
@@ -125,13 +126,25 @@ public class SPComm {
     }
 
 
-	public void requestGetOwnerPlaces(String ownerEmailAccount, ICommHandler<GeneralPlace[]> callback)
+	public void requestGetOwnerPlaces(long ownerId, ICommHandler<GeneralPlace[]> callback)
     {
         Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("owner" , String.valueOf(ownerEmailAccount));
+        parameters.put("id" , String.valueOf(ownerId));
         
         
         String request = GET_PLACES_OF_OWNER;
+        
+        com.requestGet(parameters, GeneralPlace[].class, request, callback);
+		
+	};
+	
+	public void requestGetJoinerPlaces(long joinerId, ICommHandler<GeneralPlace[]> callback)
+    {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("id" , String.valueOf(joinerId));
+        
+        
+        String request = GET_PLACES_OF_JOINER;
         
         com.requestGet(parameters, GeneralPlace[].class, request, callback);
 		

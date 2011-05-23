@@ -21,7 +21,6 @@ public class SPGenComm {
 	
     
     private RestTemplate restTemplate;
-    
     private HandlerThread sendThread;
     private Handler		  comm;
     private Thread 		 recvThread;

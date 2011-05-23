@@ -230,7 +230,6 @@ public class UIUtils {
 			}
 		}
 
-		
 		placeOverlay
 				.getActivity()
 				.getSPComm()

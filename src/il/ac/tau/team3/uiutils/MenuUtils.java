@@ -3,6 +3,8 @@ package il.ac.tau.team3.uiutils;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.SharedPreferences;
+
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.Pray;
@@ -15,7 +17,7 @@ public class MenuUtils {
 	// this boolean indicates rather the user want to show max prayers (true) or min prayers (flase)
 	private static boolean showMax = true ;
 
-	public static boolean isShowMax() {
+	public static boolean getShowMax() {
 		return showMax;
 	}
 
@@ -122,6 +124,45 @@ public class MenuUtils {
 			
 		});
 		return returnVal;
+	}
+	
+	public void UpdateServerWithNewNames(final GeneralUser user, String newFirstName, String newLastName){
+		user.setFirstName(newFirstName);
+		user.setLastName(newLastName);
+		SPComm comm = new SPComm();
+		comm.updateUserByName(user, new ICommHandler<Long>(){
+
+			public void onRecv(Long Obj) {
+				if (null != Obj && -1 != Obj)	{
+					SharedPreferences settings = getSharedPreferences("ShareAPrayer", 0);
+					SharedPreferences.Editor edit = settings.edit();
+					edit.putBoolean("UserExists", true);
+					edit.putLong("UserKey", Obj);
+					edit.putString("UserAccount", user.getName());
+					edit.putString("UserStatus", user.getStatus());
+					edit.putString("UserFirstName", user.getFirstName());
+					edit.putString("UserLastName", user.getLastName());
+					edit.commit();
+				}
+				
+			}
+
+			public void onTimeout(Long Obj) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onError(Long Obj) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
+	}
+
+	protected SharedPreferences getSharedPreferences(String string, int i) {
+		return getSharedPreferences(string, i);
 	}
 	
 	

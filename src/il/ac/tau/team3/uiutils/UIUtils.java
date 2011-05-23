@@ -110,7 +110,7 @@ public class UIUtils {
 	
 	
 	
-	static String[] HandleFirstTimeDialog(Account[] accounts, FindPrayer activity){
+	public static String[] HandleFirstTimeDialog(Account[] accounts, FindPrayer activity){
 		if (accounts.length == 0){
 			CreateNoAccountsDialog(activity);
 			return null;
@@ -326,7 +326,7 @@ public class UIUtils {
 	
 	
 	
-	/*package*/ static void createRegisterDialog(final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
+	/*package*/ public static void createRegisterDialog(final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
 	{
 		if (placeOverlay == null || placeOverlay.getThisUser() == null || place == null) 
 		{
@@ -753,7 +753,7 @@ public class UIUtils {
 		}
 	};
 
-	static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
+	public static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
 	{
 		try {
 			new CreatePlaceDialog(point, activity, user);

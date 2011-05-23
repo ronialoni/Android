@@ -29,7 +29,7 @@ public class BitmapDrawableNumbered extends BitmapDrawable {
 	}
 	
 	public int getNumber()	{
-		MenuUtils.chooseMaxOrMin(place);
+		return MenuUtils.chooseMaxOrMin(place);
 	}
 	
 	private ColorFilter determineColor(double num)	{

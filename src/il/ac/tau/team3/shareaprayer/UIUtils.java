@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import il.ac.tau.team3.addressQuery.MapsQueryLocation;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.Pray;
@@ -660,6 +661,34 @@ public class UIUtils {
 			dialog.setTitle(R.string.create_place_title);
 			
 			editAddress = (EditText) dialog.findViewById(R.id.CPDeditText1);
+			editAddress.setEnabled(false);
+			
+			activity.getSPComm().getAddressObj(point.getLatitudeInDegrees(), point.getLongitudeInDegrees(), new ACommHandler<MapsQueryLocation>() {
+				@Override
+				public void onRecv(final MapsQueryLocation Obj) {
+					try	{
+						activity.runOnUiThread(new Runnable()	{
+
+							public void run() {
+								// TODO Auto-generated method stub
+								try	{
+								 editAddress.setText(Obj.getResults()[0].getFormatted_address());
+								} catch (Exception e)	{
+									
+								}
+							}
+							
+						});
+					} catch (NullPointerException e)	{
+						
+					}
+				}
+				
+				@Override
+				public void onError(MapsQueryLocation Obj) {
+					editAddress.setText("Error fetching address");
+				}
+			});
 			
 			fromDate = (TextView) dialog.findViewById(R.id.CPDFromDatetextView);
 			toDate   = (TextView) dialog.findViewById(R.id.CPDToDatetextView);
@@ -701,7 +730,7 @@ public class UIUtils {
 					else{
 						final Date finalstartDate = new Date(startDate.get(Calendar.YEAR)-1900,startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
 						final Date finalendDate = new Date(endDate.get(Calendar.YEAR)-1900,endDate.get(Calendar.MONTH),endDate.get(Calendar.DAY_OF_MONTH));
-						CreateNewPlace_YesClick(prays, user, activity, point, finalstartDate, finalendDate, prayTimes);
+						CreateNewPlace_YesClick(prays, user, activity, point, finalstartDate, finalendDate, prayTimes, editAddress.getText().toString());
 						dialog.dismiss();
 					}
 					
@@ -728,9 +757,9 @@ public class UIUtils {
      }
 	
 	static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user,
-			FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes) {
+			FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes, String address) {
 		String placeName = (user.getFullName()==null || user.getFullName()=="" ? user.getName() : user.getFullName()) + "'s Place";
-		GeneralPlace newMinyan = new GeneralPlace(user, placeName, "", point, startDate,endDate);
+		GeneralPlace newMinyan = new GeneralPlace(user, placeName, address, point, startDate,endDate);
 		Calendar c = new GregorianCalendar();
 		List<GeneralUser> j = new ArrayList<GeneralUser>();
 		j.add(user);

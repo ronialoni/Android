@@ -2,6 +2,7 @@ package il.ac.tau.team3.shareaprayer;
 
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.Pray;
+import il.ac.tau.team3.uiutils.MenuUtils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -28,20 +29,7 @@ public class BitmapDrawableNumbered extends BitmapDrawable {
 	}
 	
 	public int getNumber()	{
-		int max = 0;
-		
-		try	{
-			for (Pray p : place.getPraysOfTheDay())	{
-				if (max < p.numberOfJoiners())	{
-					max = p.numberOfJoiners();
-				}
-			}
-		} catch (NullPointerException e)	{
-			// no prays for place
-		}
-		
-		
-		return max;
+		MenuUtils.chooseMaxOrMin(place);
 	}
 	
 	private ColorFilter determineColor(double num)	{

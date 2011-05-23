@@ -12,6 +12,7 @@ import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.Pray;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
 import il.ac.tau.team3.shareaprayer.FindPrayer.StringArray;
+import il.ac.tau.team3.uiutils.UIUtils;
 
 import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapView;

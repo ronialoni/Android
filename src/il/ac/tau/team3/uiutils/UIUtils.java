@@ -1,4 +1,4 @@
-package il.ac.tau.team3.shareaprayer;
+package il.ac.tau.team3.uiutils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,7 +16,14 @@ import il.ac.tau.team3.common.Pray;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
+import il.ac.tau.team3.shareaprayer.FindPrayer;
+import il.ac.tau.team3.shareaprayer.PlaceArrayItemizedOverlay;
+import il.ac.tau.team3.shareaprayer.R;
 import il.ac.tau.team3.shareaprayer.FindPrayer.StringArray;
+import il.ac.tau.team3.shareaprayer.R.drawable;
+import il.ac.tau.team3.shareaprayer.R.id;
+import il.ac.tau.team3.shareaprayer.R.layout;
+import il.ac.tau.team3.shareaprayer.R.string;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import android.accounts.Account;
 import android.app.Activity;

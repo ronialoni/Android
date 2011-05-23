@@ -521,13 +521,13 @@ extends MapActivity
         /*
          * Synagouge overlay
          */
-        synagougeMarker    = this.getResources().getDrawable(R.drawable.place_dark_blue);
+        synagougeMarker    = this.getResources().getDrawable(R.drawable.place_white);
       
         publicPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeMarker, this);
         mapView.getOverlays().add(publicPlaceOverlay);
        
                 
-        synagougeClosestMarker    = this.getResources().getDrawable(R.drawable.place_red_david);
+        synagougeClosestMarker    = this.getResources().getDrawable(R.drawable.place_white_david);
         closestPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeClosestMarker, this);
         mapView.getOverlays().add(closestPlaceOverlay);
         

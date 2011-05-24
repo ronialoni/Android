@@ -20,10 +20,11 @@ import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import il.ac.tau.team3.spcomm.ICommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
+import il.ac.tau.team3.uiutils.ESPMenuItem;
+import il.ac.tau.team3.uiutils.ISPMenuItem;
+import il.ac.tau.team3.uiutils.SPMenu;
+import il.ac.tau.team3.uiutils.SPMenu.ISPOnMenuItemSelectedListener;
 import il.ac.tau.team3.uiutils.UIUtils;
-import il.ac.tau.team3.uiutils.UIUtils.ISPMenuItem;
-import il.ac.tau.team3.uiutils.UIUtils.ISPOnMenuItemSelectedListener;
-import il.ac.tau.team3.uiutils.UIUtils.SPMenu;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -503,17 +504,13 @@ extends MapActivity
         /*
          * User overlay and icon:
          */ 
-        //Creates the user's map-icon
         userDefaultMarker = this.getResources().getDrawable(R.drawable.user_red_sruga);
-        // create objectan PrayerArrayItemizedOverlay for the user
 		userOverlay       = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
-		 // add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(userOverlay);
         
-        // create an PrayerArrayItemizedOverlay for the user
         searchQueryOverlay = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
-		 // add the PrayerArrayItemizedOverlay to the MapView
         mapView.getOverlays().add(searchQueryOverlay);
+
         
         
         statusBar = new StatusBarOverlay(mapView.getPaddingTop() + 24, mapView.getWidth() / 100, 24);
@@ -555,10 +552,11 @@ extends MapActivity
 			    	
     	    }
 
-			public void OnUserChange(GeneralUser user) {
-				// TODO Auto-generated method stub						
+			public void OnUserChange(GeneralUser user) 
+			{
                 registerUser(user);
-				if (!refreshTask.isAlive())	{
+				if (! refreshTask.isAlive())	
+				{
 					refreshTask.start();
 				}
 			}
@@ -649,6 +647,11 @@ extends MapActivity
         	
         });
 
+
+        
+        
+/////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
         
 
         //FIXME @Matan: IMapTapDetect doesn't seem to invoke ANYTHING when the there is NO MOVEMENT.
@@ -689,7 +692,6 @@ extends MapActivity
 	
 	
 	
-	
     /**
      * @menu
      * 
@@ -697,41 +699,6 @@ extends MapActivity
      */
     
     
-    public enum ESPMenuItem
-    implements ISPMenuItem
-    {
-        FIND_ME (0, R.drawable.menu_item_searchmap_compas),
-        EXIT    (1, R.drawable.menu_item_exit_door_greener),
-        ;
-                
-        private final int itemId;
-        private final int resIconId;
-                
-        private ESPMenuItem(int itemId, int resIconId)
-        {
-            this.itemId    = itemId;
-            this.resIconId = resIconId;
-        }
-        
-        
-        public String getTitle()
-        {
-            return this.toString().replace('_', ' ').toUpperCase();
-        }
-        
-        public int getItemId()
-        {
-            return itemId;
-        }
-        
-        public int getResIconId()
-        {
-            
-            return resIconId;
-        }
-        
-    }
-
     
     
     
@@ -783,10 +750,20 @@ extends MapActivity
 //            SPUtils.error("NullPointerException - Should have been WRAPED !!!", npe);
 //            npe.printStackTrace();
 //        } 
-        
-        
     }
     
+    
+    
+    private Account[] getAccounts()
+    {
+        Account[] accounts = AccountManager.get(FindPrayer.this).getAccounts();
+        if (null == accounts)
+        {
+            accounts = new Account[0];
+        }
+        
+        return accounts;  
+    }    
     
     
     
@@ -811,19 +788,58 @@ extends MapActivity
     private void initializeMenu()
     {        
         if (null == this.menu)
-        {   
+        {
             this.menu = new SPMenu<ESPMenuItem>(ESPMenuItem.values(), new ISPOnMenuItemSelectedListener<ESPMenuItem>()
             {
                 public void onMenuItemSelected(ESPMenuItem item, View view)
                 {
                     switch (item)
-                    {
-                        case FIND_ME:
+                    {         
+                        case FIND:
+
+                            // finding me.
                             FindPrayer.this.centerMap();
                             FindPrayer.this.menu.hide();
                             break;
+                        
+                            
+                        case MAP_OPTIONS:
+                            
+                            // Taking the closest (for now) from the map's overlay.
+                            ArrayList<OverlayItem> listOfOneItemIfAnyOnMap = FindPrayer.this.closestPlaceOverlay.getOverlayItems();
+                            if (null != listOfOneItemIfAnyOnMap && listOfOneItemIfAnyOnMap.size() > 0)
+                            {
+                                FindPrayer.this.mapView.getController().setCenter(listOfOneItemIfAnyOnMap.get(0).getPoint());
+                            }
+                            else
+                            {
+                                Toast.makeText(FindPrayer.this, "Sorry, there seem to be no plces open for prayers.\nPlese consider creating one.", Toast.LENGTH_LONG).show();
+                            }
+                            
+                            FindPrayer.this.menu.hide();
+                            break;
+                            
+                            
+                        case PROFILE:
+                            
+                            FindPrayer.this.menu.hide();
+                            ILocationSvc service = null;
+                            try
+                            {
+                                service = svcGetter.getService(); 
+                            }
+                            catch (ServiceNotConnected e)
+                            {
+                                Log.e("ShareAPrayer", "Service is not connected", e);
+                            } 
+                                
+                            service.setNames(UIUtils.HandleFirstTimeDialog(FindPrayer.this.getAccounts(), FindPrayer.this));
+
+                            break;
+                            
                             
                         case EXIT:
+                            
                             FindPrayer.this.menu.hide();
                             FindPrayer.this.finish();   //FIXME Learn to end the activity !!!
                             break;

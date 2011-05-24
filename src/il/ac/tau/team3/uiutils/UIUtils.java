@@ -131,7 +131,7 @@ public class UIUtils {
               public void onClick(View v)
               {
                  dialog.dismiss();
-                 activity.onDestroy();
+                 activity.finish();
               }
           });
           
@@ -162,7 +162,7 @@ public class UIUtils {
              public void onClick(View v)
              {
                 dialog.dismiss();
-                activity.onDestroy();
+                activity.finish();
              }
          });
          

@@ -388,9 +388,9 @@ public class UIUtils {
 						listDialog.setCanceledOnTouchOutside(true);
 						listDialog.setContentView(R.layout.dialog_registered_users_list);
 						if(p.getJoiners()== null || p.getJoiners().size() == 0 ){
-							listDialog.setTitle("No prayers registered for this pray.");
+							listDialog.setTitle("No prayers registered.");
 						}else{
-							listDialog.setTitle("Currently registered for " + p.getName() + ":");
+							listDialog.setTitle("Registered for " + p.getName() + ":");
 						}
 						ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
 						

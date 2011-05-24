@@ -336,6 +336,7 @@ public class UIUtils {
 		final Dialog dialog = new Dialog(activity);
 		dialog.setContentView(R.layout.dialog_place_registration);
 		dialog.setTitle(place.getName());
+		dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		// Address and Dates
 		TextView placeAddress = (TextView) dialog.findViewById(R.id.DPRaddress);

@@ -2,6 +2,9 @@ package il.ac.tau.team3.shareaprayer;
 
  
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +94,8 @@ extends MapActivity
 	private PlaceArrayItemizedOverlay closestPlaceOverlay;
 	
 	private SPComm comm = new SPComm();
+	private FacebookConnector facebookConnector = null;
+	
 
 	
 	
@@ -646,6 +651,13 @@ extends MapActivity
 			}
         	
         });
+        
+        facebookConnector = new FacebookConnector(this);
+
+
+        
+        
+/////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
 
         
@@ -679,6 +691,14 @@ extends MapActivity
 	}//@END: onCreate(..)
 	
 	
+	@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (null != facebookConnector)	{
+        	facebookConnector.autherizeCallback(requestCode, resultCode, data);
+        }
+    }
 	
     /**
      * @menu
@@ -752,7 +772,6 @@ extends MapActivity
         
         return accounts;  
     }    
-    
     
     
     

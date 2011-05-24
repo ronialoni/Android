@@ -43,16 +43,36 @@ public class SPMenu<  E_MenuItem  extends  Enum<E_MenuItem>  &  ISPMenuItem  >
     private final E_MenuItem[] items;
     private final ISPOnMenuItemSelectedListener<E_MenuItem> menuListener;
     private       PopupWindow  menuWindow;
+    private final OnTouchListener outsideTouchListener;
     
     
     /** @constructor */
     public SPMenu(E_MenuItem[] items, ISPOnMenuItemSelectedListener<E_MenuItem> menuListener)
     {
-        this.items        = items;
-        this.menuListener = menuListener;
-        this.menuWindow   = null;
-    }
-    
+        this.items                = items;
+        this.menuListener         = menuListener;
+        this.menuWindow           = null;
+        this.outsideTouchListener = new OnTouchListener()
+        {            
+            /**
+             * @pre SPMenu.this.menuWindow.isShowing()
+             */
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                SPUtils.debugFuncStart("*** menuWindow.OnTouchListener.onTouch", v, event);
+                // This method should invoke only if the menu isShowing(), so no check.
+                if (MotionEvent.ACTION_OUTSIDE == event.getAction())
+                {
+                    SPMenu.this.hide();
+                }
+                
+                // TODO Figure out what should be the return value ???
+                return false;
+                
+            }
+            
+        };
+    }    
     
     
 
@@ -88,6 +108,19 @@ public class SPMenu<  E_MenuItem  extends  Enum<E_MenuItem>  &  ISPMenuItem  >
     }
     
     
+    /**
+     * @pre    this.isShowing()
+     * @param  v 
+     *             Should be "outside" of the menu.
+     * @param  event
+     * @return
+     */
+    public boolean onOutsideTouch(View v, MotionEvent event)
+    {
+        return this.outsideTouchListener.onTouch(v, event);
+    }
+    
+    
     
     public synchronized void show(Activity activity, int buttomViewResId)
     {
@@ -100,26 +133,42 @@ public class SPMenu<  E_MenuItem  extends  Enum<E_MenuItem>  &  ISPMenuItem  >
         TableLayout menuRoot     = (TableLayout) activity.getLayoutInflater().inflate(SP_MENU_RES_ROOT, null);
         
         menuWindow = new PopupWindow(menuRoot, LayoutParams.FILL_PARENT,  LayoutParams.WRAP_CONTENT, false);
+        
+       
         menuWindow.setAnimationStyle(android.R.style.Animation_Dialog);
         menuWindow.setWidth(UIUtils.getContextWidth(activity));
         
-        //menuWindow.setOutsideTouchable(true);
+        menuWindow.setTouchable(true);
+        menuWindow.setOutsideTouchable(true);
+        
+// TODO This never got invoked !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// So I tried something dirty!
         menuWindow.setTouchInterceptor(new OnTouchListener()
         {                
+            /**
+             * @pre SPMenu.this.menuWindow.isShowing()
+             */
             public boolean onTouch(View v, MotionEvent event)
             {
-                SPUtils.debugFuncStart("**!!** menuWindow.OnTouchListener.onTouch", v, event);
+                SPUtils.debugFuncStart("*** menuWindow.OnTouchListener.onTouch", v, event);
                 // This method should invoke only if the menu isShowing(), so no check.
-                SPMenu.this.hide(); // For any Event
+                if (MotionEvent.ACTION_OUTSIDE == event.getAction())
+                {
+                    SPMenu.this.hide();
+                }
                 
-                // Tell the world that we took care of the touch event.
+                
+                // Let the world (map view) take care of the touch event.
+                // (OLD: Tell the world that we took care of the touch event.)
                 return false;
             }
 
         });
         
         
-        menuWindow.showAtLocation(activity.findViewById(buttomViewResId), Gravity.BOTTOM, 0, 0);
+        
+// _ALL_ the net examples have this line ???????????????????
+        //menuWindow.setFocusable(true);
         
         
         TableRow    itemTableRow = (TableRow)    menuRoot.findViewById(R.id.mom_items_row);
@@ -147,6 +196,9 @@ public class SPMenu<  E_MenuItem  extends  Enum<E_MenuItem>  &  ISPMenuItem  >
             
             itemTableRow.addView(itemTitle);
         }        
+        
+        
+        menuWindow.showAtLocation(activity.findViewById(buttomViewResId), Gravity.BOTTOM, 0, 0);
     }
     
     

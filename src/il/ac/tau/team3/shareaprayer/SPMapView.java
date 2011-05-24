@@ -3,6 +3,7 @@ package il.ac.tau.team3.shareaprayer;
 
 /** @import java.util.*;  */
 import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.common.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,11 +127,20 @@ extends MapView
 		}
 	}
 
-
 	
+	/**
+	 * @pre   null != touchData
+	 */
+	private void notifyAnyTouchEvent(MotionEvent event)
+	{
+	    for (IMapTapDetect touchistenr : this.tapListeners)
+	    {
+	        touchistenr.onAnyEvent(event);
+	    }
+	}
 	
-	private long startTime;
-	private long timeElapsed;
+//	private long startTime;
+//	private long timeElapsed;
 	
 	private float startPosX;
 	private float startPosY;
@@ -145,6 +155,7 @@ extends MapView
 	@Override
 	public boolean onTouchEvent(MotionEvent event) 
 	{
+	    this.notifyAnyTouchEvent(event);
 	    
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{ 
@@ -152,16 +163,20 @@ extends MapView
             startPosY = event.getY();
             MaxPosX = 0;
             MaxPosY = 0;
-		} else if ((event.getAction() == MotionEvent.ACTION_MOVE) || (event.getAction() == MotionEvent.ACTION_UP))	{
-			
-		} else	{
-			MaxPosX = Float.POSITIVE_INFINITY;
-			MaxPosY = Float.POSITIVE_INFINITY;
-		}
-		
-		MaxPosX = Math.max(Math.abs(event.getX() - startPosX), MaxPosX);
-		MaxPosY = Math.max(Math.abs(event.getY() - startPosY), MaxPosY);
-		
+        }
+        else if ((event.getAction() == MotionEvent.ACTION_MOVE)
+                || (event.getAction() == MotionEvent.ACTION_UP))
+        {
+            
+        }
+        else
+        {
+            MaxPosX = Float.POSITIVE_INFINITY;
+            MaxPosY = Float.POSITIVE_INFINITY;
+        }
+        
+        MaxPosX = Math.max(Math.abs(event.getX() - startPosX), MaxPosX);
+        MaxPosY = Math.max(Math.abs(event.getY() - startPosY), MaxPosY);		
 		
 		//startPosX = event.getX();
         //startPosY = event.getY();
@@ -205,7 +220,28 @@ extends MapView
 			}
 		}
 		
-		return super.onTouchEvent(event);		
+		
+		
+		/*
+		 * I guess super.onT... return false.
+		 * Because thats the return value (hard coded) that prevents FindPrayer.onT... from invoking.
+		 * (So, We'll return true and deal with that in the activity.) - I wish!...
+		 * It prevents  the map view's listener from invoke.
+		 * 
+		 * The try&catch is regardless.
+		 */		
+		try
+		{
+		    /*return*/ super.onTouchEvent(event);    
+		}
+        catch (NullPointerException npe)
+        {
+            // FIXME Another (one strange time) exception caught!
+            SPUtils.error("NullPointerException - Should have been WRAPED !!!", npe);
+            npe.printStackTrace();
+        } 
+        
+        return true;
 	}
 			
 	

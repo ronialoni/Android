@@ -666,25 +666,13 @@ extends MapActivity
          */
         mapView.registerTapListener(new IMapTapDetect()
         {
-            
-            public void onMoveEvent(SPGeoPoint sp)
+            @Override
+            public void onAnyEvent(MotionEvent event)
             {
-                SPUtils.debugFuncStart("**?** mapView.IMapTapDetect.onMoveEvent", sp);
-                if (SPMenu.isShowing(FindPrayer.this.menu))
-                {
-                    FindPrayer.this.menu.hide();
-                }
+                SPUtils.debugFuncStart("** mapView.IMapTapDetect.onMoveEvent", event);
+                SPUtils.debug("**    Passing it to the activity (thats it!).");
+                FindPrayer.this.onTouchEvent(event);
             }
-            
-            public void onTouchEvent(SPGeoPoint sp)
-            {
-                SPUtils.debugFuncStart("**?** mapView.IMapTapDetect.onTouchEvent", sp);
-                if (SPMenu.isShowing(FindPrayer.this.menu))
-                {
-                    FindPrayer.this.menu.hide();
-                }
-            }
-            
         });        
         
         
@@ -937,8 +925,19 @@ extends MapActivity
    @Override
    public boolean onTouchEvent(MotionEvent event)
    {
-       SPUtils.debugFuncStart("**?** onTouchEvent", event);
-       return super.onTouchEvent(event);
+       SPUtils.debugFuncStart("**GOT IT** onTouchEvent", event);
+       
+       /* Handle menu */
+       if (SPMenu.isShowing(FindPrayer.this.menu))
+       {
+           FindPrayer.this.menu.hide();
+       }
+       
+       
+       
+       
+       /*return*/// super.onTouchEvent(event);
+       return true;
    }  
    
     

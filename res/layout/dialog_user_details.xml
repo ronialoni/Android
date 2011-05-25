@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <TextView android:id="@+id/UDDFullName" android:visibility="invisible" android:layout_height="wrap_content" android:text="userName" android:layout_width="match_parent"></TextView>
+    <TextView android:id="@+id/UDDAddress" android:layout_height="wrap_content" android:text="fetching..." android:layout_width="wrap_content"></TextView>
+    <TextView android:id="@+id/UDDMail" android:layout_height="wrap_content" android:text="mail" android:layout_width="wrap_content"></TextView>
+    <TextView android:id="@+id/UDDStatus" android:layout_height="wrap_content" android:text="status" android:layout_width="wrap_content"></TextView>
+    <Button android:text="Dismiss" android:id="@+id/UUDDismiss" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+    
+    
+</LinearLayout>

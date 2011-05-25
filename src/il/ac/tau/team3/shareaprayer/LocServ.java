@@ -194,8 +194,12 @@ extends Service
 			return;
 		}
 		
-		Location loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER );
-		updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));		
+		try	{
+			Location loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER );
+			updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));		
+		} catch (NullPointerException e)	{
+			Log.e("LocServ", "Share a prayer Service: Startup location unknown");
+		}
 	}
 	
 	private GeneralUser loadUserFromStorage()	{

@@ -28,8 +28,7 @@ import android.graphics.drawable.Drawable;
 
 
 
-public class PlaceArrayItemizedOverlay
-extends PrayerArrayItemizedOverlay 
+public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay 
 {
 	
     
@@ -80,16 +79,17 @@ extends PrayerArrayItemizedOverlay
 	@Override
 	protected boolean onTap(int index)
 	{
-	    
-		final PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
-		final Map<String, List<String>> msgs = new HashMap<String, List<String>>();
-		final PlaceArrayItemizedOverlay p = this;
-		
-		activity.runOnUiThread(new Runnable() {
-			public void run() {
-				UIUtils.createRegisterDialog(placeItem.getPlace(), p);
-			}
-		});
+	    synchronized (this.getOverlayItems())	{
+			final PlaceOverlayItem placeItem = (PlaceOverlayItem) this.getOverlayItems().get(index);
+			final Map<String, List<String>> msgs = new HashMap<String, List<String>>();
+			final PlaceArrayItemizedOverlay p = this;
+			
+			activity.runOnUiThread(new Runnable() {
+				public void run() {
+					UIUtils.createRegisterDialog(placeItem.getPlace(), p);
+				}
+			});
+	    }
 	    return true;
 	}
 

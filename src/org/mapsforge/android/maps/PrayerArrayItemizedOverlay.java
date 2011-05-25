@@ -178,6 +178,15 @@ public class PrayerArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 			return this.overlayItems.get(i);
 		}
 	}
+	
+	protected void tapOverlayItem(OverlayItem item)	{
+			Builder builder = new AlertDialog.Builder(this.context);
+			builder.setIcon(android.R.drawable.ic_menu_info_details);
+			builder.setTitle(item.getTitle());
+			builder.setMessage(item.getSnippet());
+			builder.setPositiveButton(this.internalMapView.getText(TextField.OKAY), null);
+			builder.show();
+	}
 
 	/**
 	 * Handles a tap event.
@@ -187,12 +196,7 @@ public class PrayerArrayItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 		synchronized (this.overlayItems) {
 			OverlayItem item = this.overlayItems.get(index);
 			if (item != null) {
-				Builder builder = new AlertDialog.Builder(this.context);
-				builder.setIcon(android.R.drawable.ic_menu_info_details);
-				builder.setTitle(item.getTitle());
-				builder.setMessage(item.getSnippet());
-				builder.setPositiveButton(this.internalMapView.getText(TextField.OKAY), null);
-				builder.show();
+				tapOverlayItem(item);
 			}
 			return true;
 		}

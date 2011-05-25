@@ -510,7 +510,7 @@ extends MapActivity
          * User overlay and icon:
          */ 
         userDefaultMarker = this.getResources().getDrawable(R.drawable.user_red_sruga);
-		userOverlay       = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
+		userOverlay       = new UserArrayItemizedOverlay(userDefaultMarker, this);
         mapView.getOverlays().add(userOverlay);
         
         searchQueryOverlay = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
@@ -538,7 +538,7 @@ extends MapActivity
          * Other users overlay and icons:
          */
 		othersDefaultMarker = this.getResources().getDrawable(R.drawable.user_blue_sruga);
-		otherUsersOverlay   = new PrayerArrayItemizedOverlay(othersDefaultMarker, this);
+		otherUsersOverlay   = new UserArrayItemizedOverlay(othersDefaultMarker, this);
 		mapView.getOverlays().add(otherUsersOverlay);	 
 		
 		

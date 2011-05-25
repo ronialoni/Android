@@ -41,10 +41,12 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -529,7 +531,10 @@ public class UIUtils {
         private CheckBox[] checkBoxes = new CheckBox[NUMBER_OF_PRAYS];
         private TextView[] timeTextViews = new TextView[NUMBER_OF_PRAYS];
         private Calendar[] prayTimes = new GregorianCalendar[NUMBER_OF_PRAYS];
-      
+        private Button createButton;
+        private Button cancelButton;
+        private SPGeoPoint location;
+        private String lastEditText ="";
         
         private class DatePickerClickListener implements OnClickListener	{
         	
@@ -644,6 +649,55 @@ public class UIUtils {
                 }                
             }
         };
+        
+        private class MapsQueryAddress extends ACommHandler<MapsQueryLocation>	{
+        	private String typed_address;
+        	public MapsQueryAddress(String address)	{
+        		this.typed_address = address;
+        	}
+        
+        	@Override
+			public void onRecv(final MapsQueryLocation Obj) {
+					activity.runOnUiThread(new Runnable()	{
+
+						public void run() {
+							// TODO Auto-generated method stub
+							try	{
+							 if (!editAddress.getText().toString().equals(typed_address))	{
+								 return;
+							 }
+							 location = new SPGeoPoint(Obj.getResults()[0].getGeometry().getLocation().getLat(), 
+									 Obj.getResults()[0].getGeometry().getLocation().getLng());
+							 editAddress.setBackgroundColor(Color.GREEN);
+							 createButton.setEnabled(true);
+							 
+							} catch (Exception e)	{
+								if (!editAddress.getText().toString().equals(typed_address))	{
+									 return;
+								 }
+								editAddress.setBackgroundColor(Color.RED);
+								createButton.setEnabled(false);
+							}
+						}
+						
+					});
+			}
+        	
+        	@Override
+        	public void onError(final MapsQueryLocation Obj)	{
+        		if (!editAddress.getText().toString().equals(typed_address))	{
+					 return;
+				 }
+        		editAddress.setBackgroundColor(Color.RED);
+				createButton.setEnabled(false);
+        	}
+        	
+        }
+        
+        private  void verifyAddress(String address)	{
+        	editAddress.setBackgroundColor(Color.YELLOW);
+        	activity.getSPComm().searchForAddress(address, new MapsQueryAddress(address));
+        }
 		
 		public CreatePlaceDialog(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	{
 			if (point == null || a_activity == null || user == null)
@@ -663,28 +717,47 @@ public class UIUtils {
 			dialog.setContentView(R.layout.dialog_place_create);
 			dialog.setTitle(R.string.create_place_title);
 			
-			editAddress = (EditText) dialog.findViewById(R.id.CPDeditText1);
-			editAddress.setEnabled(false);
+			createButton  = (Button) dialog.findViewById(R.id.CPDCreateButton);
+			cancelButton = (Button) dialog.findViewById(R.id.CPDCancelButton);
 			
-			activity.getSPComm().getAddressObj(point.getLatitudeInDegrees(), point.getLongitudeInDegrees(), new ACommHandler<MapsQueryLocation>() {
+			createButton.setEnabled(false);
+			
+			editAddress = (EditText) dialog.findViewById(R.id.CPDeditText1);
+			editAddress.setBackgroundColor(Color.YELLOW);
+			
+			location = point;
+			
+			editAddress.setOnKeyListener(new OnKeyListener()	{
+
+				public boolean onKey(View v, int keyCode, KeyEvent event) {
+					if (lastEditText.equals(editAddress.getText().toString()))	{
+						return false;
+					}
+					lastEditText = editAddress.getText().toString();
+					verifyAddress(editAddress.getText().toString());
+					return false;
+				}
+				
+			});
+			
+			activity.getSPComm().getAddressObj(location.getLatitudeInDegrees(), location.getLongitudeInDegrees(), new ACommHandler<MapsQueryLocation>() {
 				@Override
 				public void onRecv(final MapsQueryLocation Obj) {
-					try	{
 						activity.runOnUiThread(new Runnable()	{
 
 							public void run() {
 								// TODO Auto-generated method stub
 								try	{
 								 editAddress.setText(Obj.getResults()[0].getFormatted_address());
+								 editAddress.setBackgroundColor(Color.GREEN);
+								 createButton.setEnabled(true);
+								 
 								} catch (Exception e)	{
-									
+									editAddress.setBackgroundColor(Color.RED);
 								}
 							}
 							
 						});
-					} catch (NullPointerException e)	{
-						
-					}
 				}
 				
 				@Override
@@ -719,9 +792,6 @@ public class UIUtils {
 			timeTextViews[2] = (TextView) dialog.findViewById(R.id.CPDarvitTime);
 			checkBoxes[2].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[2], 
 					2, checkBoxes[0], 19, 0, R.drawable.arvit_small));
-			
-			Button createButton = (Button) dialog.findViewById(R.id.CPDCreateButton);
-	        Button cancelButton = (Button) dialog.findViewById(R.id.CPDCancelButton);
 	        
 	    
 			createButton.setOnClickListener(new OnClickListener() {
@@ -733,7 +803,7 @@ public class UIUtils {
 					else{
 						final Date finalstartDate = new Date(startDate.get(Calendar.YEAR)-1900,startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
 						final Date finalendDate = new Date(endDate.get(Calendar.YEAR)-1900,endDate.get(Calendar.MONTH),endDate.get(Calendar.DAY_OF_MONTH));
-						CreateNewPlace_YesClick(prays, user, activity, point, finalstartDate, finalendDate, prayTimes, editAddress.getText().toString());
+						CreateNewPlace_YesClick(prays, user, activity, location, finalstartDate, finalendDate, prayTimes, editAddress.getText().toString());
 						dialog.dismiss();
 					}
 					

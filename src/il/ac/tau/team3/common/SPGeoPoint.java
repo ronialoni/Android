@@ -22,6 +22,13 @@ public class SPGeoPoint implements Serializable {
 		LatitudeE6 = latitudeE6;
 		LongtitudeE6 = longtitudeE6;
 	}
+	
+	public SPGeoPoint(double latitude, double longtitude) {
+		super();
+		LatitudeE6 = (int)(latitude * 1000000);
+		LongtitudeE6 = (int)(longtitude * 1000000);
+	}
+	
 	public int getLatitudeE6() {
 		return LatitudeE6;
 	}

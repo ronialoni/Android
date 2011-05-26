@@ -2,31 +2,21 @@ package il.ac.tau.team3.shareaprayer;
 
  
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import android.content.SharedPreferences;
-
 import il.ac.tau.team3.addressQuery.MapsQueryLocation;
+
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
+
 import il.ac.tau.team3.spcomm.ACommHandler;
-import il.ac.tau.team3.spcomm.ICommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
+
+
 import il.ac.tau.team3.uiutils.ISPMenuItem;
 import il.ac.tau.team3.uiutils.MenuUtils;
 import il.ac.tau.team3.uiutils.SPMenu;
-import il.ac.tau.team3.uiutils.ISPMenuItem.ISPSubMenuItem;
 import il.ac.tau.team3.uiutils.SPMenu.ISPOnMenuItemSelectedListener;
 import il.ac.tau.team3.uiutils.SPMenus;
 import il.ac.tau.team3.uiutils.SPMenus.ESPMenuItem;
@@ -34,61 +24,43 @@ import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuFind;
 import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuMap;
 import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuPeople;
 import il.ac.tau.team3.uiutils.UIUtils;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Message;
-import android.util.Log; 
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.MeasureSpec;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.PopupWindow.OnDismissListener;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
+import org.mapsforge.android.maps.GeoPoint;
 import org.mapsforge.android.maps.MapActivity;
-//import org.mapsforge.android.maps.MapViewMode;
-import org.mapsforge.android.maps.IOverlayChange;
 import org.mapsforge.android.maps.OverlayItem;
 import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
-import org.mapsforge.android.maps.GeoPoint;
 
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.PopupWindow.OnDismissListener;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 
@@ -825,11 +797,11 @@ extends MapActivity
                     {
                         FindPrayer.this.centerMap();
                         FindPrayer.this.menu.hide();
-                    }   
+                    }
                     
                     
                     else if (id == ESPSubMenuFind.CLOSEST.id())
-                    {        
+                    {
                         // Taking the closest (for now) from the map's overlay.
                         ArrayList<OverlayItem> listOfOneItemIfAnyOnMap = FindPrayer.this.closestPlaceOverlay.getOverlayItems();
                         if (null != listOfOneItemIfAnyOnMap && listOfOneItemIfAnyOnMap.size() > 0)
@@ -915,6 +887,8 @@ extends MapActivity
                     
                     else if (id == ESPSubMenuMap.MAX_MIN.id())
                     {
+                        MenuUtils.setShowMax(! MenuUtils.showMax());
+                                                
                         TextView v = new TextView(FindPrayer.this);
                         v.setGravity(Gravity.CENTER);
                         v.setPadding(2, 2, 2, 2);
@@ -931,7 +905,6 @@ extends MapActivity
                         t.setDuration(Toast.LENGTH_LONG);                       
                         t.setGravity(Gravity.CENTER, 0, 0);
                         
-                        MenuUtils.setShowMax(MenuUtils.showMax());
                         t.show();
                         FindPrayer.this.menu.hide();
                     }
@@ -939,7 +912,8 @@ extends MapActivity
                     
                     else if (id == ESPSubMenuMap.COLORS.id())
                     {
-                        // TODO
+                        // FIXME & TODO
+                        FindPrayer.this.menu.hide();
                         FindPrayer.this.menu.hide();
                     }
                     
@@ -947,7 +921,8 @@ extends MapActivity
 
                     else if (id == ESPSubMenuMap.NUNBERS.id())
                     {
-                        // TODO
+                        // FIXME & TODO
+                        FindPrayer.this.menu.hide();
                         FindPrayer.this.menu.hide();
                     }
                     

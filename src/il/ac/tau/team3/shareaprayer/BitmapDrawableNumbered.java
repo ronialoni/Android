@@ -15,10 +15,11 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 
 
-public class BitmapDrawableNumbered extends BitmapDrawable {
+public class BitmapDrawableNumbered  extends BitmapDrawable 
+{
 	private GeneralPlace place;
-	Paint pBmp = new Paint();
-	Paint p = new Paint();
+	private Paint pBmp = new Paint();
+	private Paint p    = new Paint();
 	
 	//private static int lastDisplayed = 0;
 	

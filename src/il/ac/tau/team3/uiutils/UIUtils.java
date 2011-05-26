@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mapsforge.android.maps.MapView.TextField;
+
 import il.ac.tau.team3.addressQuery.MapsQueryLocation;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
@@ -24,6 +26,8 @@ import il.ac.tau.team3.shareaprayer.R.drawable;
 import il.ac.tau.team3.shareaprayer.R.id;
 import il.ac.tau.team3.shareaprayer.R.layout;
 import il.ac.tau.team3.shareaprayer.R.string;
+import il.ac.tau.team3.shareaprayer.ServiceNotConnected;
+import il.ac.tau.team3.shareaprayer.UserNotFoundException;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import android.accounts.Account;
 import android.app.Activity;
@@ -32,6 +36,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.TimePickerDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -219,11 +224,21 @@ public class UIUtils {
 		
 	}
 	
-	
+	private static GeneralUser getThisUser(FindPrayer activity)	{
+		try {
+			return activity.getSvcGetter().getService().getUser();
+		} catch (UserNotFoundException e) {
+			return null;
+		} catch (ServiceNotConnected e) {
+			return null;
+		}
+	}
 	
 	static void RegisterClick(final GeneralPlace place,
 			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
-		GeneralUser user = placeOverlay.getThisUser();
+		
+		GeneralUser user = getThisUser(placeOverlay.getActivity());
+		
 		if (user == null) {
 			Log.d("UIUtils:createRegisterDialog", "Error: user is null");
 			return;
@@ -249,7 +264,14 @@ public class UIUtils {
 
 	static void DeleteClick(final GeneralPlace place,
 			final PlaceArrayItemizedOverlay placeOverlay) {
-		if (place.getOwner().getName().equals(placeOverlay.getThisUser().getName())) {
+		
+		GeneralUser user = getThisUser(placeOverlay.getActivity());
+		
+		if (null == user)	{
+			return;
+		}
+		
+		if (place.getOwner().getName().equals(user.getName())) {
 		
 			placeOverlay
 					.getActivity()
@@ -265,7 +287,7 @@ public class UIUtils {
 
 	static void UnregisterClick(final GeneralPlace place,
 			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
-		GeneralUser user = placeOverlay.getThisUser();
+		GeneralUser user = getThisUser(placeOverlay.getActivity());
 		if (user == null) {
 			Log.d("UIUtils:createRegisterDialog", "Error: user is null");
 			return;
@@ -327,7 +349,9 @@ public class UIUtils {
 	
 	/*package*/ public static void createRegisterDialog(final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
 	{
-		if (placeOverlay == null || placeOverlay.getThisUser() == null || place == null) 
+		GeneralUser user = getThisUser(placeOverlay.getActivity()); 
+		
+		if (placeOverlay == null || user == null || place == null) 
 		{
 			Log.d("UIUtils::createRegisterDialog",
 					"placeOverlay == null || placeOverlay.getThisUser() == null || place == null");
@@ -377,7 +401,7 @@ public class UIUtils {
 						uiObj.wish = isChecked;
 					}
 				});
-				Boolean isSigned = p.isJoinerSigned(placeOverlay.getThisUser());
+				Boolean isSigned = p.isJoinerSigned(user);
 				uiObj.prayCheckBox.setChecked(isSigned);
 				uiObj.prayCheckBox.setClickable(true);
 				uiObj.prayCheckBox.setTextColor(Color.WHITE);
@@ -456,8 +480,8 @@ public class UIUtils {
 				dialog.dismiss();
 			};
 		});
-		if (place.getOwner() != null && placeOverlay.getThisUser() != null) {
-			if (!(place.getOwner().getId().equals(placeOverlay.getThisUser().getId()))) {
+		if (place.getOwner() != null && user != null) {
+			if (!(place.getOwner().getId().equals(user.getId()))) {
 				deleteButton.setVisibility(View.INVISIBLE);
 			}
 		}
@@ -698,15 +722,31 @@ public class UIUtils {
         	editAddress.setBackgroundColor(Color.YELLOW);
         	activity.getSPComm().searchForAddress(address, new MapsQueryAddress(address));
         }
-		
-		public CreatePlaceDialog(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	{
-			if (point == null || a_activity == null || user == null)
+        
+        private boolean validateParams(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	{
+        	if (point == null || a_activity == null || user == null)
 			{
 				
 				Log.d("UIUtils::createRegisterDialog", "point == null || activity == null || user == null");
 				// TODO: change to checked exception
 				throw new NullPointerException("CreatePlaceDialog: executed with NULL!!!!");
 				//return;
+			}
+        	
+        	try {
+				if (user.getSpGeoPoint() == null)	{
+					return false;
+				}
+			} catch (UnknownLocationException e) {
+				throw new NullPointerException("CreatePlaceDialog: executed with Unknown Location!!!!");
+			}
+        	
+        	return true;
+        }
+		
+		public CreatePlaceDialog(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	{
+			if (!validateParams(point, a_activity, user))	{
+				return;
 			}
 			
 			for (int i = 0; i < prayTimes.length; prayTimes[i] = new GregorianCalendar(),i++);
@@ -826,6 +866,7 @@ public class UIUtils {
 		try {
 			new CreatePlaceDialog(point, activity, user);
 		} catch (NullPointerException e)	{
+			createUnknownUserDialog(activity);
 		}
      }
 	
@@ -854,6 +895,15 @@ public class UIUtils {
 				new UpdateUI<Long>(activity));
 
 		
+	}
+	
+	public static void createUnknownUserDialog(Activity activity)	{
+		Builder builder = new AlertDialog.Builder(activity);
+		builder.setIcon(android.R.drawable.ic_menu_info_details);
+		builder.setTitle(R.string.userUnknownTitle);
+		builder.setMessage(R.string.userUnknownMessage);
+		builder.setPositiveButton(android.R.string.ok, null);
+		builder.show();
 	}
 
 	

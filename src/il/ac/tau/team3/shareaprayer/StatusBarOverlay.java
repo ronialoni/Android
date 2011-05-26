@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.Paint.Style;
 import android.os.Bundle;
@@ -72,6 +74,7 @@ public class StatusBarOverlay extends Overlay {
 	    }
 	    
 	    Paint pFront = new Paint();
+	    Paint pBack = new Paint();
 	    
 	public Handler getHandler()	{
 		return h;
@@ -92,14 +95,25 @@ public class StatusBarOverlay extends Overlay {
 			Projection projection, byte drawZoomLevel) {
 		// TODO Auto-generated method stub
 		
-
-        
+		Rect rect = new Rect();
+		
         //p.setARGB(255, 255, 0, 0);
-		pFront.setTypeface(Typeface.DEFAULT);
+		pFront.setTypeface(Typeface.MONOSPACE);
 		pFront.setTextSize(textSz);
+		
+		if (currentMessage.length() > 0)	{
+			pFront.getTextBounds(currentMessage, 0, currentMessage.length(), rect);
+			pBack.setColor(Color.LTGRAY);
+			rect.offsetTo(xoffset/2, yoffset/2);
+			rect.inset(-4, -4);
+		}
+		
 
 		pFront.setAntiAlias(true);
 		synchronized(currentMessage)	{
+			if (currentMessage.length() > 0)	{
+				canvas.drawRect(rect, pBack);
+			}
     		canvas.drawText(currentMessage , 
             xoffset,yoffset , pFront);
 		}

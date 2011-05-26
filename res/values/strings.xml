@@ -5,5 +5,7 @@
     <string name="create_place_title">Create Place: Properties</string>
 	<string name="Shaharit">Shaharit</string>
 	<string name="Minha">Minha</string>
-	<string name="Arvit">Arvit</string>    
+	<string name="Arvit">Arvit</string>
+	<string name="userUnknownTitle">Security Error</string>
+	<string name="userUnknownMessage">Sorry, but your current location is unknown. Share-A-Prayer does not allow users whom their current location is unknown to create or registers to places due to security restrictions.</string>    
 </resources>

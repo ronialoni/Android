@@ -10,6 +10,7 @@ import java.util.Map;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.Pray;
+import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
 import il.ac.tau.team3.shareaprayer.FindPrayer.StringArray;
 import il.ac.tau.team3.uiutils.UIUtils;
@@ -33,15 +34,15 @@ public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay
 	
     
     private FindPrayer  activity;
-	private GeneralUser thisUser;
-
+/*	private GeneralUser thisUser;
+*/
 	
 	
-    public GeneralUser getThisUser()
+/*    public GeneralUser getThisUser()
     {
         return thisUser;
     }
-    
+*/    
     public FindPrayer getActivity()
     {
         return activity;
@@ -52,11 +53,11 @@ public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay
         this.activity = activity;
     }
     
-    public void setThisUser(GeneralUser thisUser)
+/*    public void setThisUser(GeneralUser thisUser)
     {
         this.thisUser = thisUser;
     }
-
+*/
 	
 	
     
@@ -86,7 +87,20 @@ public class PlaceArrayItemizedOverlay extends PrayerArrayItemizedOverlay
 			
 			activity.runOnUiThread(new Runnable() {
 				public void run() {
-					UIUtils.createRegisterDialog(placeItem.getPlace(), p);
+					GeneralUser user;
+					try {
+						user = activity.getSvcGetter().getService().getUser();
+						if (user.getSpGeoPoint() != null)	{
+							UIUtils.createRegisterDialog(placeItem.getPlace(), p);
+						}
+					} catch (UserNotFoundException e) {
+						UIUtils.createUnknownUserDialog(activity);
+					} catch (ServiceNotConnected e) {
+						UIUtils.createUnknownUserDialog(activity);
+					} catch (UnknownLocationException e) {
+						UIUtils.createUnknownUserDialog(activity);
+					} 
+					
 				}
 			});
 	    }

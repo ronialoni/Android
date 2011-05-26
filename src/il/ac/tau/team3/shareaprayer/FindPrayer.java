@@ -316,6 +316,12 @@ extends MapActivity
     
     	
 	private ServiceConnector  svcGetter = new ServiceConnector();
+	
+	public ServiceConnector getSvcGetter() {
+		return svcGetter;
+	}
+
+
 	private ILocationProv locationListener;
 	private StatusBarOverlay statusBar; 
 	
@@ -414,8 +420,8 @@ extends MapActivity
 	}
         
 	private void registerUser(GeneralUser user)	{
-		 publicPlaceOverlay.setThisUser(user);
-         closestPlaceOverlay.setThisUser(user);
+		 /*publicPlaceOverlay.setThisUser(user);
+         closestPlaceOverlay.setThisUser(user);*/
          refreshTask.start();
          try {
 			mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
@@ -518,7 +524,7 @@ extends MapActivity
 
         
         
-        statusBar = new StatusBarOverlay(mapView.getPaddingTop() + 24, mapView.getWidth() / 100, 24);
+        statusBar = new StatusBarOverlay(mapView.getPaddingTop() + 24, mapView.getWidth() / 100, 16);
         mapView.getOverlays().add(statusBar);
         
         /*

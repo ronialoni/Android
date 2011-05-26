@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
@@ -27,8 +28,9 @@ import android.widget.LinearLayout.LayoutParams;
 public class SPMenu
 {
     
+    private static final int SP_MENU_ITEM_SIZE = 64;
     
-    private static final int SP_MENU_RES_ROOT    = R.layout.menu_options_main;
+    private static final int SP_MENU_RES_ROOT  = R.layout.menu_options_main;
     //private static final int SP_MENU_ITEM_RES_ID = R.id.mom_items_row;
     
     
@@ -127,10 +129,13 @@ public class SPMenu
         
         itemView.setClickable(true);
         itemView.setGravity(Gravity.CENTER);
+        UIUtils.setPadding(itemView, 5);
+        itemView.setFadingEdgeLength(5);
         itemView.setWidth(UIUtils.getContextWidth(activity) / this.items.length);
         itemView.setText(item.title());
         itemView.setCompoundDrawablesWithIntrinsicBounds(0, item.resIconId(), 0, 0);
         itemView.setBackgroundResource(R.drawable.selector_menu_item);
+        itemView.setCompoundDrawablePadding(5);
         
         return itemView;
     }
@@ -142,9 +147,12 @@ public class SPMenu
         
         subView.setClickable(true);
         subView.setGravity(Gravity.CENTER);
+        UIUtils.setPadding(subView, 5);
+        subView.setFadingEdgeLength(5);
         subView.setText(subItem.title());
         subView.setCompoundDrawablesWithIntrinsicBounds(subItem.resIconId(), 0, 0, 0);
         subView.setBackgroundResource(R.drawable.selector_menu_item);//R.drawable.action_item_btn);
+        subView.setCompoundDrawablePadding(5);
         
         return subView;
     }
@@ -177,18 +185,14 @@ public class SPMenu
         TextView  itemView  = null;
         for (final ISPMenuItem item : this.items)
         {
-            itemView = getMenuItemTextView(item, activity);
-             
+            itemView = getMenuItemTextView(item, activity);   
             
             if (! item.hasSubMenu())
-            {      
-                
-                
+            {
                 itemView.setOnClickListener(new OnClickListener()
                 {                    
                     public void onClick(View v)
                     {
-                        
                         SPMenu.this.menuListener.onMenuItemSelected(item, v);
                     }
                 });                
@@ -208,10 +212,12 @@ public class SPMenu
                         }
                         
                         
-                        RelativeLayout rl = (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.popup, null);
-                        //LinearLayout   ll = (LinearLayout)   rl.findViewById(R.id.tracks);
-                        TableLayout    ll = (TableLayout)   rl.findViewById(R.id.tracks);
-                        ll.removeAllViews();
+                        RelativeLayout subRootView   = (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.popup, null);
+                        //LinearLayout linearLayout  = (LinearLayout)   rl.findViewById(R.id.tracks);
+                        TableLayout    subItemsTable = (TableLayout)    subRootView.findViewById(R.id.tracks);
+                        subItemsTable.removeAllViews();
+                        ImageView      arrowDown     = (ImageView)      subRootView.findViewById(R.id.arrow_down);
+                        arrowDown.setPadding(SPMenu.SP_MENU_ITEM_SIZE / 3, 0, 0, 0);
                         
                         
                         TextView subView = null;
@@ -219,26 +225,21 @@ public class SPMenu
                         {
                             subView = SPMenu.this.getSubItemTextView(subItem, activity);
                             
-                            
-                            
                             subView.setOnClickListener(new OnClickListener()
                             {                    
                                 public void onClick(View v)
                                 {
                                     SPMenu.this.menuListener.onMenuItemSelected(subItem, v);
-                                    
-                                    //SPMenu.this.subWindow.dismiss();
-                                    //SPMenu.this.subWindow = null;
                                 }
                             }); 
                             
                             //ll.addView(subView, subItem.index());
-                            ll.addView(subView);
+                            subItemsTable.addView(subView);
                         }              
                         
                         
                         
-                        SPMenu.this.subWindow = new PopupWindow(rl, LayoutParams.WRAP_CONTENT,  LayoutParams.WRAP_CONTENT, false);
+                        SPMenu.this.subWindow = new PopupWindow(subRootView, LayoutParams.WRAP_CONTENT,  LayoutParams.WRAP_CONTENT, false);
                         subWindow.setAnimationStyle(android.R.style.Animation_Dialog);
                         
                         SPMenu.this.menuWindow.getContentView().measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
@@ -252,7 +253,7 @@ public class SPMenu
                                         
                         SPUtils.debug("x = " + (menuItemWidth * ESPMenuItem.values().length) + ", y = " + menuHight);
                         
-                        subWindow.showAtLocation(activity.findViewById(buttomViewResId), Gravity.BOTTOM | Gravity.LEFT, menuItemWidth * (item.id()), menuHight);
+                        subWindow.showAtLocation(activity.findViewById(buttomViewResId), Gravity.BOTTOM | Gravity.LEFT, menuItemWidth * (item.index()), menuHight);
                       
                         
                         SPMenu.this.menuListener.onMenuItemSelected(item, v);
@@ -326,13 +327,30 @@ public class SPMenu
     
     
  
-    
-    private int getSubMenuOffsetX()
+    /**
+     * @pre    this.isShowing();
+     *         this.menuWindow.getContentView().measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+     * @param  item != null;
+     * @return
+     */
+    private int getSubMenuOffsetX(ISPMenuItem item)
     {
-        return 0;
-        
+        int menuItemWidth  = this.menuWindow.getContentView().getMeasuredWidth();
+        menuItemWidth     *= item.index();
+        menuItemWidth     /= ESPMenuItem.values().length;
+        return menuItemWidth;
     }
     
+    
+    /**
+     * @pre    this.isShowing();
+     *         this.menuWindow.getContentView().measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+     * @return
+     */
+    private int getSubMenuOffsetY()
+    {        
+        return this.menuWindow.getContentView().getMeasuredHeight();
+    }
     
     
 }

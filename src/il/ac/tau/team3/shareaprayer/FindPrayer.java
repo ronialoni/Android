@@ -868,12 +868,14 @@ extends MapActivity
                     {
                        TextView v = new TextView(FindPrayer.this);
                        v.setGravity(Gravity.CENTER);
-                       v.setPadding(2, 2, 2, 2);
+                       UIUtils.setPadding(v, 5);
+                       v.setFadingEdgeLength(5);
                        v.setText("You're status\nhas been shared\non Facebook");
                        v.setTextColor(Color.LTGRAY);
                        v.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
-                       v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_item_facebook_bubble_alt, 0, 0, 0);
                        v.setBackgroundColor(Color.GRAY & Color.BLUE);
+                       v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_item_facebook_bubble_alt, 0, 0, 0);
+                       v.setCompoundDrawablePadding(10);
                        
                        Toast t = new Toast(FindPrayer.this);
                        t.setView(v);
@@ -891,20 +893,21 @@ extends MapActivity
                                                 
                         TextView v = new TextView(FindPrayer.this);
                         v.setGravity(Gravity.CENTER);
-                        v.setPadding(2, 2, 2, 2);
+                        UIUtils.setPadding(v, 5);
+                        v.setFadingEdgeLength(5);
                         v.setText("Showing the: " + (MenuUtils.showMax() ? "Max" : "Min") + "\n" 
                                                   + "number of registerd prayers.\n" 
                                                   + "(Click again to change.)");
                         v.setTextColor(Color.DKGRAY);
                         v.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
-                        v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_item_maxmin_calc, 0, 0, 0);
                         v.setBackgroundColor(Color.LTGRAY);
+                        v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_item_maxmin_calc, 0, 0, 0);
+                        v.setCompoundDrawablePadding(10);
                         
                         Toast t = new Toast(FindPrayer.this);
                         t.setView(v);
                         t.setDuration(Toast.LENGTH_LONG);                       
                         t.setGravity(Gravity.CENTER, 0, 0);
-                        
                         t.show();
                         FindPrayer.this.menu.hide();
                     }

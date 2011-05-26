@@ -508,18 +508,18 @@ public class UIUtils {
 	}
 
 	
-	static class ListDialog extends ListActivity
-	{
-		private Map<String, StringArray> map;
-		private Activity activity;
-		
-		public ListDialog(Map<String, StringArray> map, Activity activity ){
-			super();
-			this.map = map;
-			this.activity = activity;
-		}
-
-	}
+//	private static class ListDialog extends ListActivity
+//	{
+//		private Map<String, StringArray> map;
+//		private Activity activity;
+//		
+//		public ListDialog(Map<String, StringArray> map, Activity activity ){
+//			super();
+//			this.map = map;
+//			this.activity = activity;
+//		}
+//
+//	}
 			
 	
 
@@ -540,7 +540,8 @@ public class UIUtils {
 	
 	
 	
-	static class CreatePlaceDialog	{		
+	static class CreatePlaceDialog	
+	{		
 		private Dialog dialog;
 		private EditText editAddress;
 		private Calendar startDate = new GregorianCalendar(); 
@@ -560,8 +561,8 @@ public class UIUtils {
         private SPGeoPoint location;
         private String lastEditText ="";
         
-        private class DatePickerClickListener implements OnClickListener	{
-        	
+        private class DatePickerClickListener implements OnClickListener	
+        {        	
         	private Calendar cal;
         	private TextView textStr;
         	
@@ -591,45 +592,61 @@ public class UIUtils {
         	
         }
         
-        class PrayTimePickDialog extends TimePickerDialog {
 
-        	private CheckBox checkBox;
-        	private int prayIndex;
-        	
-        	public PrayTimePickDialog(final TextView a_timeStr, int defHour, int defMin, 
-        			CheckBox a_checkBox, final int a_prayIndex, int a_resIcon)	{
-        		super(activity, 
-        				new OnTimeSetListener() {
-        			
-        			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-    					SPUtils.debugFuncStart("timePickerDialog.onTimeSet", view, hourOfDay, minute);
-    					CreatePlaceDialog.this.prays[a_prayIndex] = true;
-    					prayTimes[a_prayIndex].set(2000, 1, 1, hourOfDay, minute, 0);
-    					Date time = new Date(0,0,0,hourOfDay, minute);
-    					a_timeStr.setText(printTimeFromDate(time));
-    					
-    				}
-        			
-        		}, defHour, defMin, true);
-        		
+        class PrayTimePickDialog extends TimePickerDialog
+        {
+            
+            private CheckBox checkBox;
+            
+            private int      prayIndex;
+            
+            public PrayTimePickDialog(final TextView a_timeStr, int defHour,
+                    int defMin, CheckBox a_checkBox, final int a_prayIndex,
+                    int a_resIcon)
+            {
+                super(activity, new OnTimeSetListener()
+                {
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute)
+                    {
+                        SPUtils.debugFuncStart("timePickerDialog.onTimeSet", view, hourOfDay, minute);
+                        CreatePlaceDialog.this.prays[a_prayIndex] = true;
+                        prayTimes[a_prayIndex].set(2000, 1, 1, hourOfDay, minute, 0);
+                        Date time = new Date(0, 0, 0, hourOfDay, minute);
+                        a_timeStr.setText(printTimeFromDate(time));
+                        
+                    }
+                    
+                }, defHour, defMin, true);
+                
                 this.setIcon(a_resIcon);
-                this.setInverseBackgroundForced(true);          
-                this.setCancelable(true);              //
-                this.setCanceledOnTouchOutside(true);  //
-        		checkBox = a_checkBox;
-        	}
-        	
+                this.setInverseBackgroundForced(true);
+                this.setCancelable(true); //
+                this.setCanceledOnTouchOutside(true); //
+                checkBox = a_checkBox;
+            }
+    	
         	@Override
-			public void cancel()	{
-        		SPUtils.debugFuncStart("timePickerDialog.onCancel", dialog);
+			public void cancel()	
+        	{
+        		SPUtils.debug("<*><*> timePickerDialog.onCancel <*><*>");
+        		/*
+        		 * Obviously, If We Got Here: 
+        		 *     A PrayTimePickDialog was canceled. ==>
+        		 *     A PrayTimePickDialog was opened. ==>
+        		 *     The Appropriate CheckBox was enabled. ==>
+        		 *     THEREFORE: We need to uncheck.
+        		 *         I will do it only to the booleans, because this.dismiss() is nice & safe.
+        		 */
+        		//CreatePlaceDialog.this.prays[this.prayIndex] = !CreatePlaceDialog.this.prays[this.prayIndex];
+        		
         		super.cancel();
         	}
         	
         	@Override
         	public void dismiss()	{
-        		SPUtils.debugFuncStart("timePickerDialog.onDismiss", dialog);
-                SPUtils.debug("--> prays["+prayIndex+"] = " + "prays["+prayIndex+"]");
-                checkBox.setChecked(prays[prayIndex]);
+        		SPUtils.debug("timePickerDialog.onDismiss");
+                SPUtils.debug("--> prays["+this.prayIndex+"] = " + "prays["+prayIndex+"]");
+                this.checkBox.setChecked(CreatePlaceDialog.this.prays[this.prayIndex]);
                 super.dismiss();
         	}
         	
@@ -637,28 +654,37 @@ public class UIUtils {
         	
         }
         
-        class CheckBoxListener implements OnCheckedChangeListener
+        private class CheckBoxListener implements OnCheckedChangeListener     ////
         {              
-        	private TextView timeTextView;
-        	private int		 index;
-        	private CheckBox checkBox;
-        	int defHour;
-        	int defMinutes;
-        	int resIcon;
+        	private     TextView timeTextView;
+        	private     int		 index;
+        	private     CheckBox checkBox;
+        	/*package*/ int      defHour;
+        	/*package*/ int      defMinutes;
+        	/*package*/ int      resIcon;
         	
         	
-            public CheckBoxListener(TextView timeTextView, int index, CheckBox checkBox, 
-            		int defHour, int defMinutes, int resIcon) {
+            public CheckBoxListener(TextView timeTextView, int index, CheckBox checkBox, int defHour, int defMinutes, int resIcon)
+            {
 				super();
-				this.timeTextView = timeTextView;
-				this.index = index;
-				this.checkBox = checkBox;
-				this.defHour = defHour;
-				this.defMinutes = defMinutes;
-				this.resIcon = resIcon;
-				
+                this.timeTextView = timeTextView;
+                this.index        = index;
+                this.checkBox     = checkBox;
+                this.defHour      = defHour;
+                this.defMinutes   = defMinutes;
+                this.resIcon      = resIcon;
 			}
-
+            
+            
+            /**
+             * @post Setting prays[index] to false if we got false, otherwise...
+             *       Calling a PrayTimePickDialog which will:
+             *           if (time was SET)    
+             *               update prays[index] for us.
+             *           if (time was CANCEL) 
+             *               check the box again (this must be to false).
+             *               Then we will be invoked again, but the last if(...) will happen.
+             */
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
                 SPUtils.debugFuncStart("pray1.onCheckedChanged", buttonView, isChecked);
@@ -668,11 +694,16 @@ public class UIUtils {
                 }
                 else
                 {
-                    prays[index] = false;
+                    //prays[index] = false;                    ////
                     timeTextView.setText("");
-                }                
+                    prays[index] = isChecked;                ////
+                }
+                
+                                     
             }
-        };
+        }
+        
+        
         
         private class MapsQueryAddress extends ACommHandler<MapsQueryLocation>	{
         	private String typed_address;
@@ -744,21 +775,25 @@ public class UIUtils {
         	return true;
         }
 		
-		public CreatePlaceDialog(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	{
-			if (!validateParams(point, a_activity, user))	{
+        
+		public CreatePlaceDialog(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	
+		{
+			if (!validateParams(point, a_activity, user))	
+			{
 				return;
 			}
 			
-			for (int i = 0; i < prayTimes.length; prayTimes[i] = new GregorianCalendar(),i++);
+			for (int i = 0; i < prayTimes.length; prayTimes[i++] = new GregorianCalendar()/*,i++*/);
 			  
 			activity = a_activity;
 			
 			dialog = new Dialog(activity);
+			dialog.setCancelable(true);
 			dialog.setContentView(R.layout.dialog_place_create);
 			dialog.setTitle(R.string.create_place_title);
 			
 			createButton  = (Button) dialog.findViewById(R.id.CPDCreateButton);
-			cancelButton = (Button) dialog.findViewById(R.id.CPDCancelButton);
+			cancelButton  = (Button) dialog.findViewById(R.id.CPDCancelButton);
 			
 			createButton.setEnabled(false);
 			
@@ -812,55 +847,63 @@ public class UIUtils {
 	        toDate.setText(printDateFromCalendar(endDate,0)); 
 	        
 	        changeStartDate = (Button) dialog.findViewById(R.id.CPDChange1button);
-	        changeEndDate = (Button) dialog.findViewById(R.id.CPDChange2button);
+	        changeEndDate   = (Button) dialog.findViewById(R.id.CPDChange2button);
 	        
 			changeStartDate.setOnClickListener(new DatePickerClickListener(startDate, fromDate));
 			changeEndDate.setOnClickListener(new DatePickerClickListener(endDate, toDate));
 			
 			
-			checkBoxes[0] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox1);
+			
+			checkBoxes[0]    = (CheckBox) dialog.findViewById(R.id.CPDcheckBox1);
 			timeTextViews[0] = (TextView) dialog.findViewById(R.id.CPDshahritTime);
-			checkBoxes[0].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[0], 
-					0, checkBoxes[0], 7, 0, R.drawable.shaharit_small));
+			checkBoxes[0].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[0], 0, checkBoxes[0], 7, 0, R.drawable.shaharit_small));
+			
 			// TODO find out what's working, checkBoxes[0] or checkBoxes[1]
-			checkBoxes[1] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);
+			checkBoxes[1]    = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);
 			timeTextViews[1] = (TextView) dialog.findViewById(R.id.CPDminhaTime);
-			checkBoxes[1].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[1], 
-					1, checkBoxes[0], 15, 0, R.drawable.minha_small));
+			checkBoxes[1].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[1], 1, checkBoxes[1], 15, 0, R.drawable.minha_small));
+			
 			// TODO find out what's working, checkBoxes[0] or checkBoxes[2]
-			checkBoxes[2] = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
+			checkBoxes[2]    = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
 			timeTextViews[2] = (TextView) dialog.findViewById(R.id.CPDarvitTime);
-			checkBoxes[2].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[2], 
-					2, checkBoxes[0], 19, 0, R.drawable.arvit_small));
+			checkBoxes[2].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[2], 2, checkBoxes[2], 19, 0, R.drawable.arvit_small));           ////
 	        
+			
 	    
-			createButton.setOnClickListener(new OnClickListener() {
-
-				public void onClick(View view) {
-					if(!prays[0] && !prays[1] && !prays[2]){
-						createAlertDialog("You must choose at least one pray", activity, "Cancel");
-					}
-					else{
-						final Date finalstartDate = new Date(startDate.get(Calendar.YEAR)-1900,startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
-						final Date finalendDate = new Date(endDate.get(Calendar.YEAR)-1900,endDate.get(Calendar.MONTH),endDate.get(Calendar.DAY_OF_MONTH));
-						CreateNewPlace_YesClick(prays, user, activity, location, finalstartDate, finalendDate, prayTimes, editAddress.getText().toString());
-						dialog.dismiss();
-					}
-					
-
-				};
-
-			});
-
-			cancelButton.setOnClickListener(new OnClickListener() {
-				public void onClick(View view) {
+            createButton.setOnClickListener(new OnClickListener()
+            {
+                public void onClick(View view)
+                {
+                    if (!prays[0] && !prays[1] && !prays[2])
+                    {
+                        createAlertDialog("You must choose at least one pray", activity, "Cancel");
+                    }
+                    else
+                    {
+                        final Date finalstartDate = new Date(startDate.get(Calendar.YEAR) - 1900, startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
+                        final Date finalendDate   = new Date(endDate.get(Calendar.YEAR) - 1900, endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
+                        CreateNewPlace_YesClick(prays, user, activity, location, finalstartDate, finalendDate, prayTimes, editAddress.getText().toString());
+                        dialog.dismiss();
+                    }
+                };
+            });
+            
+            
+			cancelButton.setOnClickListener(new OnClickListener()
+			{
+				public void onClick(View view) 
+				{
 					dialog.dismiss();
 				};
 			});
+			
+			
 			dialog.show();
 		}
-	};
-
+	}
+	
+	
+	
 	public static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
 	{
 		try {
@@ -868,10 +911,12 @@ public class UIUtils {
 		} catch (NullPointerException e)	{
 			createUnknownUserDialog(activity);
 		}
-     }
+    }
 	
-	static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user,
-			FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes, String address) {
+	
+	
+	static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user, FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes, String address)
+	{
 		String placeName = (user.getFullName()==null || user.getFullName()=="" ? user.getName() : user.getFullName()) + "'s Place";
 		GeneralPlace newMinyan = new GeneralPlace(user, placeName, address, point, startDate,endDate);
 		Calendar c = new GregorianCalendar();
@@ -896,6 +941,8 @@ public class UIUtils {
 
 		
 	}
+	
+	
 	
 	public static void createUnknownUserDialog(Activity activity)	{
 		Builder builder = new AlertDialog.Builder(activity);
@@ -935,10 +982,19 @@ public class UIUtils {
 		return ((hour < 10 ? "0" : "") + hour + ":" + (minutes < 10 ? "0" : "") + minutes + " ");
 	} 
 	
-	public static int getPrayerIconID(String prayer){
-		if (prayer.equals("Shaharit")) return R.drawable.shaharit_small;
-		if (prayer.equals("Minha")) return R.drawable.minha_small;
-		if (prayer.equals("Arvit")) return R.drawable.arvit_small;
+	
+	
+	public static int getPrayerIconID(String prayer)
+	{
+		if (prayer.equals("Shaharit")) 
+		    return R.drawable.shaharit_small;
+		
+		if (prayer.equals("Minha")) 
+		    return R.drawable.minha_small;
+		
+		if (prayer.equals("Arvit")) 
+		    return R.drawable.arvit_small;
+		
 		return 0;
 	}
 	
@@ -956,7 +1012,10 @@ public class UIUtils {
 	}
 	
 	
-	
+	public static void setPadding(View view, int padding)
+	{
+	    view.setPadding(padding, padding, padding, padding);
+	}
 	
 	
 	

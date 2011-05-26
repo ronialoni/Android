@@ -28,15 +28,7 @@
             >
             
             <!--
-            <TextView 
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="10dip"
-                android:text = "salamtak!"
-                android:drawableLeft = "@drawable/icon"
-                />
-
+            I want this example!
             <TextView 
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -57,7 +49,7 @@
         android:layout_width     = "wrap_content"
         android:layout_height    = "wrap_content"
         android:layout_above     = "@id/scroller"
-        android:layout_marginTop = "+4dip"
+        android:layout_marginTop = "0dip"
         android:src              = "@drawable/arrow_up" 
         />
     
@@ -68,6 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/scroller"
         android:layout_marginTop="-4dip"
+        
         android:src="@drawable/arrow_down" 
         />
 

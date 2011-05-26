@@ -103,7 +103,7 @@ public class StatusBarOverlay extends Overlay {
 		
 		if (currentMessage.length() > 0)	{
 			pFront.getTextBounds(currentMessage, 0, currentMessage.length(), rect);
-			pBack.setColor(Color.LTGRAY);
+			pBack.setColor(0xaabbbbbb);
 			rect.offsetTo(xoffset/2, yoffset/2);
 			rect.inset(-4, -4);
 		}

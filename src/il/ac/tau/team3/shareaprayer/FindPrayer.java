@@ -432,10 +432,10 @@ extends MapActivity
 	{		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		//mapView = new SPMapView(this);
-		mapView = (SPMapView) findViewById(R.id.MAINview1);
+
+		mapView = (SPMapView) findViewById(R.id.view1);
 		editText = (EditText) findViewById(R.id.addressBar);
-		//UIUtils.activity = this;
+		
         mapView.registerTapListener(new IMapTapDetect()	
         {
 			public void onTouchEvent(SPGeoPoint sp) 
@@ -496,8 +496,7 @@ extends MapActivity
         });
         
         
-        //editText.
-        
+            
         
         /*
          * User overlay and icon:
@@ -639,7 +638,7 @@ extends MapActivity
 			}
         });
         
-//        facebookConnector = new FacebookConnector(this);                                                    ////
+       facebookConnector = new FacebookConnector(this);                                                    ////
 
 
         
@@ -681,7 +680,7 @@ extends MapActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (null != facebookConnector)	{
-//        	facebookConnector.autherizeCallback(requestCode, resultCode, data);                                                  ////
+        	facebookConnector.autherizeCallback(requestCode, resultCode, data);                                                  ////
         }
     }
 	
@@ -999,7 +998,7 @@ extends MapActivity
     {
         SPUtils.debugFuncStart("onPrepareOptionsMenu", menu);
         
-        this.menu.handleMenuButtonClick(this, R.id.MAINview1);
+        this.menu.handleMenuButtonClick(this, R.id.view1);
         //super.onPrepareOptionsMenu(menu);
         return true; 
     }

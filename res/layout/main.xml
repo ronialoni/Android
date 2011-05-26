@@ -23,7 +23,7 @@
 		/>	
     	
    	<il.ac.tau.team3.shareaprayer.SPMapView   	
-        android:id="@+id/MAINview1"
+        android:id="@+id/view1"
         android:layout_width="fill_parent"
         xmlns:android="http://schemas.android.com/apk/res/android"
     	android:layout_height="fill_parent"

@@ -34,7 +34,7 @@
 
 
 
-        android:text          = "Share-A-Prayer requires you to sync an account to your Android device.___more text will look like this!___and this is probably the 4th row."
+        android:text          = "Share-A-Prayer requires you to sync an account to your Android device. Please return after you synced your mail. Share-A-Prayer"
         android:drawableLeft  = "@drawable/icon"
         />
     

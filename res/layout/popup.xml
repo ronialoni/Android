@@ -17,7 +17,8 @@
         android:scrollbars="none"
         >
         
-        <LinearLayout
+        <!-- LinearLayout --> 
+        <TableLayout
             android:id="@+id/tracks"
             android:orientation="vertical"
             android:layout_width="wrap_content"
@@ -46,7 +47,7 @@
                 />
             -->
 
-        </LinearLayout>
+        </TableLayout>
        
        
     </ScrollView >
@@ -56,7 +57,7 @@
         android:layout_width     = "wrap_content"
         android:layout_height    = "wrap_content"
         android:layout_above     = "@id/scroller"
-        android:layout_marginTop = "-4dip"
+        android:layout_marginTop = "+4dip"
         android:src              = "@drawable/arrow_up" 
         />
     

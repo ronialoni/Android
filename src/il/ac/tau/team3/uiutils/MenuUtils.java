@@ -20,7 +20,7 @@ public class MenuUtils {
 	// this boolean indicates rather the user want to show max prayers (true) or min prayers (flase)
 	private static boolean showMax = true ;
 
-	public static boolean getShowMax() {
+	public static boolean showMax() {
 		return showMax;
 	}
 

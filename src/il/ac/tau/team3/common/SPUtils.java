@@ -6,7 +6,9 @@ package il.ac.tau.team3.common;
 import org.mapsforge.android.maps.GeoPoint;
 
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 
 
@@ -53,6 +55,16 @@ public class SPUtils
     
     
     public static final boolean DEBUGGING = true; 
+    
+    
+    public static void debugToast(String message, Context context)
+    {
+        if (DEBUGGING)
+        {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        }
+    }
+    
     
     
     

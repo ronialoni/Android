@@ -23,10 +23,16 @@ import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import il.ac.tau.team3.spcomm.ICommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
-import il.ac.tau.team3.uiutils.ESPMenuItem;
 import il.ac.tau.team3.uiutils.ISPMenuItem;
+import il.ac.tau.team3.uiutils.MenuUtils;
 import il.ac.tau.team3.uiutils.SPMenu;
+import il.ac.tau.team3.uiutils.ISPMenuItem.ISPSubMenuItem;
 import il.ac.tau.team3.uiutils.SPMenu.ISPOnMenuItemSelectedListener;
+import il.ac.tau.team3.uiutils.SPMenus;
+import il.ac.tau.team3.uiutils.SPMenus.ESPMenuItem;
+import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuFind;
+import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuMap;
+import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuPeople;
 import il.ac.tau.team3.uiutils.UIUtils;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -40,17 +46,27 @@ import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,11 +80,14 @@ import org.mapsforge.android.maps.GeoPoint;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
 
@@ -451,11 +470,6 @@ extends MapActivity
 			{
 				NewPlaceCall(sp);
 			}
-
-			public void onMoveEvent(SPGeoPoint sp) {
-				// TODO Auto-generated method stub
-				
-			}
         });
         
         
@@ -506,12 +520,13 @@ extends MapActivity
 				}
 				return false;
 			}
-
-			
         	
         });
         
-      
+        
+        //editText.
+        
+        
         /*
          * User overlay and icon:
          */ 
@@ -627,8 +642,7 @@ extends MapActivity
         	
         	class TimerRefreshTask 
             extends TimerTask
-            {
-                
+            {                
                 @Override
                 public void run()
                 {
@@ -636,13 +650,14 @@ extends MapActivity
                     {
                         refreshTask.notify();
                     }
-                }
-                
+                }                
             };
             
             private Timer     t  = new Timer();                    
             private TimerTask ts = new TimerRefreshTask();
-
+            
+            
+            @Override
 			public void onMoveEvent(SPGeoPoint sp) {
 				// TODO Auto-generated method stub
 				ts.cancel();
@@ -650,15 +665,9 @@ extends MapActivity
                 ts = new TimerRefreshTask();
                 t.schedule(ts, 1000);
 			}
-
-			public void onTouchEvent(SPGeoPoint sp) {
-				// TODO Auto-generated method stub
-				
-			}
-        	
         });
         
-        facebookConnector = new FacebookConnector(this);
+//        facebookConnector = new FacebookConnector(this);                                                    ////
 
 
         
@@ -672,18 +681,16 @@ extends MapActivity
 
         
 
-        //FIXME @Matan: IMapTapDetect doesn't seem to invoke ANYTHING when the there is NO MOVEMENT.
-        
-        /**
-         * TODO Decide where this should be:  
-         *          1) return correct booleans, thus onTouchEvent(MotionEvent) will handle.
-         *          2) built in Matan's design.
-         *          3) in initializeMenu().  - because we KNOW it will be called once, one first menu show.
-         *          4) here.  - because No.3 is not a good reason.
-         *          5) maybe it belongs earlier in onCreate... don't know!   
+        /*
+         * Registering one listener for passing all events to activity with out making it consume them.
          */
         mapView.registerTapListener(new IMapTapDetect()
         {
+            /**
+             * Delegating to the original function for comfort.
+             * Note: The method is now final, because it's dangerous!.
+             *       This way if we fix this bypasses, all the code will be in the appropriate place.
+             */
             @Override
             public void onAnyEvent(MotionEvent event)
             {
@@ -702,7 +709,7 @@ extends MapActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (null != facebookConnector)	{
-        	facebookConnector.autherizeCallback(requestCode, resultCode, data);
+//        	facebookConnector.autherizeCallback(requestCode, resultCode, data);                                                  ////
         }
     }
 	
@@ -792,74 +799,191 @@ extends MapActivity
      *            Dew to @imp restrains.
      * @imp   Lazy-initialization done via initializeMenu().
      */
-    private SPMenu<ESPMenuItem> menu = null;
+    private SPMenu menu = null;
     
     
     /**
      * @imp Lazy-initialization.
      */
     private void initializeMenu()
-    {        
+    {   
+        SPMenus.debug("FindPrayer.initializeMenu()...");
+        
         if (null == this.menu)
         {
-            this.menu = new SPMenu<ESPMenuItem>(ESPMenuItem.values(), new ISPOnMenuItemSelectedListener<ESPMenuItem>()
+            this.menu = new SPMenu(ESPMenuItem.values(), new ISPOnMenuItemSelectedListener()
             {
-                public void onMenuItemSelected(ESPMenuItem item, View view)
+                public void onMenuItemSelected(ISPMenuItem item, View view)
                 {
-                    switch (item)
-                    {         
-                        case FIND:
-
-                            // finding me.
-                            FindPrayer.this.centerMap();
-                            FindPrayer.this.menu.hide();
-                            break;
-                        
-                            
-                        case MAP_OPTIONS:
-                            
-                            // Taking the closest (for now) from the map's overlay.
-                            ArrayList<OverlayItem> listOfOneItemIfAnyOnMap = FindPrayer.this.closestPlaceOverlay.getOverlayItems();
-                            if (null != listOfOneItemIfAnyOnMap && listOfOneItemIfAnyOnMap.size() > 0)
-                            {
-                                FindPrayer.this.mapView.getController().setCenter(listOfOneItemIfAnyOnMap.get(0).getPoint());
-                            }
-                            else
-                            {
-                                Toast.makeText(FindPrayer.this, "Sorry, there seem to be no plces open for prayers.\nPlese consider creating one.", Toast.LENGTH_LONG).show();
-                            }
-                            
-                            FindPrayer.this.menu.hide();
-                            break;
-                            
-                            
-                        case PROFILE:
-                            
-                            FindPrayer.this.menu.hide();
-                            ILocationSvc service = null;
-                            try
-                            {
-                                service = svcGetter.getService(); 
-                            }
-                            catch (ServiceNotConnected e)
-                            {
-                                Log.e("ShareAPrayer", "Service is not connected", e);
-                            } 
-                                
-                            service.setNames(UIUtils.HandleFirstTimeDialog(FindPrayer.this.getAccounts(), FindPrayer.this));
-
-                            break;
-                            
-                            
-                        case EXIT:
-                            
-                            FindPrayer.this.menu.hide();
-                            FindPrayer.this.finish();   //FIXME Learn to end the activity !!!
-                            break;
-                        
+                    
+                    final int id = item.id();
+                    
+                    SPUtils.debugToast("Item No. " + id, FindPrayer.this);
+                    
+                    
+                    if (id == SPMenus.ESPSubMenuFind.ME.id())
+                    {
+                        FindPrayer.this.centerMap();
+                        FindPrayer.this.menu.hide();
+                    }   
+                    
+                    
+                    else if (id == ESPSubMenuFind.CLOSEST.id())
+                    {        
+                        // Taking the closest (for now) from the map's overlay.
+                        ArrayList<OverlayItem> listOfOneItemIfAnyOnMap = FindPrayer.this.closestPlaceOverlay.getOverlayItems();
+                        if (null != listOfOneItemIfAnyOnMap && listOfOneItemIfAnyOnMap.size() > 0)
+                        {
+                            FindPrayer.this.mapView.getController().setCenter(listOfOneItemIfAnyOnMap.get(0).getPoint());
+                        }
+                        else
+                        {
+                            Toast.makeText(FindPrayer.this, "Sorry, there seem to be no plces open for prayers.\nPlese consider creating one.", Toast.LENGTH_LONG).show();
+                        }
+                        FindPrayer.this.menu.hide();
+                    }   
+                    
+                    
+                    else if (id == SPMenus.ESPSubMenuFind.PLACES.id())
+                    {
+                        SPUtils.debugToast("Sorry, no places list yet.", FindPrayer.this);
+                        FindPrayer.this.menu.hide();
                     }
                     
+                    
+                    else if (id == SPMenus.ESPSubMenuFind.ADDRESS.id())
+                    {
+                        SPUtils.debugToast("The SearchBar is now: " + "Focused. \n(We can make it pop & hide?).", FindPrayer.this);
+                        
+                        //FindPrayer.this.menu.hide();  
+                        FindPrayer.this.menu.onMenuDismiss(new OnDismissListener()
+                        {
+                            public void onDismiss()
+                            {
+                                InputMethodManager keyboardMenager = (InputMethodManager) FindPrayer.this.getSystemService(INPUT_METHOD_SERVICE);
+                                keyboardMenager.showSoftInput(FindPrayer.this.editText, InputMethodManager.SHOW_FORCED /* | InputMethodManager.SHOW_IMPLICIT */);
+                            }
+                        });
+                        
+                        // Apparently, only the sub gets closed...
+                        FindPrayer.this.menu.hide(); // TODO this is BAD, make separate methods in SPMenu.
+                    }
+                    
+                    
+                    
+                    
+                    
+                    else if (id == ESPSubMenuPeople.MY_POFILE.id())
+                    {       
+                        FindPrayer.this.menu.hide(); // TODO this is BAD, make separate methods in SPMenu.
+                        ILocationSvc service = null;
+                        try
+                        {
+                            service = svcGetter.getService(); 
+                        }
+                        catch (ServiceNotConnected e)
+                        {
+                            Log.e("ShareAPrayer", "Service is not connected", e);
+                        } 
+                        
+                        FindPrayer.this.menu.hide();
+                        service.setNames(UIUtils.HandleFirstTimeDialog(FindPrayer.this.getAccounts(), FindPrayer.this));
+                    }                            
+                    
+                    
+                    
+                    else if (id == ESPSubMenuPeople.SHARE.id())
+                    {
+                       TextView v = new TextView(FindPrayer.this);
+                       v.setGravity(Gravity.CENTER);
+                       v.setPadding(2, 2, 2, 2);
+                       v.setText("You're status\nhas been shared\non Facebook");
+                       v.setTextColor(Color.LTGRAY);
+                       v.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+                       v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_item_facebook_bubble_alt, 0, 0, 0);
+                       v.setBackgroundColor(Color.GRAY & Color.BLUE);
+                       
+                       Toast t = new Toast(FindPrayer.this);
+                       t.setView(v);
+                       t.setDuration(Toast.LENGTH_LONG);                       
+                       t.setGravity(Gravity.CENTER, 0, 0);
+                       t.show();
+                       FindPrayer.this.menu.hide();
+                    }
+                    
+                    
+                    
+                    else if (id == ESPSubMenuMap.MAX_MIN.id())
+                    {
+                        TextView v = new TextView(FindPrayer.this);
+                        v.setGravity(Gravity.CENTER);
+                        v.setPadding(2, 2, 2, 2);
+                        v.setText("Showing the: " + (MenuUtils.showMax() ? "Max" : "Min") + "\n" 
+                                                  + "number of registerd prayers.\n" 
+                                                  + "(Click again to change.)");
+                        v.setTextColor(Color.DKGRAY);
+                        v.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+                        v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_item_maxmin_calc, 0, 0, 0);
+                        v.setBackgroundColor(Color.LTGRAY);
+                        
+                        Toast t = new Toast(FindPrayer.this);
+                        t.setView(v);
+                        t.setDuration(Toast.LENGTH_LONG);                       
+                        t.setGravity(Gravity.CENTER, 0, 0);
+                        
+                        MenuUtils.setShowMax(MenuUtils.showMax());
+                        t.show();
+                        FindPrayer.this.menu.hide();
+                    }
+                    
+                    
+                    else if (id == ESPSubMenuMap.COLORS.id())
+                    {
+                        // TODO
+                        FindPrayer.this.menu.hide();
+                    }
+                    
+                    
+
+                    else if (id == ESPSubMenuMap.NUNBERS.id())
+                    {
+                        // TODO
+                        FindPrayer.this.menu.hide();
+                    }
+                    
+
+                    
+                    else if (id == ESPMenuItem.EXIT.id())
+                    {
+                        FindPrayer.this.menu.onMenuDismiss(new OnDismissListener()
+                        {                            
+                            public void onDismiss()
+                            {
+                                FindPrayer.this.finish(); //FIXME Learn to end the activity !!!
+                            }
+                        });                        
+                        
+                        //FindPrayer.this.menu.hide();    // dismissed by: onMenuDismiss().
+                        //return;
+                    }   
+                        
+                    
+                    else
+                    {
+                        Log.w("SP Menu Listener", "got an unhandled item id = " + id);
+                        if (item.hasSubMenu())
+                        {
+                            Log.w("SP Menu Listener", "got an unhandled item id  - Due to sub menu.");
+                        }
+                        else
+                        {
+                            Log.w("SP Menu Listener", "got an unhandled item id  - No sub menu... Hidding menu!!!");
+                            FindPrayer.this.menu.hide();
+                        }
+                    }              
+                    
                     //XXX Maybe hide the menu smarter.
+                    //FindPrayer.this.menu.hide();
                 }
             });
         }
@@ -873,7 +997,6 @@ extends MapActivity
      * @invokes  onPrepareOptionsMenu().
      * @param    Menu menu: 
      *               Ignored. 
-     *               TODO Try to make system release it.
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -891,8 +1014,7 @@ extends MapActivity
      * @callBack On menu button push.
      * @pre      onCreateOptionsMenu(menu).
      * @param    Menu menu: 
-     *               Ignored. 
-     *               TODO Try to make system release it.
+     *                Ignored. 
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
@@ -906,8 +1028,28 @@ extends MapActivity
     
     
     
+    /**
+     * @final because of menu showing.
+     * @pre   this.mapView.onTouchEvent()
+     */
+    @Override
+    public final boolean onTouchEvent(MotionEvent event)
+    {
+        SPUtils.debugFuncStart("***GOT IT*** FindPrayer.onTouchEvent", event);
+        
+        /* Handle menu */
+        if (SPMenu.isShowing(this.menu))
+        {
+            //this.menu.onOutsideTouch(this.mapView, event);  - canceled.
+            this.menu.hide();                
+        }
+        
+        /*return*/// super.onTouchEvent(event);
+        return true;
+    } 
     
-     
+    
+    
     
     @Override   
     public void onBackPressed()
@@ -916,7 +1058,10 @@ extends MapActivity
         {
             //@imp I can actually just hide, but I want to show the pattern.
             this.menu.hide();
+        
+        
         }
+        
         
         else
         {
@@ -947,23 +1092,7 @@ extends MapActivity
 //    }
     
     
-   @Override
-   public boolean onTouchEvent(MotionEvent event)
-   {
-       SPUtils.debugFuncStart("**GOT IT** onTouchEvent", event);
-       
-       /* Handle menu */
-       if (SPMenu.isShowing(FindPrayer.this.menu))
-       {
-           FindPrayer.this.menu.hide();
-       }
-       
-       
-       
-       
-       /*return*/// super.onTouchEvent(event);
-       return true;
-   }  
+    
    
     
 ////  Unused:

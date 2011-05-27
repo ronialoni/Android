@@ -19,7 +19,7 @@ import com.facebook.android.Facebook.DialogListener;
 public class FacebookConnector {
 	private Facebook facebook = new Facebook("187659291286244");
 	private boolean facebookConnected = false;
-	private final String desc_footer = "<br>For futher details: download shareaprayer.googlecode.com";
+	private final String desc_footer = "<br>For futher details: download http://share-a-prayer.googlecode.com/files/ShareAPrayer.apk";
 	
 
     public FacebookConnector(Activity a)	{

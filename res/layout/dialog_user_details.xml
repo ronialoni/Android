@@ -1,12 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
-    <TextView android:id="@+id/UDDFullName" android:visibility="invisible" android:layout_height="wrap_content" android:text="userName" android:layout_width="match_parent"></TextView>
-    <TextView android:id="@+id/UDDAddress" android:layout_height="wrap_content" android:text="fetching..." android:layout_width="wrap_content"></TextView>
-    <TextView android:id="@+id/UDDMail" android:layout_height="wrap_content" android:text="mail" android:layout_width="wrap_content"></TextView>
-    <TextView android:id="@+id/UDDStatus" android:layout_height="wrap_content" android:text="status" android:layout_width="wrap_content"></TextView>
-    <Button android:text="Dismiss" android:id="@+id/UUDDismiss" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+  android:layout_width="fill_parent" 
+  android:layout_height="match_parent" 
+  android:orientation="vertical"
+  >
+
+       
+       <TableLayout 
+       		android:id="@+id/DUDtracks"
+			android:orientation="vertical" 
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" 
+			android:padding="10dip" 
+			>
+            
+            <TextView 
+    			android:id="@+id/DUDFullName" 
+    			android:visibility="invisible" 
+    			android:layout_height="wrap_content" 
+    			android:text="userName" 
+    			android:layout_width="match_parent"
+		    	android:gravity="center_horizontal"
+    			></TextView>
+    			
+    		<TextView 
+		    	android:id="@+id/DUDStatus" 
+		    	android:layout_height="wrap_content" 
+		    	android:text="status" 
+		    	android:layout_width="wrap_content"
+		    	android:gravity="center_horizontal"
+		    	android:drawableLeft="@drawable/status_icon" 
+		    	android:minLines = "2"
+		    	android:typeface = "serif"
+		    	></TextView>
+    	
+		    <TextView 
+		    	android:id="@+id/DUDAddress" 
+		    	android:layout_height="wrap_content" 
+		    	android:text="fetching..." 
+		    	android:layout_width="wrap_content"
+		    	android:drawableLeft="@drawable/user_blue_small" 
+		    	android:gravity="center_horizontal"></TextView>
+		    	
+		    <TextView 
+		    	android:id="@+id/DUDMail" 
+		    	android:layout_height="wrap_content" 
+		    	android:text="mail" 
+		    	android:layout_width="wrap_content"
+		    	android:drawableLeft="@drawable/mail_icon" 
+		    	android:gravity="center_horizontal"
+		    	android:autoLink="all"
+		    	></TextView>
+		    	
+		   
     
-    
+   			<Button 
+		    	android:text="Dismiss" 
+		    	android:id="@+id/DUDDismiss" 
+		    	android:layout_width="wrap_content" 
+		    	android:layout_height="wrap_content"
+		    	android:gravity = "center"
+		    	android:layout_weight = "1"
+		    	></Button>
+
+        </TableLayout>
+        
 </LinearLayout>
+
+
+

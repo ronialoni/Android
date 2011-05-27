@@ -883,12 +883,10 @@ public class UIUtils {
 			timeTextViews[0] = (TextView) dialog.findViewById(R.id.CPDshahritTime);
 			checkBoxes[0].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[0], 0, checkBoxes[0], 7, 0, R.drawable.shaharit_small));
 			
-			// TODO find out what's working, checkBoxes[0] or checkBoxes[1]
 			checkBoxes[1]    = (CheckBox) dialog.findViewById(R.id.CPDcheckBox2);
 			timeTextViews[1] = (TextView) dialog.findViewById(R.id.CPDminhaTime);
 			checkBoxes[1].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[1], 1, checkBoxes[1], 15, 0, R.drawable.minha_small));
 			
-			// TODO find out what's working, checkBoxes[0] or checkBoxes[2]
 			checkBoxes[2]    = (CheckBox) dialog.findViewById(R.id.CPDcheckBox3);
 			timeTextViews[2] = (TextView) dialog.findViewById(R.id.CPDarvitTime);
 			checkBoxes[2].setOnCheckedChangeListener(new CheckBoxListener(timeTextViews[2], 2, checkBoxes[2], 19, 0, R.drawable.arvit_small));           ////

@@ -830,6 +830,12 @@ extends MapActivity
                     {
                         SPUtils.debugToast("The SearchBar is now: " + "Focused. \n(We can make it pop & hide?).", FindPrayer.this);
                         
+                        // Displaying the search bar
+                        
+//                        EditText edittext = (EditText) FindPrayer.this.findViewById(R.id.addressBar);
+//                        edittext.setVisibility(View.VISIBLE);
+//                        edittext.setFocusable(true);
+                        
                         //FindPrayer.this.menu.hide();  
                         FindPrayer.this.menu.onMenuDismiss(new OnDismissListener()
                         {
@@ -925,7 +931,7 @@ extends MapActivity
                     
                     
 
-                    else if (id == ESPSubMenuMap.NUNBERS.id())
+                    else if (id == ESPSubMenuMap.NUMBERS.id())
                     {
                         // FIXME & TODO
                         FindPrayer.this.menu.hide();

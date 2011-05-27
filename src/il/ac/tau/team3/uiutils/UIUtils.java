@@ -42,8 +42,10 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.provider.Settings;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -133,7 +135,7 @@ public class UIUtils {
 		  dialog.setContentView(R.layout.dialog_startup_async);
           dialog.setTitle(_sWelcomeMsg);
           Button exitButton = (Button) dialog.findViewById(R.id.dsa_button_exit);
-         // Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
+          Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
           
           exitButton.setOnClickListener(new OnClickListener()
           {                
@@ -144,7 +146,15 @@ public class UIUtils {
               }
           });
           
-
+          syncButton.setOnClickListener(new OnClickListener()
+          {                
+              public void onClick(View v)
+              {
+            	  activity.startActivity(new Intent(Settings.ACTION_SYNC_SETTINGS));
+            	  dialog.dismiss();
+                  activity.finish();
+              }
+          });
           dialog.show();
 		
 	}

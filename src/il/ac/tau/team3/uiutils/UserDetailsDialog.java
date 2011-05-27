@@ -3,13 +3,17 @@ package il.ac.tau.team3.uiutils;
 
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -26,19 +30,19 @@ public class UserDetailsDialog {
 	private GeneralUser user;
 	private FindPrayer activity;
 	private Dialog dialog;
-	//private TextView user_full_name;
+	private TextView user_full_name;
 	private TextView user_mail;
 	private TextView user_address;
 	private TextView user_status;
 	private Button btn_dismiss;
-	private PopupWindow window;
+	//private PopupWindow window;
 	
 	public UserDetailsDialog(GeneralUser user, final FindPrayer activity)	
 	{
 		this.user = user;
 		this.activity = activity;
 		
-		dialog = new Dialog(this.activity);
+		dialog = new NoTitleDialog(this.activity);
         dialog.setContentView(R.layout.dialog_user_details);
         
         dialog.setTitle(this.user.getFullName());
@@ -46,29 +50,54 @@ public class UserDetailsDialog {
         
         dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
         
+        user_full_name = (TextView)dialog.findViewById(R.id.DUDFullName);
         user_mail = (TextView)dialog.findViewById(R.id.DUDMail);
         user_address = (TextView)dialog.findViewById(R.id.DUDAddress);
         user_status = (TextView)dialog.findViewById(R.id.DUDStatus);
-        
         btn_dismiss = (Button)dialog.findViewById(R.id.DUDClose);
         
+        // Title
+        
+        user_full_name.setText(this.user.getFullName());
+        user_full_name.setTextColor(Color.WHITE);
+        user_full_name.setTextSize(30);
+        
+        // Status
+        user_status.setText("\"" + this.user.getStatus() + "\"");
+        user_status.setTextColor(Color.WHITE);
+        user_status.setTextSize(20);
+        
+		// Address
+        
+        
+        // Mail
         user_mail.setText(this.user.getName());
-        user_status.setText(this.user.getStatus());
-		
         user_mail.setClickable(true);
         user_mail.setLinkTextColor(Color.WHITE);
         user_mail.setOnClickListener(new OnClickListener()
         {                
             public void onClick(View v)
             {
-            	Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            	emailIntent.setType("plain/text");
-            	activity.startActivity(Intent.createChooser(emailIntent, "Send your email in:"));
+            	try{
+            		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            	   	emailIntent.setType("plain/text");
+	            	//activity.startActivity(Intent.createChooser(emailIntent, "Send your email in:"));
+	            	activity.startActivity(emailIntent);
+            	}
+            	catch(UnsupportedOperationException e){
+            		e.printStackTrace();
+            	}
+            	catch(NullPointerException e){
+            		e.printStackTrace();
+            	}
+            	catch(ActivityNotFoundException e){
+            		e.printStackTrace();
+            	}
             }
         });
         
         
-		
+		// POPUP TRY
 //		RelativeLayout userPopRoot = (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.dialog_user_details, null);
 //                
 //		window = new PopupWindow(userPopRoot, LayoutParams.WRAP_CONTENT,  LayoutParams.WRAP_CONTENT, false);       

@@ -302,7 +302,7 @@ public final class SPMenus
     implements ISPSubMenuItem
     {
                 
-        NUNBERS (0, R.drawable.menu_item_numbers_blcakboard),
+        NUMBERS (0, R.drawable.menu_item_numbers_blcakboard),
         MAX_MIN (1, R.drawable.menu_item_maxmin_calc),
         COLORS  (2, R.drawable.menu_item_colors),
         

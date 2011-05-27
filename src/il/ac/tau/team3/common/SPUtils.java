@@ -54,14 +54,15 @@ public class SPUtils
     
     
     
-    public static final boolean DEBUGGING = true;
+    public static final boolean DEBUGGING = false; 
+ 
     public static final boolean TOASTING  = false;
     
     
     
     public static void debugToast(String message, Context context)
     {
-        if (DEBUGGING && TOASTING)
+        if (DEBUGGING)
         {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         }

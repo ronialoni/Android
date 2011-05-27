@@ -50,7 +50,7 @@ public class UserDetailsDialog {
         user_address = (TextView)dialog.findViewById(R.id.DUDAddress);
         user_status = (TextView)dialog.findViewById(R.id.DUDStatus);
         
-        btn_dismiss = (Button)dialog.findViewById(R.id.DUDDismiss);
+        btn_dismiss = (Button)dialog.findViewById(R.id.DUDClose);
         
         user_mail.setText(this.user.getName());
         user_status.setText(this.user.getStatus());

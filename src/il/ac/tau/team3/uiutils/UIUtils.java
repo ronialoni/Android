@@ -255,10 +255,19 @@ public class UIUtils {
 								.getActivity()));
 
 		FacebookConnector fc = placeOverlay.getActivity().getFacebookConnector();
-		fc.publishOnFacebook("Just signed to " + place.getName() + " for " + 
-				(praysWishes[0] ? "Shaharit" : "" ) + (praysWishes[0]&&(praysWishes[1] || praysWishes[2]) ? " and ": "")+ (praysWishes[1] ? "Minha" : "") + (praysWishes[1] && praysWishes[2] ? " and ": "") +  
-				(praysWishes[2] ? "Arvit" : "") + "." , 10 - getMin(place) + " are still missing for a minyan. <br>" + "Sign as well and help to fill a minyan!");
+		fc.publishOnFacebook(formatFacebookHeadear_Register(place,praysWishes) ,
+				formatFacebookDesc_Register(place));
+	}
 
+	
+	static String formatFacebookDesc_Register(GeneralPlace place){
+		return 10 - getMin(place) + " are still missing for a minyan. <br>" + "Sign as well and help to fill a minyan!";
+	}
+	
+	static String formatFacebookHeadear_Register(GeneralPlace place, boolean praysWishes[]){
+		return "Just signed to " + place.getName() + " for " + 
+		(praysWishes[0] ? "Shaharit" : "" ) + (praysWishes[0]&&(praysWishes[1] || praysWishes[2]) ? " and ": "")+ (praysWishes[1] ? "Minha" : "") + (praysWishes[1] && praysWishes[2] ? " and ": "") +  
+		(praysWishes[2] ? "Arvit" : "") + ".";
 	}
 	
 	static int getMin(GeneralPlace place){
@@ -960,14 +969,20 @@ public class UIUtils {
 				new UpdateUI<Long>(activity));
 		
 		FacebookConnector fc = activity.getFacebookConnector();
-		fc.publishOnFacebook("Just create a new Minyan place!" + " (" + newMinyan.getAddress()+ ")" , "Come and sign to " + placeName + " for " + 
-				(prays[0] ? "Shaharit" : "" ) + (prays[0]&&(prays[1] || prays[2]) ? " or ": "")+ (prays[1] ? "Minha" : "") + (prays[1] && prays[2] ? " or ": "") +  
-				(prays[2] ? "Arvit" : "") + ".");
+		fc.publishOnFacebook(formatFacebookHeader_NewPlace(newMinyan.getAddress()) , formatFacebookDesc_NewPlace(placeName,prays));
 		
 		
 	}
 	
+	static String formatFacebookHeader_NewPlace(String address){
+		return "Just create a new Minyan place!" + (null == address? "" : " (" + address + ")");
+	}
 	
+	static String formatFacebookDesc_NewPlace(String placeName, boolean prays[]){
+		return "Come and sign to " + placeName + " for " + 
+		(prays[0] ? "Shaharit" : "" ) + (prays[0]&&(prays[1] || prays[2]) ? " or ": "")+ (prays[1] ? "Minha" : "") + (prays[1] && prays[2] ? " or ": "") +  
+		(prays[2] ? "Arvit" : "") + ".";
+	}
 	
 	public static void createUnknownUserDialog(Activity activity)	{
 		Builder builder = new AlertDialog.Builder(activity);

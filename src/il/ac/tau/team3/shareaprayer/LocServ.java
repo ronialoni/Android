@@ -93,7 +93,7 @@ extends Service
 
 		public void setNames(final String[] names) {
 
-			final GeneralUser tempuser = new GeneralUser(names[2], curr_loc == null ? new SPGeoPoint() : curr_loc, "my status" , names[0], names[1]);
+			final GeneralUser tempuser = new GeneralUser(names[2], curr_loc == null ? new SPGeoPoint() : curr_loc, "" , names[0], names[1]);
         	
 			comm.updateUserByName(tempuser, new ICommHandler<Long>() {
 

@@ -67,7 +67,7 @@ import android.widget.Toast;
 
 
 public class FindPrayer 
-extends MapActivity 
+extends MapActivity
 {
 	public final static int SHAHARIT = 4;
 	public final static int MINHA = 2;
@@ -638,7 +638,7 @@ extends MapActivity
 			}
         });
         
-       facebookConnector = new FacebookConnector(this);                                                    ////
+       facebookConnector = new FacebookConnector(this);
 
 
         
@@ -675,6 +675,7 @@ extends MapActivity
 	}//@END: onCreate(..)
 	
 	
+	
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -684,14 +685,8 @@ extends MapActivity
         }
     }
 	
-    /**
-     * @menu
-     * 
-     * 
-     */
-    
-    
-    
+	
+	
     
     
     private void centerMap()
@@ -733,15 +728,6 @@ extends MapActivity
         }
         
         this.mapView.getController().setCenter(SPUtils.toGeoPoint(center));
-        
-// I will enable if it happens.
-//
-//        catch (NullPointerException npe)
-//        {
-//            // XXX  (_FIXME_)
-//            SPUtils.error("NullPointerException - Should have been WRAPED !!!", npe);
-//            npe.printStackTrace();
-//        } 
     }
     
     
@@ -947,14 +933,13 @@ extends MapActivity
                     
                     else
                     {
-                        Log.w("SP Menu Listener", "got an unhandled item id = " + id);
                         if (item.hasSubMenu())
                         {
-                            Log.w("SP Menu Listener", "got an unhandled item id  - Due to sub menu.");
+                            Log.w("SP Menu Listener", "got an unhandled item id = " + id + "- Due to SUB MENU.");
                         }
                         else
                         {
-                            Log.w("SP Menu Listener", "got an unhandled item id  - No sub menu... Hidding menu!!!");
+                            Log.w("SP Menu Listener", "got an unhandled item id = " + id + "- No sub menu... Hidding menu!!!");
                             FindPrayer.this.menu.hide();
                         }
                     }              

@@ -21,7 +21,8 @@ public class FacebookConnector {
 	private boolean facebookConnected = false;
 	private final String desc_footer = "<br>For futher details: download shareaprayer.googlecode.com";
 	
-	public FacebookConnector(Activity a)	{
+
+    public FacebookConnector(Activity a)	{
         facebook.authorize(a, new String[]{"publish_stream"/*,"read_stream","offline_access"*/},-1, new DialogListener() {
         	
 			public void onCancel() {
@@ -51,6 +52,8 @@ public class FacebookConnector {
 
         });
 	}
+
+	
 	
 	public void publishOnFacebook(final String headline, final String description)	{
 		if (!facebookConnected)	{
@@ -101,9 +104,10 @@ public class FacebookConnector {
 		}, null);
 	};
 	
-	public void autherizeCallback(int requestCode, int resultCode, Intent data)	{
+    
+
+    public void autherizeCallback(int requestCode, int resultCode, Intent data)	{
 		facebook.authorizeCallback(requestCode, resultCode, data);
-		
 	}
 	
 	

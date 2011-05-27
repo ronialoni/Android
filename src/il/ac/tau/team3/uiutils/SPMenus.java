@@ -2,7 +2,6 @@ package il.ac.tau.team3.uiutils;
 
 
 
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -28,6 +27,11 @@ public final class SPMenus
         
     public static void debug(ISPMenuItem item)
     {
+        if (! SPUtils.DEBUGGING)
+        {
+            return;
+        }
+        
         SPUtils.debug(item.title());
         SPUtils.debug("    index = " + item.index());
         SPUtils.debug("    id    = " + item.id());
@@ -46,6 +50,7 @@ public final class SPMenus
         {
             debug(item);
         }
+        SPUtils.debug("");
         
         SPUtils.debug("ESPSubMenuFind... (in: " + where + ")");
         for (ESPSubMenuFind item : ESPSubMenuFind.values())

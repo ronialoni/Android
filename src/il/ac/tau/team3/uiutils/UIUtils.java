@@ -37,6 +37,7 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.TimePickerDialog;
 import android.app.AlertDialog.Builder;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -537,10 +538,14 @@ public class UIUtils {
 		alert.show();
 	}
 	
+
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+    //// CreatePlaceDialog ////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
-	
-	static class CreatePlaceDialog	
+	private static class CreatePlaceDialog	
 	{		
 		private Dialog dialog;
 		private EditText editAddress;
@@ -560,6 +565,9 @@ public class UIUtils {
         private Button cancelButton;
         private SPGeoPoint location;
         private String lastEditText ="";
+        
+        
+        
         
         private class DatePickerClickListener implements OnClickListener	
         {        	
@@ -593,59 +601,73 @@ public class UIUtils {
         }
         
 
-        class PrayTimePickDialog extends TimePickerDialog
+        
+        
+        private class SPOnTimeSetListener 
+        implements OnTimeSetListener
         {
+            private int                  prayIndex;
+            private PrayTimePickerDialog oof;
             
-            private CheckBox checkBox;
-            
-            private int      prayIndex;
-            
-            public PrayTimePickDialog(final TextView a_timeStr, int defHour,
-                    int defMin, CheckBox a_checkBox, final int a_prayIndex,
-                    int a_resIcon)
+            private SPOnTimeSetListener(/*PrayTimePickerDialog oof,*/ int prayIndex)
             {
-                super(activity, new OnTimeSetListener()
-                {
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-                    {
-                        SPUtils.debugFuncStart("timePickerDialog.onTimeSet", view, hourOfDay, minute);
-                        CreatePlaceDialog.this.prays[a_prayIndex] = true;
-                        prayTimes[a_prayIndex].set(2000, 1, 1, hourOfDay, minute, 0);
-                        Date time = new Date(0, 0, 0, hourOfDay, minute);
-                        a_timeStr.setText(printTimeFromDate(time));
-                        
-                    }
-                    
-                }, defHour, defMin, true);
+                this.prayIndex = prayIndex;
+                //this.oof       = oof;
+            }
+            
+            
+            //@Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute)
+            {
+                SPUtils.debugFuncStart("timePickerDialog.onTimeSet", view, hourOfDay, minute);
+                CreatePlaceDialog.this.prays[this.prayIndex] = true;
+                prayTimes[this.prayIndex].set(2000, 1, 1, hourOfDay, minute, 0);
+                Date time = new Date(0, 0, 0, hourOfDay, minute);
+                CreatePlaceDialog.this.timeTextViews[this.prayIndex].setText(printTimeFromDate(time));
+            }                
+        }
+        
+        
+        private class PrayTimePickerDialog 
+        extends TimePickerDialog
+        {            
+            private CheckBox checkBox;
+            private int      prayIndex;
+
+            
+            private PrayTimePickerDialog(int defHour, int defMin, 
+                                       CheckBox a_checkBox, final int a_prayIndex, int a_resIcon)
+            {
+                super(activity, new SPOnTimeSetListener(a_prayIndex) , defHour, defMin, true);
                 
                 this.setIcon(a_resIcon);
                 this.setInverseBackgroundForced(true);
-                this.setCancelable(true); //
-                this.setCanceledOnTouchOutside(true); //
+                this.setCancelable(true);
+                this.setCanceledOnTouchOutside(true);
                 checkBox = a_checkBox;
+                this.prayIndex = a_prayIndex;                   ////   THIS WAS THE MAIN PROBLAM:  !!!!!!!!!!!
             }
     	
-        	@Override
+        	
+
+            //TODO REMOVE
+            /**
+             * @imp      No need for this one because: onDismiss() gets invoked any way.
+             * @override For no good reason.
+             */
+            @Override
 			public void cancel()	
         	{
         		SPUtils.debug("<*><*> timePickerDialog.onCancel <*><*>");
-        		/*
-        		 * Obviously, If We Got Here: 
-        		 *     A PrayTimePickDialog was canceled. ==>
-        		 *     A PrayTimePickDialog was opened. ==>
-        		 *     The Appropriate CheckBox was enabled. ==>
-        		 *     THEREFORE: We need to uncheck.
-        		 *         I will do it only to the booleans, because this.dismiss() is nice & safe.
-        		 */
-        		//CreatePlaceDialog.this.prays[this.prayIndex] = !CreatePlaceDialog.this.prays[this.prayIndex];
-        		
         		super.cancel();
         	}
         	
+        	
         	@Override
-        	public void dismiss()	{
+        	public void dismiss()
+        	{
         		SPUtils.debug("timePickerDialog.onDismiss");
-                SPUtils.debug("--> prays["+this.prayIndex+"] = " + "prays["+prayIndex+"]");
+                SPUtils.debug("--> prays[" + this.prayIndex + "] = " + "prays[" + this.prayIndex + "]");
                 this.checkBox.setChecked(CreatePlaceDialog.this.prays[this.prayIndex]);
                 super.dismiss();
         	}
@@ -654,7 +676,8 @@ public class UIUtils {
         	
         }
         
-        private class CheckBoxListener implements OnCheckedChangeListener     ////
+        private class CheckBoxListener 
+        implements OnCheckedChangeListener
         {              
         	private     TextView timeTextView;
         	private     int		 index;
@@ -677,26 +700,28 @@ public class UIUtils {
             
             
             /**
-             * @post Setting prays[index] to false if we got false, otherwise...
+             * @post Setting prays[index] to false (& removing time text) if we got false,
+             *       otherwise...
              *       Calling a PrayTimePickDialog which will:
              *           if (time was SET)    
              *               update prays[index] for us.
              *           if (time was CANCEL) 
              *               check the box again (this must be to false).
              *               Then we will be invoked again, but the last if(...) will happen.
+             * @imp  Note: that the "true case" job is completed by the PrayTimePickerDialog.
              */
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
                 SPUtils.debugFuncStart("pray1.onCheckedChanged", buttonView, isChecked);
                 if (isChecked)
                 {
-                    (new PrayTimePickDialog(timeTextView, defHour, defMinutes, checkBox, index, resIcon)).show();
+                    PrayTimePickerDialog goodPractice = new PrayTimePickerDialog(defHour, defMinutes, checkBox, index, resIcon);
+                    goodPractice.show();
                 }
                 else
                 {
-                    //prays[index] = false;                    ////
                     timeTextView.setText("");
-                    prays[index] = isChecked;                ////
+                    prays[index] = isChecked;    /** @imp ... = false; */  
                 }
                 
                                      

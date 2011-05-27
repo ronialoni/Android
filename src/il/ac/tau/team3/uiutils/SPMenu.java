@@ -34,10 +34,26 @@ public class SPMenu
     //private static final int SP_MENU_ITEM_RES_ID = R.id.mom_items_row;
     
     
+    /**
+     * A safe  help method.
+     * @usage  Use this to avoid a null check & exceptions.
+     * @pre    true.
+     * @param  SPMenu menu
+     * @return Is the menu visible to the user.
+     */
     public static boolean isShowing(SPMenu menu)
     {
         return null != menu && menu.isInitialized() && menu.isShowing();
     }
+    
+    
+    /**
+     * A safe  help method.
+     * @usage  Use this to avoid a null check & exceptions.
+     * @pre    true.
+     * @param  SPMenu menu
+     * @return Is there a sub menu visible to the user.
+     */
     public static boolean isSubShowing(SPMenu menu)
     {
         return isShowing(menu) && menu.isSubShowing();

@@ -676,6 +676,24 @@ extends MapActivity
 	
 	
 	
+	public FacebookConnector getFacebookConnector() {
+		return facebookConnector;
+	}
+
+
+
+
+
+
+	public void setFacebookConnector(FacebookConnector facebookConnector) {
+		this.facebookConnector = facebookConnector;
+	}
+
+
+
+
+
+
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

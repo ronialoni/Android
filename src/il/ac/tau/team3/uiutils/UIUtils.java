@@ -18,6 +18,7 @@ import il.ac.tau.team3.common.Pray;
 import il.ac.tau.team3.common.SPGeoPoint;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
+import il.ac.tau.team3.shareaprayer.FacebookConnector;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
 import il.ac.tau.team3.shareaprayer.PlaceArrayItemizedOverlay;
 import il.ac.tau.team3.shareaprayer.R;
@@ -143,13 +144,7 @@ public class UIUtils {
               }
           });
           
-//          syncButton.setOnClickListener(new OnClickListener()
-//          {                
-//              public void onClick(View v)
-//              {
-//                  // TODO Open Sync Center.
-//              }
-//          });
+
           dialog.show();
 		
 	}
@@ -259,8 +254,20 @@ public class UIUtils {
 						new UpdateUI<String>(placeOverlay
 								.getActivity()));
 
-		
+		FacebookConnector fc = placeOverlay.getActivity().getFacebookConnector();
+		fc.publishOnFacebook("Just signed to " + place.getName() + " for " + 
+				(praysWishes[0] ? "Shaharit" : "" ) + (praysWishes[0]&&(praysWishes[1] || praysWishes[2]) ? " and ": "")+ (praysWishes[1] ? "Minha" : "") + (praysWishes[1] && praysWishes[2] ? " and ": "") +  
+				(praysWishes[2] ? "Arvit" : "") + "." , 10 - getMin(place) + " are still missing for a minyan. <br>" + "Sign as well and help to fill a minyan!");
 
+	}
+	
+	static int getMin(GeneralPlace place){
+		int nums[] = new int[3];
+		for(int i=0; i<3 ;++i){
+			nums[i] = (int) (place.getNumberOfPrayers(i) == -1 ? SPUtils.INFINITY : place.getNumberOfPrayers(i));
+		}
+		return Math.min(Math.min(nums[0],nums[1]), nums[2]) ;
+		
 	}
 
 	static void DeleteClick(final GeneralPlace place,
@@ -335,16 +342,6 @@ public class UIUtils {
 	private static boolean[] toPrayerWishes(Map<String, PrayUIObj> ui)	{
 		return new boolean[]{ui.get("Shaharit").wish, ui.get("Minha").wish, ui.get("Arvit").wish};
 	}
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	
-	
 	
 	
 	
@@ -961,7 +958,12 @@ public class UIUtils {
 
 		activity.getSPComm().requestPostNewPlace(newMinyan,
 				new UpdateUI<Long>(activity));
-
+		
+		FacebookConnector fc = activity.getFacebookConnector();
+		fc.publishOnFacebook("Just create a new Minyan place!" + " (" + newMinyan.getAddress()+ ")" , "Come and sign to " + placeName + " for " + 
+				(prays[0] ? "Shaharit" : "" ) + (prays[0]&&(prays[1] || prays[2]) ? " or ": "")+ (prays[1] ? "Minha" : "") + (prays[1] && prays[2] ? " or ": "") +  
+				(prays[2] ? "Arvit" : "") + ".");
+		
 		
 	}
 	

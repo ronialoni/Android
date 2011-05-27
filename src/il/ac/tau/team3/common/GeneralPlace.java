@@ -170,9 +170,9 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
                 try     {
                 return this.praysOfTheDay.get(prayNumber).numberOfJoiners();
                 }  catch (IndexOutOfBoundsException e)  {       
-                return 0;
+                return -1;
             } catch (NullPointerException e)    {
-                return 0;
+                return -1;
             }
         }
 

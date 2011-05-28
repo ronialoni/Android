@@ -1,0 +1,53 @@
+
+  <LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+              android:id    = "@+id/dss_root" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+     android:orientation = "vertical"
+    > 
+    
+    <!-- Head -->
+    
+    <TextView android:id      = "@+id/dss_head"
+        android:gravity       = "center_vertical"
+        android:layout_width  = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:textColor     = "#ffffff"
+        android:textSize      = "20sp"
+        android:textStyle     = "bold"
+        android:typeface      = "serif"
+        android:text          = "Set Your Status:"
+       
+        />    
+     
+     
+ 
+
+       
+	    <EditText android:id      = "@+id/dss_status"
+	        android:layout_width  = "fill_parent" 
+	        android:layout_height = "wrap_content"
+	        android:layout_weight = "1"
+            android:padding       = "25dp"
+	        android:textColor     = "#000000"
+	        android:textSize      = "15sp"
+	        android:text          = ""
+	        />   
+	             
+
+     <!-- Buttons -->
+  <LinearLayout 
+              android:id    = "@+id/dss_l2" 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" android:orientation="horizontal"> 
+            
+        <Button android:id        = "@+id/dss_button_ok" 
+            android:layout_width  = "wrap_content"
+            android:layout_height = "wrap_content" 
+            android:layout_weight = "1"
+            android:text          = "OK" 
+            />
+            
+            </LinearLayout>
+
+    </LinearLayout>

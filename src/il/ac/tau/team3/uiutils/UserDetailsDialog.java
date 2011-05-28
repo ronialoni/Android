@@ -96,32 +96,7 @@ public class UserDetailsDialog {
             }
         });
         
-        
-		// POPUP TRY
-//		RelativeLayout userPopRoot = (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.dialog_user_details, null);
-//                
-//		window = new PopupWindow(userPopRoot, LayoutParams.WRAP_CONTENT,  LayoutParams.WRAP_CONTENT, false);       
-//       
-//		window.setAnimationStyle(R.anim.grow_from_bottom);
-//		window.setWidth(UIUtils.getContextWidth(activity));
-//		
-//		
-//		window.setTouchable(true);
-//		window.setOutsideTouchable(true);
-//		
-//		TextView user_name = (TextView)userPopRoot.findViewById(R.id.PUDFullName);
-//		user_mail = (TextView)userPopRoot.findViewById(R.id.PUDMail);
-//		user_address = (TextView)userPopRoot.findViewById(R.id.PUDAddress);
-//		user_status = (TextView)userPopRoot.findViewById(R.id.PUDStatus);
-//		
-//		btn_dismiss = (Button)userPopRoot.findViewById(R.id.PUDDismiss);
-//		
-//		user_name.setText(user.getFullName());
-//		user_mail.setText(this.user.getName());
-//		user_status.setText(this.user.getStatus());
-		
-		//ImageView arrowdown = (ImageView) userPopRoot.findViewById(R.id.PUDarrow_down);
-		
+ 
 		
 		try 
 		{

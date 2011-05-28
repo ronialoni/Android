@@ -2,6 +2,7 @@ package il.ac.tau.team3.shareaprayer;
 
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.Pray;
+import il.ac.tau.team3.uiutils.MenuSettingsUtils;
 import il.ac.tau.team3.uiutils.MenuUtils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -30,7 +31,7 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
 	}
 	
 	public int getNumber()	{
-		return MenuUtils.chooseMaxOrMin(place);
+		return MenuSettingsUtils.chooseMaxOrMin(place);
 	}
 	
 	private ColorFilter determineColor(double num)	{

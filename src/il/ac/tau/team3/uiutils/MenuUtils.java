@@ -17,59 +17,7 @@ import il.ac.tau.team3.spcomm.SPComm;
 
 public class MenuUtils {
 	
-	// this boolean indicates rather the user want to show max prayers (true) or min prayers (flase)
-	private static boolean showMax = true ;
 
-	public static boolean showMax() {
-		return showMax;
-	}
-
-	public static void setShowMax(boolean toShowMax) {
-		showMax = toShowMax;
-	}
-	
-	
-	public static int chooseMaxOrMin(GeneralPlace place){
-		if(showMax){
-			return determinMax(place);
-		}else{
-			return determinMin(place);
-		}
-	}
-	
-	static int determinMax(GeneralPlace place){
-		int max = 0;
-		
-		try	{
-			for (Pray p : place.getPraysOfTheDay())	{
-				if (max < p.numberOfJoiners())	{
-					max = p.numberOfJoiners();
-				}
-			}
-		} catch (NullPointerException e)	{
-			// no prays for place
-		}
-		
-		
-		return max;
-	}
-	
-	static int determinMin(GeneralPlace place){
-		int min = (int) SPUtils.INFINITY;
-		
-		try	{
-			for (Pray p : place.getPraysOfTheDay())	{
-				if (min > p.numberOfJoiners())	{
-					min = p.numberOfJoiners();
-				}
-			}
-		} catch (NullPointerException e)	{
-			// no prays for place
-		}
-		
-		
-		return min;
-	}
 	
 	public static List<String> getOwnerPlaces(GeneralUser user){
 		SPComm comm = new SPComm();

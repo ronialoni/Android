@@ -15,13 +15,14 @@ import il.ac.tau.team3.spcomm.SPComm;
 
 
 import il.ac.tau.team3.uiutils.ISPMenuItem;
+import il.ac.tau.team3.uiutils.MenuSettingsUtils;
+import il.ac.tau.team3.uiutils.MenuStatusUtils;
 import il.ac.tau.team3.uiutils.MenuUtils;
 import il.ac.tau.team3.uiutils.SPMenu;
 import il.ac.tau.team3.uiutils.SPMenu.ISPOnMenuItemSelectedListener;
 import il.ac.tau.team3.uiutils.SPMenus;
 import il.ac.tau.team3.uiutils.SPMenus.ESPMenuItem;
 import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuFind;
-import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuMap;
 import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuPeople;
 import il.ac.tau.team3.uiutils.UIUtils;
 
@@ -797,8 +798,8 @@ extends MapActivity
                     
                     SPUtils.debugToast("Item No. " + id, FindPrayer.this);
                     
-                    
-                    if (id == SPMenus.ESPSubMenuFind.ME.id())
+                                
+                   if (id == SPMenus.ESPSubMenuFind.ME.id())
                     {
                         FindPrayer.this.centerMap();
                         FindPrayer.this.menu.hide();
@@ -806,19 +807,27 @@ extends MapActivity
                     
                     else if (id == SPMenus.ESPSubMenuSettings.FACEBOOK.id())
                     {
-                        FindPrayer.this.centerMap();
+                    	
                         FindPrayer.this.menu.hide();
                     }
                     
                     else if (id == SPMenus.ESPSubMenuSettings.PROFILE.id())
                     {
-                        FindPrayer.this.centerMap();
+                    	try {
+							MenuSettingsUtils.createEditDetailsDialog(svcGetter.getService().getUser(), FindPrayer.this);
+						} catch (UserNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ServiceNotConnected e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
                         FindPrayer.this.menu.hide();
                     }
                     
                     else if (id == SPMenus.ESPSubMenuSettings.VIEW.id())
                     {
-                        FindPrayer.this.centerMap();
+                        MenuSettingsUtils.CreateChooseMinMaxDialog(FindPrayer.this);
                         FindPrayer.this.menu.hide();
                     }
                     
@@ -832,7 +841,7 @@ extends MapActivity
                         }
                         else
                         {
-                            Toast.makeText(FindPrayer.this, "Sorry, there seem to be no plces open for prayers.\nPlese consider creating one.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(FindPrayer.this, "Sorry, there seem to be no plces open for prayers.\nPlease consider creating one.", Toast.LENGTH_LONG).show();
                         }
                         FindPrayer.this.menu.hide();
                     }   
@@ -914,50 +923,20 @@ extends MapActivity
                     }
                     
                     
+                  
                     
-                    else if (id == ESPSubMenuMap.MAX_MIN.id())
-                    {
-                        MenuUtils.setShowMax(! MenuUtils.showMax());
-                                                
-                        TextView v = new TextView(FindPrayer.this);
-                        v.setGravity(Gravity.CENTER);
-                        UIUtils.setPadding(v, 5);
-                        v.setFadingEdgeLength(5);
-                        v.setText("Showing the: " + (MenuUtils.showMax() ? "Max" : "Min") + "\n" 
-                                                  + "number of registerd prayers.\n" 
-                                                  + "(Click again to change.)");
-                        v.setTextColor(Color.DKGRAY);
-                        v.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
-                        v.setBackgroundColor(Color.LTGRAY);
-                        v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_item_maxmin_calc, 0, 0, 0);
-                        v.setCompoundDrawablePadding(10);
-                        
-                        Toast t = new Toast(FindPrayer.this);
-                        t.setView(v);
-                        t.setDuration(Toast.LENGTH_LONG);                       
-                        t.setGravity(Gravity.CENTER, 0, 0);
-                        t.show();
-                        FindPrayer.this.menu.hide();
+                    else if (id == ESPMenuItem.STATUS.id()){
+                    	try {
+							MenuStatusUtils.createEditStatusDialog(svcGetter.getService().getUser(), FindPrayer.this);
+						} catch (UserNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ServiceNotConnected e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						 FindPrayer.this.menu.hide();
                     }
-                    
-                    
-                    else if (id == ESPSubMenuMap.COLORS.id())
-                    {
-                        // FIXME & TODO
-                        FindPrayer.this.menu.hide();
-                        FindPrayer.this.menu.hide();
-                    }
-                    
-                    
-
-                    else if (id == ESPSubMenuMap.NUMBERS.id())
-                    {
-                        // FIXME & TODO
-                        FindPrayer.this.menu.hide();
-                        FindPrayer.this.menu.hide();
-                    }
-                    
-
                     
                     else if (id == ESPMenuItem.EXIT.id())
                     {

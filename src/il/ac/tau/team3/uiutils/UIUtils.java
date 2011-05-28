@@ -165,8 +165,7 @@ public class UIUtils {
 	
 	
 	public static String[] HandleFirstTimeDialog(Account[] accounts, FindPrayer activity){
-		if (accounts.length == 0)
-		{
+		if (accounts.length == 0){
 			CreateNoAccountsDialog(activity);
 			return null;
 		}else{
@@ -228,9 +227,9 @@ public class UIUtils {
              public void onClick(View v)
              {
             	 if(editTextFirstName.getText() == null || editTextFirstName.getText().toString() == null ||
-            			 editTextFirstName.getText().toString() == "" || 
+            			 editTextFirstName.getText().toString().equals("") || 
             			 editTextLastName.getText() == null || editTextLastName.getText().toString() == null ||
-            			 editTextLastName.getText().toString() == ""){
+            			 editTextLastName.getText().toString().equals("")){
             		 createAlertDialog("Please enter your first and last name", activity, "OK");
             	 }else{
             	 names[0] = editTextFirstName.getText().toString();
@@ -313,6 +312,8 @@ public class UIUtils {
 				formatFacebookDesc_Register(place));
 	}
 
+	
+	
 	
 	static String formatFacebookDesc_Register(GeneralPlace place){
 		return 10 - getMin(place) + " are still missing for a minyan. <br>" + "Sign as well and help to fill a minyan!";
@@ -876,7 +877,6 @@ public class UIUtils {
 			
 			createButton.setEnabled(false);
 			
-			//TTT
 			editAddress = (EditText) dialog.findViewById(R.id.CPDeditText1);
 			initSearchBar(editAddress);
 			
@@ -1027,7 +1027,7 @@ public class UIUtils {
 	}
 	
 	static String formatFacebookHeader_NewPlace(String address){
-		return "Just create a new Minyan place!" + (null == address? "" : " (" + address + ")");
+		return "Just created a new Minyan place!" + (null == address? "" : " (" + address + ")");
 	}
 	
 	static String formatFacebookDesc_NewPlace(String placeName, boolean prays[]){

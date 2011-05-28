@@ -26,15 +26,7 @@
      
     <!-- Name -->
     
-    <TextView android:id      = "@+id/dep_name_text"
-        android:layout_width  = "fill_parent"
-        android:layout_height = "wrap_content"
-        android:textColor     = "#ffffff"
-        android:textSize      = "15sp"
-        android:textStyle     = "bold"
-        android:typeface      = "serif"
-        android:text          = "Your Name"
-        />
+  
     
     <TableRow 
         android:orientation   = "horizontal"

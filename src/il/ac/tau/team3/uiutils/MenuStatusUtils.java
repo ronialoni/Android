@@ -20,18 +20,17 @@ public class MenuStatusUtils {
 		 dialog.setContentView(R.layout.dialog_set_status);
 		 dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		 final EditText status = (EditText)dialog.findViewById(R.id.dss_status);
-         
+         status.setText(user.getStatus());
          dialog.setTitle("Status");
          Button okButton = (Button) dialog.findViewById(R.id.dss_button_ok);
          
-         final int accountId[] = new int[1];
-         final String names[] = new String[3];
+         
          
          okButton.setOnClickListener(new OnClickListener()
          {                
              public void onClick(View v)
              {
-               // activity.setStatus(status.getText().toString());
+            	activity.setStatus(status.getText().toString());
                 dialog.dismiss();
              }
          });

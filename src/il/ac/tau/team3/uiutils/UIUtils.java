@@ -47,7 +47,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.text.Editable;
-import android.text.Layout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -65,11 +64,9 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -836,7 +833,7 @@ public class UIUtils {
         }
         
         private boolean validateParams(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	{
-        	if (point == null || a_activity == null || user == null)
+        	if (a_activity == null || user == null)
 			{
 				
 				Log.d("UIUtils::createRegisterDialog", "point == null || activity == null || user == null");
@@ -868,12 +865,10 @@ public class UIUtils {
 			  
 			activity = a_activity;
 			
-			dialog = new NoTitleDialog(activity);
+			dialog = new Dialog(activity);
 			dialog.setCancelable(true);
 			dialog.setContentView(R.layout.dialog_place_create);
-			//dialog.setTitle("");
-			//dialog.setTitle(R.string.create_place_title);
-			
+			dialog.setTitle(R.string.create_place_title);
 			
 			createButton  = (Button) dialog.findViewById(R.id.CPDCreateButton);
 			cancelButton  = (Button) dialog.findViewById(R.id.CPDCancelButton);
@@ -901,31 +896,35 @@ public class UIUtils {
 				
 			});
 			
-			activity.getSPComm().getAddressObj(location.getLatitudeInDegrees(), location.getLongitudeInDegrees(), new ACommHandler<MapsQueryLocation>() {
-				@Override
-				public void onRecv(final MapsQueryLocation Obj) {
-						activity.runOnUiThread(new Runnable()	{
-
-							public void run() {
-								// TODO Auto-generated method stub
-								try	{
-								 editAddress.setText(Obj.getResults()[0].getFormatted_address());
-								 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
-								 createButton.setEnabled(true);
-								 
-								} catch (Exception e)	{
-								    editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
+			if (null != location)	{
+				activity.getSPComm().getAddressObj(location.getLatitudeInDegrees(), location.getLongitudeInDegrees(), new ACommHandler<MapsQueryLocation>() {
+					@Override
+					public void onRecv(final MapsQueryLocation Obj) {
+							activity.runOnUiThread(new Runnable()	{
+	
+								public void run() {
+									// TODO Auto-generated method stub
+									try	{
+									 editAddress.setText(Obj.getResults()[0].getFormatted_address());
+									 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
+									 createButton.setEnabled(true);
+									 
+									} catch (Exception e)	{
+										editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
+									}
 								}
-							}
-							
-						});
-				}
-				
-				@Override
-				public void onError(MapsQueryLocation Obj) {
-					editAddress.setText("Error fetching address");
-				}
-			});
+								
+							});
+					}
+					
+					@Override
+					public void onError(MapsQueryLocation Obj) {
+						editAddress.setText("Error fetching address");
+					}
+				});
+			} else	{
+				editAddress.setText("");
+			}
 			
 			fromDate = (TextView) dialog.findViewById(R.id.CPDFromDatetextView);
 			toDate   = (TextView) dialog.findViewById(R.id.CPDToDatetextView);

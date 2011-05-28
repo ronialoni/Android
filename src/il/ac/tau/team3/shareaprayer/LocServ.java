@@ -145,6 +145,19 @@ extends Service
 			
 		}
 
+		public void setStatus(String status) throws UserNotFoundException {
+			if (null == user)	{
+				throw new UserNotFoundException();
+			}
+			
+			user.setStatus(status);
+			SharedPreferences.Editor edit = settings.edit();
+			edit.putString("UserStatus", user.getStatus());
+			edit.commit();
+			LocServ.this.updateUserInServer();
+			
+		}
+
     }
 	
 	
@@ -169,6 +182,14 @@ extends Service
 		curr_loc = SPUtils.toSPGeoPoint(loc);
     	user.setSpGeoPoint(curr_loc);
 
+    	updateUserInServer();
+	}
+	
+	private void updateUserInServer()	{
+		if (null == user)	{
+			return;
+		}
+		
 		comm.updateUserByName(user, new ACommHandler<Long>() {
 			@Override
 			public void onRecv(Long Obj)	{
@@ -183,8 +204,6 @@ extends Service
 				}
 			}
 		});
-			
-		
 	}
 
 

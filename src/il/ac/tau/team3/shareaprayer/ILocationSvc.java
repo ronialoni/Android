@@ -15,6 +15,8 @@ public interface ILocationSvc {
 	public LocServ getService();
 		
 	public void setNames(String[] new_names);
+	
+	public void setStatus(String status) throws UserNotFoundException;
 
 	public GeneralUser getUser() throws UserNotFoundException;
 }

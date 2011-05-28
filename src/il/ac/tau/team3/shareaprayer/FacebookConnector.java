@@ -39,6 +39,18 @@ public class FacebookConnector {
 		edit.commit();
 	}
 	
+	public void disconnect()	{
+		try {
+			facebook.logout(activity);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void connect()	{
 			facebook.authorize(activity, new String[]{"publish_stream"/*,"read_stream","offline_access"*/},0, new DialogListener() {
         	
@@ -84,7 +96,7 @@ public class FacebookConnector {
     	facebook_connectStatup = settings.getBoolean(FACEBOOK_STARTUP_KEY, false);
     	facebook_configured = settings.getBoolean(FACEBOOK_CONFIGURED_KEY, false);
     	
-    	if ((facebook_connectStatup) && (facebook_configured))	{
+    	if (facebook_connectStatup)	{
     		connect();
     	}
     		

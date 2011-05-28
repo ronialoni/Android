@@ -11,6 +11,7 @@ import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
 
 import il.ac.tau.team3.spcomm.ACommHandler;
+import il.ac.tau.team3.spcomm.ICommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
 
 
@@ -19,11 +20,13 @@ import il.ac.tau.team3.uiutils.MenuSettingsUtils;
 import il.ac.tau.team3.uiutils.MenuStatusUtils;
 import il.ac.tau.team3.uiutils.MenuUtils;
 import il.ac.tau.team3.uiutils.SPMenu;
+import il.ac.tau.team3.uiutils.placesDetailsUI;
 import il.ac.tau.team3.uiutils.SPMenu.ISPOnMenuItemSelectedListener;
 import il.ac.tau.team3.uiutils.SPMenus;
 import il.ac.tau.team3.uiutils.SPMenus.ESPMenuItem;
 import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuFind;
 import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuPeople;
+import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuPlaces;
 import il.ac.tau.team3.uiutils.UIUtils;
 
 
@@ -41,7 +44,10 @@ import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -437,8 +443,6 @@ extends MapActivity
 		mapView = (SPMapView) findViewById(R.id.view1);
 		editText = (EditText) findViewById(R.id.addressBar);
 		UIUtils.initSearchBar(editText);
-		
-		
         mapView.registerTapListener(new IMapTapDetect()	
         {
 			public void onTouchEvent(SPGeoPoint sp) 
@@ -643,7 +647,7 @@ extends MapActivity
         
        facebookConnector = new FacebookConnector(this);
 
-
+       facebookConnector.setConnectOnStartup(true);
         
         
 /////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -798,14 +802,65 @@ extends MapActivity
                     
                     SPUtils.debugToast("Item No. " + id, FindPrayer.this);
                     
-                                
-                   if (id == SPMenus.ESPSubMenuFind.ME.id())
+                    
+                    if (id == SPMenus.ESPSubMenuFind.ME.id())
                     {
                         FindPrayer.this.centerMap();
                         FindPrayer.this.menu.hide();
                     }
                     
                     else if (id == SPMenus.ESPSubMenuSettings.FACEBOOK.id())
+                    {
+                        FindPrayer.this.centerMap();
+                        FindPrayer.this.menu.hide();
+                    }
+                                        
+                    else if (id == ESPSubMenuFind.CLOSEST.id())
+                    {
+                        // Taking the closest (for now) from the map's overlay.
+                        ArrayList<OverlayItem> listOfOneItemIfAnyOnMap = FindPrayer.this.closestPlaceOverlay.getOverlayItems();
+                        if (null != listOfOneItemIfAnyOnMap && listOfOneItemIfAnyOnMap.size() > 0)
+                        {
+                            FindPrayer.this.mapView.getController().setCenter(listOfOneItemIfAnyOnMap.get(0).getPoint());
+                        }
+                        else
+                        {
+                            Toast.makeText(FindPrayer.this, "Sorry, there seem to be no plces open for prayers.\nPlese consider creating one.", Toast.LENGTH_LONG).show();
+                        }
+                        FindPrayer.this.menu.hide();
+                    }   
+                    
+                    
+                    else if (id == SPMenus.ESPSubMenuFind.PLACES.id())
+                    {
+                        SPUtils.debugToast("Sorry, no places list yet.", FindPrayer.this);
+                        FindPrayer.this.menu.hide();
+                    }
+                    
+                    
+                    else if (id == SPMenus.ESPSubMenuFind.ADDRESS.id())
+                    {
+                        SPUtils.debugToast("The SearchBar is now: " + "Focused. \n(We can make it pop & hide?).", FindPrayer.this);
+                        
+                        // Displaying the search bar
+                        
+                        EditText edittext = (EditText) FindPrayer.this.findViewById(R.id.addressBar);
+                        edittext.setVisibility(View.VISIBLE);
+                        edittext.setFocusable(true);
+                        
+                        //FindPrayer.this.menu.hide();  
+                        FindPrayer.this.menu.onMenuDismiss(new OnDismissListener()
+                        {
+                            public void onDismiss()
+                            {
+                                InputMethodManager keyboardMenager = (InputMethodManager) FindPrayer.this.getSystemService(INPUT_METHOD_SERVICE);
+                                keyboardMenager.showSoftInput(FindPrayer.this.editText, InputMethodManager.SHOW_FORCED /* | InputMethodManager.SHOW_IMPLICIT */);
+                            }
+                        });
+                        
+                        // Apparently, only the sub gets closed...
+                        FindPrayer.this.menu.hide(); // TODO this is BAD, make separate methods in SPMenu.
+                    } else if (id == SPMenus.ESPSubMenuSettings.FACEBOOK.id())
                     {
                     	
                         FindPrayer.this.menu.hide();
@@ -829,60 +884,25 @@ extends MapActivity
                     {
                         MenuSettingsUtils.CreateChooseMinMaxDialog(FindPrayer.this);
                         FindPrayer.this.menu.hide();
-                    }
-                    
-                    else if (id == ESPSubMenuFind.CLOSEST.id())
-                    {
-                        // Taking the closest (for now) from the map's overlay.
-                        ArrayList<OverlayItem> listOfOneItemIfAnyOnMap = FindPrayer.this.closestPlaceOverlay.getOverlayItems();
-                        if (null != listOfOneItemIfAnyOnMap && listOfOneItemIfAnyOnMap.size() > 0)
-                        {
-                            FindPrayer.this.mapView.getController().setCenter(listOfOneItemIfAnyOnMap.get(0).getPoint());
-                        }
-                        else
-                        {
-                            Toast.makeText(FindPrayer.this, "Sorry, there seem to be no plces open for prayers.\nPlease consider creating one.", Toast.LENGTH_LONG).show();
-                        }
-                        FindPrayer.this.menu.hide();
-                    }   
-                    
-                    
-                    else if (id == SPMenus.ESPSubMenuFind.PLACES.id())
-                    {
-                        SPUtils.debugToast("Sorry, no places list yet.", FindPrayer.this);
-                        FindPrayer.this.menu.hide();
-                    }
-                    
-                    
-                    else if (id == SPMenus.ESPSubMenuFind.ADDRESS.id())
-                    {
-                        SPUtils.debugToast("The SearchBar is now: " + "Focused. \n(We can make it pop & hide?).", FindPrayer.this);
-                        
-                        // Displaying the search bar
-                        EditText edittext = (EditText) FindPrayer.this.findViewById(R.id.addressBar);
-                        edittext.setVisibility(View.VISIBLE);
-                        edittext.setFocusable(true);
-                        
-                        //FindPrayer.this.menu.hide();  
-                        FindPrayer.this.menu.onMenuDismiss(new OnDismissListener()
-                        {
-                            public void onDismiss()
-                            {
-                                InputMethodManager keyboardMenager = (InputMethodManager) FindPrayer.this.getSystemService(INPUT_METHOD_SERVICE);
-                                keyboardMenager.showSoftInput(FindPrayer.this.editText, InputMethodManager.SHOW_FORCED /* | InputMethodManager.SHOW_IMPLICIT */);
-                            }
-                        });
-                        
-                        // Apparently, only the sub gets closed...
-                        FindPrayer.this.menu.hide(); // TODO this is BAD, make separate methods in SPMenu.
-                    }
-                    
-                    
-                    
-                    
-                    
-                    else if (id == ESPSubMenuPeople.MY_POFILE.id())
-                    {       
+                    } else if (id == SPMenus.ESPSubMenuPlaces.JOINED.id()){
+                    		FindPrayer.this.menu.hide(); 
+                    		new placesDetailsUI(FindPrayer.this, svcGetter, comm, "Places I joined to", placesDetailsUI.Actions.JOINER, publicPlaceOverlay);
+                    		
+							
+                    } else if (id == SPMenus.ESPSubMenuPlaces.OWNED.id()){
+                    	FindPrayer.this.menu.hide(); 
+                    	new placesDetailsUI(FindPrayer.this, svcGetter, comm, "Places I own", placesDetailsUI.Actions.OWNER, publicPlaceOverlay);              
+                    } else if (id == ESPSubMenuPlaces.CREATE.id())	{
+                    	try {
+							UIUtils.createNewPlaceDialog(null, FindPrayer.this, svcGetter.getService().getUser());
+						} catch (UserNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ServiceNotConnected e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+                    } else if (id == ESPSubMenuPeople.MY_POFILE.id()) {       
                         FindPrayer.this.menu.hide(); // TODO this is BAD, make separate methods in SPMenu.
                         ILocationSvc service = null;
                         try
@@ -896,7 +916,18 @@ extends MapActivity
                         
                         FindPrayer.this.menu.hide();
                         service.setNames(UIUtils.HandleFirstTimeDialog(FindPrayer.this.getAccounts(), FindPrayer.this));
-                    }                            
+                    } else if (id == ESPMenuItem.STATUS.id()){
+                    	try {
+							MenuStatusUtils.createEditStatusDialog(svcGetter.getService().getUser(), FindPrayer.this);
+						} catch (UserNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ServiceNotConnected e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						 FindPrayer.this.menu.hide();
+                    }                           
                     
                     
                     
@@ -923,21 +954,7 @@ extends MapActivity
                     }
                     
                     
-                  
-                    
-                    else if (id == ESPMenuItem.STATUS.id()){
-                    	try {
-							MenuStatusUtils.createEditStatusDialog(svcGetter.getService().getUser(), FindPrayer.this);
-						} catch (UserNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (ServiceNotConnected e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						 FindPrayer.this.menu.hide();
-                    }
-                    
+                                        
                     else if (id == ESPMenuItem.EXIT.id())
                     {
                         FindPrayer.this.menu.onMenuDismiss(new OnDismissListener()
@@ -1121,6 +1138,23 @@ extends MapActivity
 		} catch (ServiceNotConnected e) {
 			
 		}
+		
+	}
+	
+	public void setStatus(String status)	{
+		
+			ILocationSvc service;
+			try {
+				service = svcGetter.getService();
+				service.setStatus(status);
+			} catch (ServiceNotConnected e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UserNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		
 	}
 	

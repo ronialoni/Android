@@ -175,6 +175,12 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
                 return -1;
             }
         }
+        
+        @JsonIgnore
+        @Override
+        public String toString()	{
+        	return getName() + " @ " +getAddress();
+        }
 
 
 }

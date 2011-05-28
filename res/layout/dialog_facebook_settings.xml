@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+             android:id    = "@+id/DFS_root" 
+    android:layout_width   = "fill_parent" 
+    android:layout_height  = "match_parent"
+    android:orientation    = "vertical"
+    android:layout_gravity = "fill"
+    android:padding        = "5dp"
+    > 
+      <TextView android:id="@+id/DFS_Header" 
+            android:text="Facebook Settings:" 
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:textStyle = "bold"
+            android:textColor = "#ffffff"
+            />
+              <TextView android:id="@+id/DFS_ButtonTitle" 
+            android:text="Click to setup your facebook account" 
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:textStyle = "bold"
+            android:textColor = "#ffffff"
+            />
+  <Button android:id         = "@+id/DFS_setup_button" 
+                        android:text          = "Setup Account" 
+                        android:textSize      = "10dp" 
+                        android:layout_height = "wrap_content" 
+                        android:layout_width  = "wrap_content" 
+                        
+                        />    
+ 
+ <CheckBox 
+                android:text="Share my evants on Facebook" 
+                android:id="@+id/DFS_share"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight = "1"
+                android:textColor = "#bbbbbb"
+                ></CheckBox>
+                
+  </LinearLayout>

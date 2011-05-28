@@ -60,7 +60,7 @@ public class UserDetailsDialog {
         
         user_full_name.setText(this.user.getFullName());
         user_full_name.setTextColor(Color.WHITE);
-        user_full_name.setTextSize(30);
+        //user_full_name.setTextSize(30);  in xml.
         
         // Status
         user_status.setText("\"" + this.user.getStatus() + "\"");

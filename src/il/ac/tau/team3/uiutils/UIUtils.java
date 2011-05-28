@@ -154,6 +154,7 @@ public class UIUtils {
 	    searchBar.setHorizontallyScrolling(true);
 	    searchBar.setHorizontalFadingEdgeEnabled(true);
 	    
+	    searchBar.setHintTextColor(Color.LTGRAY);	    
         
 	    searchBar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_item_new_edit_find_replace, 0);
 	    searchBar.setCompoundDrawablePadding(4);
@@ -867,10 +868,12 @@ public class UIUtils {
 			  
 			activity = a_activity;
 			
-			dialog = new Dialog(activity);
+			dialog = new NoTitleDialog(activity);
 			dialog.setCancelable(true);
 			dialog.setContentView(R.layout.dialog_place_create);
-			dialog.setTitle(R.string.create_place_title);
+			//dialog.setTitle("");
+			//dialog.setTitle(R.string.create_place_title);
+			
 			
 			createButton  = (Button) dialog.findViewById(R.id.CPDCreateButton);
 			cancelButton  = (Button) dialog.findViewById(R.id.CPDCancelButton);

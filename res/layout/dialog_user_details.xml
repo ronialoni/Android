@@ -23,6 +23,8 @@
     			android:gravity="center"
     			android:layout_width="fill_parent"
 		    	android:textStyle = "bold"
+		    	android:typeface  = "serif"
+		    	android:textSize = "30dp"
 		    	android:background = "@drawable/background"
 		    	></TextView>
             
@@ -68,14 +70,14 @@
 		    	android:autoLink="all"
 		    	></TextView>
 		    
-		    
+		    <!-- 
 		    <LinearLayout 
 		    	android:id="@+id/DUDlinearLayout1" 
 		    	android:layout_width="fill_parent" 
 		    	android:layout_height="wrap_content" 
 		    	android:gravity="center"
 		    	>
-		    	
+		     -->
 		    	<Button 
 			    	android:text="Close" 
 			    	android:id="@+id/DUDClose" 
@@ -83,7 +85,7 @@
 			    	android:gravity = "center"
 		    		android:layout_height="wrap_content"
 		    	></Button>
-		    	</LinearLayout>
+		    	<!-- </LinearLayout> -->
    			</LinearLayout>
         </TableLayout>
 </LinearLayout>

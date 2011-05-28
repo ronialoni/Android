@@ -484,7 +484,9 @@ public class UIUtils {
 						lv.setOnItemClickListener(new OnItemClickListener() {
 						    public void onItemClick(AdapterView<?> parent, View view,
 						        int position, long id) {
-						      createAlertDialog(((String) ((TextView) view).getText()) + "\n\n We should really have a Profile dialog for each user...", activity, "Close");
+						    	String clickedUserName = ((String) ((TextView) view).getText());
+						    	GeneralUser clickedUser = getUserByName(p.getJoiners(), clickedUserName);
+						    	if (clickedUser != null) new UserDetailsDialog(clickedUser, (FindPrayer) activity);
 						    }
 						  });
 						
@@ -1111,6 +1113,14 @@ public class UIUtils {
 	    view.setPadding(padding, padding, padding, padding);
 	}
 	
-	
+	private static GeneralUser getUserByName(List<GeneralUser> joiners, String clickedUserName) {
+		if (joiners == null || clickedUserName == null) return null;
+		for (GeneralUser user : joiners){
+			if (user.getFullName().equals(clickedUserName) ||
+					user.getName().equals(clickedUserName)) return user;
+				
+		}
+		return null;
+	}
 	
 }

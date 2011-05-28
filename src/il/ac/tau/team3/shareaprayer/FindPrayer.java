@@ -350,7 +350,7 @@ extends MapActivity
 	    				{
 	    					updateUsersOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
 	    					updatePlacesOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
-	    					statusBar.write("refreshing...", 4000);
+	    					statusBar.write("refreshing...", R.drawable.action_refresh, 1000);
 	    				}
     				} catch (NullPointerException e)	{
     					

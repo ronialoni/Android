@@ -80,7 +80,6 @@ public class UserDetailsDialog {
             {
             	try{
             		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            	   	emailIntent.setType("plain/text");
 	            	//activity.startActivity(Intent.createChooser(emailIntent, "Send your email in:"));
 	            	activity.startActivity(emailIntent);
             	}

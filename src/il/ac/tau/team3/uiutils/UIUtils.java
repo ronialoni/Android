@@ -304,29 +304,78 @@ public class UIUtils {
 				.requestPostRegister(place, user, praysWishes,
 						new UpdateUI<String>(placeOverlay
 								.getActivity()));
-
+		
+		boolean[] changedPlus = new boolean[praysWishes.length];
+		final String[] praysNames = new String[]{"Shaharit", "Minha", "Arvit"};
+		boolean anyChange = false;
+		for (int i = 0; i < praysWishes.length; i++)	{
+			try	{
+				changedPlus[i] = (!(place.getPrayByName(praysNames[i]).isJoinerSigned(user)) && praysWishes[i]);
+				anyChange |= changedPlus[i];
+			} catch (Exception e)	{
+				changedPlus[i] = false;
+			}
+			
+		}
+		
+		boolean[] changedMinus = new boolean[praysWishes.length];
+		//final String[] praysNames = new String[]{"Shaharit", "Minha", "Arvit"};
+		
+		for (int i = 0; i < praysWishes.length; i++)	{
+			try	{
+				changedMinus[i] = (place.getPrayByName(praysNames[i]).isJoinerSigned(user) && !(praysWishes[i]));
+				//anyChange |= changedMinus[i];
+			} catch (Exception e)	{
+				changedMinus[i] = false;
+			}
+			
+		}
+		
+		
+		if (!anyChange)	{
+			return;
+		}
+		
 		FacebookConnector fc = placeOverlay.getActivity().getFacebookConnector();
-		fc.publishOnFacebook(formatFacebookHeadear_Register(place,praysWishes) ,
-				formatFacebookDesc_Register(place));
+		fc.publishOnFacebook(formatFacebookHeadear_Register(place,changedPlus) ,
+				formatFacebookDesc_Register(place, changedPlus, changedMinus));
 	}
 
 	
 	
 	
-	static String formatFacebookDesc_Register(GeneralPlace place){
-		return 10 - getMin(place) + " are still missing for a minyan. <br>" + "Sign as well and help to fill a minyan!";
+	static String formatFacebookDesc_Register(GeneralPlace place, boolean[] changedPlus, boolean[] changedMinus ){
+		return 10 - getMin(place , changedPlus, changedMinus) + " are still missing for a minyan in one of the prays. <br>" + "Sign as well and help to fill a minyan!";
 	}
 	
 	static String formatFacebookHeadear_Register(GeneralPlace place, boolean praysWishes[]){
+		
 		return "Just signed to " + place.getName() + " for " + 
 		(praysWishes[0] ? "Shaharit" : "" ) + (praysWishes[0]&&(praysWishes[1] || praysWishes[2]) ? " and ": "")+ (praysWishes[1] ? "Minha" : "") + (praysWishes[1] && praysWishes[2] ? " and ": "") +  
 		(praysWishes[2] ? "Arvit" : "") + ".";
 	}
 	
-	static int getMin(GeneralPlace place){
+	static int getMin(GeneralPlace place, boolean[] changedPlus, boolean[] changedMinus){
 		int nums[] = new int[3];
+		int nowCounts[] = new int[3];
 		for(int i=0; i<3 ;++i){
-			nums[i] = (int) (place.getNumberOfPrayers(i) == -1 ? SPUtils.INFINITY : place.getNumberOfPrayers(i));
+			if(!changedPlus[i] && !changedMinus[i]){
+				nowCounts[i] = 0;
+			}else if (changedPlus[i]){
+				nowCounts[i] = 1;
+			}else if (changedMinus[i]){
+				nowCounts[i] = -1;
+			}
+		}
+		final String[] praysNames = new String[]{"Shaharit", "Minha", "Arvit"};
+		
+				
+		for(int i=0; i<3 ;++i){
+			try{
+			nums[i] = (int) (place.getPrayByName(praysNames[i]).getJoiners().size()  + nowCounts[i]);
+			}catch (Exception e) {
+				nums[i] = (int) SPUtils.INFINITY;
+			}
 		}
 		return Math.min(Math.min(nums[0],nums[1]), nums[2]) ;
 		

@@ -299,7 +299,7 @@ public class SPMenu
         
         menuWindow.showAtLocation(activity.findViewById(buttomViewResId), Gravity.BOTTOM, 0, 0);
         
-        SPMenus.debug("SPMenu.show()-end  ");
+        
     }
     
     

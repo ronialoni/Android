@@ -39,43 +39,7 @@ public final class SPMenus
     }
     
     
-    public static void debug(String where)
-    {
-        if (! SPUtils.DEBUGGING)
-        {
-            return;
-        }
-        
-        SPUtils.debug("ESPMenuItem... (in: " + where + ")");
-        for (ESPMenuItem item : ESPMenuItem.values())
-        {
-            debug(item);
-        }
-        SPUtils.debug("");
-        
-        SPUtils.debug("ESPSubMenuFind... (in: " + where + ")");
-        for (ESPSubMenuFind item : ESPSubMenuFind.values())
-        {
-            debug(item);
-        }
-        SPUtils.debug("");
-        
-        SPUtils.debug("ESPSubMenuPeople... (in: " + where + ")");
-        for (ESPSubMenuPeople item : ESPSubMenuPeople.values())
-        {
-            debug(item);
-        }
-        
-        for (ESPSubMenuSettings item : ESPSubMenuSettings.values())
-        {
-            debug(item);
-        }
-        SPUtils.debug("");
-    }
-    
-    
-    
-    
+      
     /**
      * 
      * @author Team3
@@ -86,11 +50,10 @@ public final class SPMenus
     {
         FIND   (0, R.drawable.menu_item_find_green_wifi,   ESPSubMenuFind.class  ),
         PLACES   (1, R.drawable.menu_item_find_green_wifi,   ESPSubMenuPlaces.class  ),
-        PEOPLE (2, R.drawable.menu_item_sign_in_men_colorful,  ESPSubMenuPeople.class),
-        SETTINGS (3, R.drawable.menu_item_sign_in_men_colorful,  ESPSubMenuSettings.class),
-        FACEBOOK (4, R.drawable.menu_item_sign_in_men_colorful,  null),
-        STATUS    (5, R.drawable.menu_item_map_optiond_starthere, null),
-        EXIT   (6, R.drawable.menu_item_exit_door_greener, null),
+        SETTINGS (2, R.drawable.menu_item_sign_in_men_colorful,  ESPSubMenuSettings.class),
+        FACEBOOK (3, R.drawable.menu_item_sign_in_men_colorful,  null),
+        STATUS    (4, R.drawable.menu_item_map_optiond_starthere, null),
+        EXIT   (5, R.drawable.menu_item_exit_door_greener, null),
         ;
 
         private final int                       index;
@@ -175,8 +138,7 @@ public final class SPMenus
         
         ME      (0, R.drawable.menu_item_user_red_sruga ),
         CLOSEST (1, R.drawable.menu_item_mesure_package_graphics),
-        PLACES  (2, R.drawable.menu_item_place_dark_blue),
-        ADDRESS (3, R.drawable.menu_item_new_edit_find_replace),
+        ADDRESS (2, R.drawable.menu_item_new_edit_find_replace),
         ;
           
         public ISPMenuItem getParent()
@@ -352,71 +314,7 @@ public final class SPMenus
     
     
     
-    /**
-     * 
-     * @author Team3
-     *
-     */
-    public enum ESPSubMenuPeople
-    implements ISPSubMenuItem
-    {
-        
-        MY_POFILE (0, R.drawable.menu_item_edit_profile),
-        SHARE     (1, R.drawable.menu_item_facebook_bubble_alt),
-        ;
-          
-        public ISPMenuItem getParent()
-        {
-             return ESPMenuItem.PEOPLE;
-        }
-        
-        private final int index;
-        private final int resIconId;
-        
-        
-        private ESPSubMenuPeople(int index, int resIconId)
-        {
-            this.index     = index ;
-            this.resIconId = resIconId;
-          //  ESPMenuItem.PEOPLE.addSubItem(this);
-        }
-        
-        
-        
-        public String title()
-        {
-            return this.toString().replace('_', ' ').toUpperCase();
-        }
-                
-        public int id()
-        {
-            return this.index + ESPMenuItem.PEOPLE.offsetId();
-        }
-                
-        public int resIconId()
-        {           
-            return resIconId;
-        }
-
-        public int index()
-        {
-            return this.index;
-        }
-
-
-
-        public boolean hasSubMenu()
-        {
-            return false;
-        }
-        
-        public ISPSubMenuItem[] getSubMenuItems()
-        {
-            return null;
-        }
-        
-    }
-
+   
     
     
     

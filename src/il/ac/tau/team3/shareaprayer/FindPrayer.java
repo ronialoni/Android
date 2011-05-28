@@ -26,7 +26,6 @@ import il.ac.tau.team3.uiutils.SPMenu.ISPOnMenuItemSelectedListener;
 import il.ac.tau.team3.uiutils.SPMenus;
 import il.ac.tau.team3.uiutils.SPMenus.ESPMenuItem;
 import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuFind;
-import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuPeople;
 import il.ac.tau.team3.uiutils.SPMenus.ESPSubMenuPlaces;
 import il.ac.tau.team3.uiutils.UIUtils;
 
@@ -82,6 +81,7 @@ extends MapActivity
 	public final static int ARVIT = 1;
     	
 	private Drawable userDefaultMarker; 
+	private Drawable glowClosestMarker;
 	private Drawable othersDefaultMarker;
 	private Drawable synagougeMarker;
 	private Drawable synagougeClosestMarker;
@@ -268,13 +268,15 @@ extends MapActivity
     				public void onRecv(final GeneralPlace[] places) {
     					FindPrayer.this.runOnUiThread(new Runnable() {
 
-    						public void run() {
+    						
+
+							public void run() {
     							// TODO Auto-generated method stub
     							GeneralPlace closestPlace = determineClosestPlace(places);
     					        if(closestPlace!=null){
     					        	List<PlaceOverlayItem> closestPlacesOverlayList = new ArrayList<PlaceOverlayItem>();
     					        	try {
-										closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress(), synagougeClosestMarker));
+										closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress(), synagougeClosestMarker, glowClosestMarker));
 									} catch (UnknownLocationException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -531,6 +533,7 @@ extends MapActivity
        
                 
         synagougeClosestMarker    = this.getResources().getDrawable(R.drawable.place_white_david);
+        glowClosestMarker    = this.getResources().getDrawable(R.drawable.place_glow);
         closestPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeClosestMarker, this);
         mapView.getOverlays().add(closestPlaceOverlay);
         
@@ -790,7 +793,7 @@ extends MapActivity
      */
     private void initializeMenu()
     {   
-        SPMenus.debug("FindPrayer.initializeMenu()...");
+       
         
         if (null == this.menu)
         {
@@ -832,13 +835,7 @@ extends MapActivity
                         FindPrayer.this.menu.hide();
                     }   
                     
-                    
-                    else if (id == SPMenus.ESPSubMenuFind.PLACES.id())
-                    {
-                        SPUtils.debugToast("Sorry, no places list yet.", FindPrayer.this);
-                        FindPrayer.this.menu.hide();
-                    }
-                    
+                  
                     
                     else if (id == SPMenus.ESPSubMenuFind.ADDRESS.id())
                     {
@@ -900,21 +897,7 @@ extends MapActivity
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-                    } else if (id == ESPSubMenuPeople.MY_POFILE.id()) {       
-                        FindPrayer.this.menu.hide(); // TODO this is BAD, make separate methods in SPMenu.
-                        ILocationSvc service = null;
-                        try
-                        {
-                            service = svcGetter.getService(); 
-                        }
-                        catch (ServiceNotConnected e)
-                        {
-                            Log.e("ShareAPrayer", "Service is not connected", e);
-                        } 
-                        
-                        FindPrayer.this.menu.hide();
-                        service.setNames(UIUtils.HandleFirstTimeDialog(FindPrayer.this.getAccounts(), FindPrayer.this));
-                    } else if (id == ESPMenuItem.STATUS.id()){
+                    }  else if (id == ESPMenuItem.STATUS.id()){
                     	try {
 							MenuStatusUtils.createEditStatusDialog(svcGetter.getService().getUser(), FindPrayer.this);
 						} catch (UserNotFoundException e) {
@@ -929,30 +912,7 @@ extends MapActivity
                     
                     
                     
-                    else if (id == ESPSubMenuPeople.SHARE.id())
-                    {
-                       TextView v = new TextView(FindPrayer.this);
-                       v.setGravity(Gravity.CENTER);
-                       UIUtils.setPadding(v, 5);
-                       v.setFadingEdgeLength(5);
-                       v.setText("You're status\nhas been shared\non Facebook");
-                       v.setTextColor(Color.LTGRAY);
-                       v.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
-                       v.setBackgroundColor(Color.GRAY & Color.BLUE);
-                       v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.menu_item_facebook_bubble_alt, 0, 0, 0);
-                       v.setCompoundDrawablePadding(10);
-                       
-                       Toast t = new Toast(FindPrayer.this);
-                       t.setView(v);
-                       t.setDuration(Toast.LENGTH_LONG);                       
-                       t.setGravity(Gravity.CENTER, 0, 0);
-                       t.show();
-                       FindPrayer.this.menu.hide();
-                       statusBar.write("Facebook: Shared", R.drawable.menu_item_facebook_bubble_alt, 2000);
-                    }
-                    
-                    
-                                        
+                                                       
                     else if (id == ESPMenuItem.EXIT.id())
                     {
                         FindPrayer.this.menu.onMenuDismiss(new OnDismissListener()

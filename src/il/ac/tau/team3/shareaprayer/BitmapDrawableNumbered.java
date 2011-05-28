@@ -21,13 +21,19 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
 	private GeneralPlace place;
 	private Paint pBmp = new Paint();
 	private Paint p    = new Paint();
+	private Bitmap glow = null;
 	
 	//private static int lastDisplayed = 0;
 	
 	public BitmapDrawableNumbered(Bitmap image, GeneralPlace a_place)	{
+		this(image, a_place, null);
+	}
+	
+	public BitmapDrawableNumbered(Bitmap image, GeneralPlace a_place, Bitmap glow)	{
 		super(image);
 		place = a_place;
 		this.setBounds(0, 0, image.getWidth(), image.getHeight());
+		this.glow = glow;
 	}
 	
 	public int getNumber()	{
@@ -54,7 +60,13 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
     		int  numToDisplay= getNumber();
     		pBmp.setColorFilter(determineColor(numToDisplay));
             
-            arg.drawBitmap(getBitmap(), this.getBounds().left, this.getBounds().top, pBmp);
+    		int x = this.getBounds().left;
+    		int y = this.getBounds().top;
+            arg.drawBitmap(getBitmap(), x, y, pBmp);
+            
+            if (null != glow)	{
+            	arg.drawBitmap(glow, x, y, new Paint());
+            }
             
             p.setColor(Color.WHITE);
                     p.setStyle(Paint.Style.STROKE);

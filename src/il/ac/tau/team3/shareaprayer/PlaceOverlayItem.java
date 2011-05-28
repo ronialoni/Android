@@ -22,21 +22,28 @@ public class PlaceOverlayItem extends OverlayItem
     
     
     private GeneralPlace place;
+    private Drawable glow;
     
     /*** @throws UnknownLocationException 
      * @constructor ***/
     
-    public PlaceOverlayItem(GeneralPlace place, String title, String snippet, Drawable marker) throws UnknownLocationException
+    public PlaceOverlayItem(GeneralPlace place, String title, String snippet, Drawable marker) throws UnknownLocationException	{
+    	this(place, title, snippet, marker, null);
+    }
+    
+    public PlaceOverlayItem(GeneralPlace place, String title, String snippet, Drawable marker, Drawable glow) throws UnknownLocationException
     {
-                super(SPUtils.toGeoPoint(place.getSpGeoPoint()), title, snippet, marker);
+        super(SPUtils.toGeoPoint(place.getSpGeoPoint()), title, snippet, marker);
         this.place = place;
+        this.glow = glow;
     }
     
     @Override
     public synchronized Drawable getMarker() {
     	//return this.marker;
     	if (this.marker instanceof BitmapDrawable)	{
-    		return new BitmapDrawableNumbered(((BitmapDrawable)marker).getBitmap(), place);
+    		
+    		return new BitmapDrawableNumbered(((BitmapDrawable)marker).getBitmap(), place, glow == null ? null : ((BitmapDrawable)glow).getBitmap());
     	}
     	
     	return this.marker;

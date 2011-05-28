@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import il.ac.tau.team3.common.GeneralUser;
+import il.ac.tau.team3.shareaprayer.FacebookConnector;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
 import il.ac.tau.team3.shareaprayer.R;
 
@@ -31,6 +32,8 @@ public class MenuStatusUtils {
              public void onClick(View v)
              {
             	activity.setStatus(status.getText().toString());
+            	FacebookConnector fc = activity.getFacebookConnector();
+        		fc.publishOnFacebook(formatFacebookHeader_Status(status.getText().toString()) , formatFacebookDesc_Status(user));
                 dialog.dismiss();
              }
          });

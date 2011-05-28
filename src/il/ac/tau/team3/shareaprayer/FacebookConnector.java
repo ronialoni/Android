@@ -74,6 +74,10 @@ public class FacebookConnector {
 
 			public void onComplete(Bundle values) {
 				// TODO Auto-generated method stub
+				if(!facebook_configured){
+					publishOnFacebook("Started using Share-A-Prayer",
+							"Welcome to Share-A-Prayer. <br>" + "This application will help to find the closest minyan for the next pray.");
+				}
 				facebookConnected = true;
 				facebook_configured = true;
 				SharedPreferences.Editor edit = settings.edit();
@@ -82,8 +86,6 @@ public class FacebookConnector {
 				setConnectOnStartup(true);
 				
 				
-				publishOnFacebook("Started using Share-A-Prayer",
-						"Welcome to Share-A-Prayer. <br>" + "This application will help to find the closest minyan for the next pray.");
 				
 				
 				

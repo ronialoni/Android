@@ -511,7 +511,7 @@ extends MapActivity
 
         
         
-        statusBar = new StatusBarOverlay(this, mapView.getPaddingTop() + 24, mapView.getWidth() / 100, 12);
+        statusBar = new StatusBarOverlay(this, mapView.getPaddingTop() + 24, mapView.getWidth() / 100, 16);
         mapView.getOverlays().add(statusBar);
         
         /*
@@ -892,6 +892,7 @@ extends MapActivity
                        t.setGravity(Gravity.CENTER, 0, 0);
                        t.show();
                        FindPrayer.this.menu.hide();
+                       statusBar.write("Facebook: Shared", R.drawable.menu_item_facebook_bubble_alt, 2000);
                     }
                     
                     

@@ -51,6 +51,6 @@ public class MenuStatusUtils {
 	}
 	
 	static String formatFacebookDesc_Status(GeneralUser user){
-		return user.getFullName() + " just changed her status on Share-A-Prayer!";
+		return user.getFullName() + " just wrote a new status on Share-A-Prayer!";
 	}
 }

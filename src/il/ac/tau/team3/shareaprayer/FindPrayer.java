@@ -511,7 +511,7 @@ extends MapActivity
 
         
         
-        statusBar = new StatusBarOverlay(mapView.getPaddingTop() + 24, mapView.getWidth() / 100, 12);
+        statusBar = new StatusBarOverlay(this, mapView.getPaddingTop() + 24, mapView.getWidth() / 100, 12);
         mapView.getOverlays().add(statusBar);
         
         /*

@@ -28,7 +28,7 @@
         android:gravity       = "center"
         android:paddingBottom = "2dip"
         android:paddingTop    = "2dip"
-        /> 
+        />
     
     
     <TextView android:id      = "@+id/moi_caption"

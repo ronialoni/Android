@@ -16,7 +16,7 @@
     android:layout_height  = "match_parent"
     android:layout_gravity = "fill"
     android:padding        = "5dp" 
-    >   
+    >
     
     
     <!-- Head -->
@@ -32,7 +32,7 @@
         android:text          = "Wellcome"
         android:drawableLeft  = "@drawable/icon"
         />    
-     
+    
      
     <!-- Name -->
     

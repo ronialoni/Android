@@ -47,6 +47,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.Layout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -64,9 +65,11 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -121,8 +124,49 @@ public class UIUtils {
 	
 	
 	
+	/////////////////////////////////////
+	////////// EditText /////////////////
+	/////////////////////////////////////
+    
+		
+//	private static EditText getViewEditText(int resId, View parent)
+//	{
+//	    return (EditText) parent.findViewById(resId);
+//	}
+//	
+//	
+//	private static EditText getSearcBar(int resId, View parent)
+//	{
+//	    EditText bar = getViewEditText(resId, parent);
+//        bar.setMaxLines(1);
+//	    bar.setHorizontalFadingEdgeEnabled(true);
+//        bar.setHorizontallyScrolling(true);
+//        //bar.setFreezesText(true);
+//        
+//        bar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_item_new_edit_find_replace, 0);
+//        bar.setCompoundDrawablePadding(4);
+//	    return bar;
+//	}
+	
+	public static void initSearchBar(EditText searchBar)
+	{
+	    searchBar.setMaxLines(1);
+	    searchBar.setHorizontallyScrolling(true);
+	    searchBar.setHorizontalFadingEdgeEnabled(true);
+	    
+        
+	    searchBar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_item_new_edit_find_replace, 0);
+	    searchBar.setCompoundDrawablePadding(4);
+	}
+	
+	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
 	public static String[] HandleFirstTimeDialog(Account[] accounts, FindPrayer activity){
-		if (accounts.length == 0){
+		if (accounts.length == 0)
+		{
 			CreateNoAccountsDialog(activity);
 			return null;
 		}else{
@@ -622,13 +666,11 @@ public class UIUtils {
         private class SPOnTimeSetListener 
         implements OnTimeSetListener
         {
-            private int                  prayIndex;
-            private PrayTimePickerDialog oof;
+            private int prayIndex;
             
-            private SPOnTimeSetListener(/*PrayTimePickerDialog oof,*/ int prayIndex)
+            private SPOnTimeSetListener(int prayIndex)
             {
                 this.prayIndex = prayIndex;
-                //this.oof       = oof;
             }
             
             
@@ -644,6 +686,7 @@ public class UIUtils {
         }
         
         
+        
         private class PrayTimePickerDialog 
         extends TimePickerDialog
         {            
@@ -651,8 +694,7 @@ public class UIUtils {
             private int      prayIndex;
 
             
-            private PrayTimePickerDialog(int defHour, int defMin, 
-                                       CheckBox a_checkBox, final int a_prayIndex, int a_resIcon)
+            private PrayTimePickerDialog(int defHour, int defMin, CheckBox a_checkBox, final int a_prayIndex, int a_resIcon)
             {
                 super(activity, new SPOnTimeSetListener(a_prayIndex) , defHour, defMin, true);
                 
@@ -660,7 +702,7 @@ public class UIUtils {
                 this.setInverseBackgroundForced(true);
                 this.setCancelable(true);
                 this.setCanceledOnTouchOutside(true);
-                checkBox = a_checkBox;
+                this.checkBox  = a_checkBox;
                 this.prayIndex = a_prayIndex;                   ////   THIS WAS THE MAIN PROBLAM:  !!!!!!!!!!!
             }
     	
@@ -687,10 +729,8 @@ public class UIUtils {
                 this.checkBox.setChecked(CreatePlaceDialog.this.prays[this.prayIndex]);
                 super.dismiss();
         	}
-        	
-        	
-        	
         }
+        
         
         private class CheckBoxListener 
         implements OnCheckedChangeListener
@@ -701,7 +741,6 @@ public class UIUtils {
         	/*package*/ int      defHour;
         	/*package*/ int      defMinutes;
         	/*package*/ int      resIcon;
-        	
         	
             public CheckBoxListener(TextView timeTextView, int index, CheckBox checkBox, int defHour, int defMinutes, int resIcon)
             {
@@ -738,9 +777,7 @@ public class UIUtils {
                 {
                     timeTextView.setText("");
                     prays[index] = isChecked;    /** @imp ... = false; */  
-                }
-                
-                                     
+                }                    
             }
         }
         
@@ -757,21 +794,22 @@ public class UIUtils {
 					activity.runOnUiThread(new Runnable()	{
 
 						public void run() {
-							// TODO Auto-generated method stub
 							try	{
-							 if (!editAddress.getText().toString().equals(typed_address))	{
+							 if (! editAddress.getText().toString().equals(typed_address))	
+							 {
 								 return;
 							 }
 							 location = new SPGeoPoint(Obj.getResults()[0].getGeometry().getLocation().getLat(), 
 									 Obj.getResults()[0].getGeometry().getLocation().getLng());
-							 editAddress.setBackgroundColor(Color.GREEN);
+							 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
+							 
 							 createButton.setEnabled(true);
 							 
 							} catch (Exception e)	{
 								if (!editAddress.getText().toString().equals(typed_address))	{
 									 return;
 								 }
-								editAddress.setBackgroundColor(Color.RED);
+								editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
 								createButton.setEnabled(false);
 							}
 						}
@@ -784,14 +822,14 @@ public class UIUtils {
         		if (!editAddress.getText().toString().equals(typed_address))	{
 					 return;
 				 }
-        		editAddress.setBackgroundColor(Color.RED);
+        		editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
 				createButton.setEnabled(false);
         	}
         	
         }
         
         private  void verifyAddress(String address)	{
-        	editAddress.setBackgroundColor(Color.YELLOW);
+            editAddress.setBackgroundResource(R.drawable.selector_edittext_yellow);
         	activity.getSPComm().searchForAddress(address, new MapsQueryAddress(address));
         }
         
@@ -838,8 +876,12 @@ public class UIUtils {
 			
 			createButton.setEnabled(false);
 			
+			//TTT
 			editAddress = (EditText) dialog.findViewById(R.id.CPDeditText1);
-			editAddress.setBackgroundColor(Color.YELLOW);
+			initSearchBar(editAddress);
+			
+			
+			editAddress.setBackgroundResource(R.drawable.selector_edittext_yellow);
 			
 			location = point;
 			
@@ -865,11 +907,11 @@ public class UIUtils {
 								// TODO Auto-generated method stub
 								try	{
 								 editAddress.setText(Obj.getResults()[0].getFormatted_address());
-								 editAddress.setBackgroundColor(Color.GREEN);
+								 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
 								 createButton.setEnabled(true);
 								 
 								} catch (Exception e)	{
-									editAddress.setBackgroundColor(Color.RED);
+								    editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
 								}
 							}
 							

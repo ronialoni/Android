@@ -435,6 +435,8 @@ extends MapActivity
 
 		mapView = (SPMapView) findViewById(R.id.view1);
 		editText = (EditText) findViewById(R.id.addressBar);
+		UIUtils.initSearchBar(editText);
+		
 		
         mapView.registerTapListener(new IMapTapDetect()	
         {
@@ -848,7 +850,6 @@ extends MapActivity
                         SPUtils.debugToast("The SearchBar is now: " + "Focused. \n(We can make it pop & hide?).", FindPrayer.this);
                         
                         // Displaying the search bar
-                        
                         EditText edittext = (EditText) FindPrayer.this.findViewById(R.id.addressBar);
                         edittext.setVisibility(View.VISIBLE);
                         edittext.setFocusable(true);

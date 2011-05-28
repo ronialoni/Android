@@ -88,8 +88,9 @@ public final class SPMenus
         PLACES   (1, R.drawable.menu_item_find_green_wifi,   ESPSubMenuPlaces.class  ),
         PEOPLE (2, R.drawable.menu_item_sign_in_men_colorful,  ESPSubMenuPeople.class),
         SETTINGS (3, R.drawable.menu_item_sign_in_men_colorful,  ESPSubMenuSettings.class),
-        STATUS    (4, R.drawable.menu_item_map_optiond_starthere, null),
-        EXIT   (5, R.drawable.menu_item_exit_door_greener, null),
+        FACEBOOK (4, R.drawable.menu_item_sign_in_men_colorful,  null),
+        STATUS    (5, R.drawable.menu_item_map_optiond_starthere, null),
+        EXIT   (6, R.drawable.menu_item_exit_door_greener, null),
         ;
 
         private final int                       index;
@@ -233,8 +234,7 @@ public final class SPMenus
     {
         
         PROFILE      (0, R.drawable.menu_item_user_red_sruga ),
-        FACEBOOK (1, R.drawable.menu_item_mesure_package_graphics),
-        VIEW  (2, R.drawable.menu_item_place_dark_blue),
+        VIEW  (1, R.drawable.menu_item_place_dark_blue),
         
         ;
           

@@ -16,6 +16,7 @@ import il.ac.tau.team3.spcomm.SPComm;
 
 
 import il.ac.tau.team3.uiutils.ISPMenuItem;
+import il.ac.tau.team3.uiutils.MenuFacebookUtils;
 import il.ac.tau.team3.uiutils.MenuSettingsUtils;
 import il.ac.tau.team3.uiutils.MenuStatusUtils;
 import il.ac.tau.team3.uiutils.MenuUtils;
@@ -809,10 +810,11 @@ extends MapActivity
                         FindPrayer.this.menu.hide();
                     }
                     
-                    else if (id == SPMenus.ESPSubMenuSettings.FACEBOOK.id())
+                    else if (id == ESPMenuItem.FACEBOOK.id())
                     {
-                        FindPrayer.this.centerMap();
-                        FindPrayer.this.menu.hide();
+                    	FindPrayer.this.menu.hide();
+                        new MenuFacebookUtils(FindPrayer.this);
+                        
                     }
                                         
                     else if (id == ESPSubMenuFind.CLOSEST.id())
@@ -860,11 +862,7 @@ extends MapActivity
                         
                         // Apparently, only the sub gets closed...
                         FindPrayer.this.menu.hide(); // TODO this is BAD, make separate methods in SPMenu.
-                    } else if (id == SPMenus.ESPSubMenuSettings.FACEBOOK.id())
-                    {
-                    	
-                        FindPrayer.this.menu.hide();
-                    }
+                    } 
                     
                     else if (id == SPMenus.ESPSubMenuSettings.PROFILE.id())
                     {

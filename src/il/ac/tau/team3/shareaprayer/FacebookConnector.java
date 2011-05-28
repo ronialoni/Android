@@ -24,10 +24,23 @@ public class FacebookConnector {
 	
 	private final String FACEBOOK_STARTUP_KEY = "FACEBOOK_STARTUP";
 	private final String FACEBOOK_CONFIGURED_KEY = "FACEBOOK_CONFIGURED";
+	private final String FACEBOOK_SHARE_KEY = "FACEBOOK_SHARE";
 	
 	private boolean facebook_connectStatup = false;
+	private boolean facebook_share = false;
 	private boolean facebook_configured = false;
 	
+	
+	public boolean isFacebook_connectStatup() {
+		return facebook_connectStatup;
+	}
+	
+	public boolean isFacebook_configured() {
+		return facebook_configured;
+	}
+
+
+
 	private Activity activity;
 	
 	private SharedPreferences settings;
@@ -87,14 +100,29 @@ public class FacebookConnector {
         });
 
 	}
+	
+	public void logout()	{
+		try {
+			facebook.logout(activity);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally	{
+			facebookConnected = false;
+		}
+	}
 
     public FacebookConnector(Activity a)	{
     	activity = a;
     	
     	settings = a.getSharedPreferences("ShareAPrayer", 0);
     	
-    	facebook_connectStatup = settings.getBoolean(FACEBOOK_STARTUP_KEY, false);
+    	facebook_connectStatup = settings.getBoolean(FACEBOOK_STARTUP_KEY, true);
     	facebook_configured = settings.getBoolean(FACEBOOK_CONFIGURED_KEY, false);
+    	facebook_share = settings.getBoolean(FACEBOOK_SHARE_KEY, false);
     	
     	if (facebook_connectStatup)	{
     		connect();
@@ -105,7 +133,7 @@ public class FacebookConnector {
 	
 	
 	public void publishOnFacebook(final String headline, final String description)	{
-		if ((!facebookConnected) || (!facebook_connectStatup) || (!facebook_configured))	{
+		if ((!facebookConnected) || (!facebook_share) || (!facebook_configured))	{
 			return;
 		}
 		
@@ -157,6 +185,17 @@ public class FacebookConnector {
 
     public void autherizeCallback(int requestCode, int resultCode, Intent data)	{
 		facebook.authorizeCallback(requestCode, resultCode, data);
+	}
+
+	public void setFacebook_share(boolean facebook_share) {
+		this.facebook_share = facebook_share;
+		SharedPreferences.Editor edit = settings.edit();
+		edit.putBoolean(FACEBOOK_SHARE_KEY, facebook_share);
+		edit.commit();
+	}
+
+	public boolean isFacebook_share() {
+		return facebook_share;
 	}
 	
 	

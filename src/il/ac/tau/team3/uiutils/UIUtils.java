@@ -611,7 +611,7 @@ public class UIUtils {
 	
 	private static class CreatePlaceDialog	
 	{		
-		private NoTitleDialog dialog;
+		private Dialog dialog;
 		private EditText editAddress;
 		private Calendar startDate = new GregorianCalendar(); 
 		private Calendar endDate = new GregorianCalendar(); 

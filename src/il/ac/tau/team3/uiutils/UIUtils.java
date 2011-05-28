@@ -536,9 +536,12 @@ public class UIUtils {
 						lv.setOnItemClickListener(new OnItemClickListener() {
 						    public void onItemClick(AdapterView<?> parent, View view,
 						        int position, long id) {
+						    	try{
 						    	String clickedUserName = ((String) ((TextView) view).getText());
 						    	GeneralUser clickedUser = getUserByName(p.getJoiners(), clickedUserName);
 						    	if (clickedUser != null) new UserDetailsDialog(clickedUser, (FindPrayer) activity);
+						    	}
+						    	catch (NullPointerException npe){}
 						    }
 						  });
 						
@@ -1166,7 +1169,7 @@ public class UIUtils {
 	}
 	
 	private static GeneralUser getUserByName(List<GeneralUser> joiners, String clickedUserName) {
-		if (joiners == null || clickedUserName == null) return null;
+		if (joiners == null) return null;
 		for (GeneralUser user : joiners){
 			if (user.getFullName().equals(clickedUserName) ||
 					user.getName().equals(clickedUserName)) return user;

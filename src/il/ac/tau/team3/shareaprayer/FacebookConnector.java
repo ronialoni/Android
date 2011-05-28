@@ -79,6 +79,8 @@ public class FacebookConnector {
 				SharedPreferences.Editor edit = settings.edit();
 				edit.putBoolean(FACEBOOK_CONFIGURED_KEY, facebook_configured);
 				edit.commit();
+				setConnectOnStartup(true);
+				
 				
 				publishOnFacebook("Started using Share-A-Prayer",
 						"Welcome to Share-A-Prayer. <br>" + "This application will help to find the closest minyan for the next pray.");
@@ -120,7 +122,7 @@ public class FacebookConnector {
     	
     	settings = a.getSharedPreferences("ShareAPrayer", 0);
     	
-    	facebook_connectStatup = settings.getBoolean(FACEBOOK_STARTUP_KEY, true);
+    	facebook_connectStatup = settings.getBoolean(FACEBOOK_STARTUP_KEY, false);
     	facebook_configured = settings.getBoolean(FACEBOOK_CONFIGURED_KEY, false);
     	facebook_share = settings.getBoolean(FACEBOOK_SHARE_KEY, false);
     	

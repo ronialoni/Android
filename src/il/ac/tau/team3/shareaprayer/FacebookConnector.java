@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -21,9 +22,25 @@ public class FacebookConnector {
 	private boolean facebookConnected = false;
 	private final String desc_footer = "<br>For futher details: download http://share-a-prayer.googlecode.com/files/ShareAPrayer.apk";
 	
-
-    public FacebookConnector(Activity a)	{
-        facebook.authorize(a, new String[]{"publish_stream"/*,"read_stream","offline_access"*/},-1, new DialogListener() {
+	private final String FACEBOOK_STARTUP_KEY = "FACEBOOK_STARTUP";
+	private final String FACEBOOK_CONFIGURED_KEY = "FACEBOOK_CONFIGURED";
+	
+	private boolean facebook_connectStatup = false;
+	private boolean facebook_configured = false;
+	
+	private Activity activity;
+	
+	private SharedPreferences settings;
+	
+	public void setConnectOnStartup(boolean startup)	{
+		facebook_connectStatup = startup;
+		SharedPreferences.Editor edit = settings.edit();
+		edit.putBoolean(FACEBOOK_STARTUP_KEY, facebook_connectStatup);
+		edit.commit();
+	}
+	
+	public void connect()	{
+			facebook.authorize(activity, new String[]{"publish_stream"/*,"read_stream","offline_access"*/},0, new DialogListener() {
         	
 			public void onCancel() {
 				// TODO Auto-generated method stub
@@ -33,6 +50,11 @@ public class FacebookConnector {
 			public void onComplete(Bundle values) {
 				// TODO Auto-generated method stub
 				facebookConnected = true;
+				facebook_configured = true;
+				SharedPreferences.Editor edit = settings.edit();
+				edit.putBoolean(FACEBOOK_CONFIGURED_KEY, facebook_configured);
+				edit.commit();
+				
 				publishOnFacebook("Started using Share-A-Prayer",
 						"Welcome to Share-A-Prayer. <br>" + "This application will help to find the closest minyan for the next pray.");
 				
@@ -51,12 +73,27 @@ public class FacebookConnector {
 			}
 
         });
+
 	}
+
+    public FacebookConnector(Activity a)	{
+    	activity = a;
+    	
+    	settings = a.getSharedPreferences("ShareAPrayer", 0);
+    	
+    	facebook_connectStatup = settings.getBoolean(FACEBOOK_STARTUP_KEY, false);
+    	facebook_configured = settings.getBoolean(FACEBOOK_CONFIGURED_KEY, false);
+    	
+    	if ((facebook_connectStatup) && (facebook_configured))	{
+    		connect();
+    	}
+    		
+      }
 
 	
 	
 	public void publishOnFacebook(final String headline, final String description)	{
-		if (!facebookConnected)	{
+		if ((!facebookConnected) || (!facebook_connectStatup) || (!facebook_configured))	{
 			return;
 		}
 		

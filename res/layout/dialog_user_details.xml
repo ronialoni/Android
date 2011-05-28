@@ -47,8 +47,8 @@
 		    	android:drawableLeft="@drawable/status_icon" 
 		    	android:minLines = "3"
 		    	android:typeface = "serif"
-		    	android:paddingTop = "30dp"
-		    	android:paddingBottom = "30dp"
+		    	android:paddingTop = "20dp"
+		    	android:paddingBottom = "20dp"
 		    	></TextView>
     	
 		    <TextView 
@@ -57,35 +57,54 @@
 		    	android:text="fetching..." 
 		    	android:layout_width="fill_parent"
 		    	android:drawableLeft="@drawable/user_blue_small" 
+		    	android:paddingBottom = "20dp"
 		    	android:gravity="center_horizontal">
 		    	</TextView>
 		    	
-		    <TextView 
-		    	android:id="@+id/DUDMail" 
-		    	android:layout_height="wrap_content" 
-		    	android:text="mail" 
-		    	android:layout_width="fill_parent"
-		    	android:drawableLeft="@drawable/mail_icon" 
-		    	android:gravity="center_horizontal"
-		    	android:autoLink="all"
-		    	></TextView>
-		    
-		    <!-- 
 		    <LinearLayout 
-		    	android:id="@+id/DUDlinearLayout1" 
-		    	android:layout_width="fill_parent" 
 		    	android:layout_height="wrap_content" 
-		    	android:gravity="center"
+		    	android:id="@+id/DUDlinearLayout123" 
+		    	android:layout_width="fill_parent"
+		    	android:paddingBottom = "20dp"
 		    	>
-		     -->
+		        
+		        <ImageButton 
+    			android:id="@+id/DUDChat" 
+    			android:layout_height="wrap_content" 
+    			android:layout_gravity="center"
+    			android:layout_width="wrap_content"
+    			android:layout_weight=".1"
+    			android:src="@drawable/gtalk_icon" 
+		    	></ImageButton>
+		        
+		        <TextView 
+		        	android:id="@+id/DUDMail" 
+		        	android:layout_width="wrap_content" 
+		        	android:gravity="center" 
+		        	android:layout_gravity="center"
+		        	android:text="mail" 
+		        	android:layout_weight=".8"
+		        	android:layout_height="wrap_content" 
+		        	></TextView>
+		        
+		       <ImageButton 
+    			android:id="@+id/DUDEmail" 
+    			android:layout_height="wrap_content" 
+    			android:layout_gravity="center"
+    			android:layout_weight=".1"
+    			android:layout_width="wrap_content"
+    			android:src="@drawable/mail_icon" 
+		    	></ImageButton>
+		    
+		    </LinearLayout>
+		    
 		    	<Button 
 			    	android:text="Close" 
 			    	android:id="@+id/DUDClose" 
 			    	android:layout_width="wrap_content" 
 			    	android:gravity = "center"
 		    		android:layout_height="wrap_content"
-		    	></Button>
-		    	<!-- </LinearLayout> -->
+		    	android:minWidth="100dp"></Button>
    			</LinearLayout>
         </TableLayout>
 </LinearLayout>

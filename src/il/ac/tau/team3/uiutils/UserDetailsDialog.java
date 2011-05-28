@@ -6,17 +6,11 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.view.Gravity;
+import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 import il.ac.tau.team3.addressQuery.MapsQueryLocation;
@@ -37,7 +31,7 @@ public class UserDetailsDialog {
 	private Button btn_dismiss;
 	//private PopupWindow window;
 	
-	public UserDetailsDialog(GeneralUser user, final FindPrayer activity)	
+	public UserDetailsDialog(final GeneralUser user, final FindPrayer activity)	
 	{
 		this.user = user;
 		this.activity = activity;
@@ -72,30 +66,54 @@ public class UserDetailsDialog {
         
         // Mail
         user_mail.setText(this.user.getName());
-        user_mail.setClickable(true);
-        user_mail.setLinkTextColor(Color.WHITE);
-        user_mail.setOnClickListener(new OnClickListener()
-        {                
-            public void onClick(View v)
-            {
-            	try{
-            		Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-	            	//activity.startActivity(Intent.createChooser(emailIntent, "Send your email in:"));
-	            	activity.startActivity(emailIntent);
-            	}
-            	catch(UnsupportedOperationException e){
-            		e.printStackTrace();
-            	}
-            	catch(NullPointerException e){
-            		e.printStackTrace();
-            	}
-            	catch(ActivityNotFoundException e){
-            		e.printStackTrace();
-            	}
-            }
-        });
+        user_mail.setTextColor(Color.WHITE);
         
- 
+        ImageButton chat = (ImageButton) dialog.findViewById(R.id.DUDChat);
+        ImageButton email = (ImageButton) dialog.findViewById(R.id.DUDEmail);
+        
+		chat.setOnClickListener(new OnClickListener() 
+		{
+			public void onClick(View view) 
+			{
+				try{
+					Uri imUri = new Uri.Builder().scheme("imto").authority("gtalk").appendPath(user.getName()).build();
+					Intent chatintent = new Intent(Intent.ACTION_SENDTO, imUri);
+					activity.startActivity(chatintent);
+				}
+				catch(UnsupportedOperationException e){
+					e.printStackTrace();
+				}
+				catch(NullPointerException e){
+					e.printStackTrace();
+				}
+				catch(ActivityNotFoundException e){
+					e.printStackTrace();
+				}
+			};
+		});
+            		
+		email.setOnClickListener(new OnClickListener() 
+		{
+			public void onClick(View view) 
+			{
+				try {
+					Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+					emailIntent.setType("plain/text");
+					emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{user.getName()});
+					activity.startActivity(emailIntent);
+//					activity.startActivity(Intent.createChooser(emailIntent, "Send your email in:"));
+				}
+				catch(UnsupportedOperationException e){
+					e.printStackTrace();
+				}
+				catch(NullPointerException e){
+					e.printStackTrace();
+				}
+				catch(ActivityNotFoundException e){
+					e.printStackTrace();
+				}
+			};
+		});
 		
 		try 
 		{
@@ -152,9 +170,6 @@ public class UserDetailsDialog {
 		});
 		
 		dialog.show();
-		
-		//window.showAtLocation(activity.getCurrentFocus(), Gravity.TOP, 0, 0);
-		
 	}
 	
 	

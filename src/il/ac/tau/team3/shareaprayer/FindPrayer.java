@@ -441,7 +441,6 @@ extends MapActivity
 			public void onTouchEvent(SPGeoPoint sp) 
 			{
 				NewPlaceCall(sp);
-				if (editText.isShown()) editText.setVisibility(View.GONE);
 			}
         });
         
@@ -803,6 +802,23 @@ extends MapActivity
                         FindPrayer.this.menu.hide();
                     }
                     
+                    else if (id == SPMenus.ESPSubMenuSettings.FACEBOOK.id())
+                    {
+                        FindPrayer.this.centerMap();
+                        FindPrayer.this.menu.hide();
+                    }
+                    
+                    else if (id == SPMenus.ESPSubMenuSettings.PROFILE.id())
+                    {
+                        FindPrayer.this.centerMap();
+                        FindPrayer.this.menu.hide();
+                    }
+                    
+                    else if (id == SPMenus.ESPSubMenuSettings.VIEW.id())
+                    {
+                        FindPrayer.this.centerMap();
+                        FindPrayer.this.menu.hide();
+                    }
                     
                     else if (id == ESPSubMenuFind.CLOSEST.id())
                     {
@@ -833,8 +849,9 @@ extends MapActivity
                         
                         // Displaying the search bar
                         
-                        FindPrayer.this.editText.setVisibility(View.VISIBLE);
-                        editText.setFocusable(true);
+                        EditText edittext = (EditText) FindPrayer.this.findViewById(R.id.addressBar);
+                        edittext.setVisibility(View.VISIBLE);
+                        edittext.setFocusable(true);
                         
                         //FindPrayer.this.menu.hide();  
                         FindPrayer.this.menu.onMenuDismiss(new OnDismissListener()

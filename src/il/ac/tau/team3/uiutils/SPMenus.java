@@ -2,6 +2,7 @@ package il.ac.tau.team3.uiutils;
 
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -64,6 +65,11 @@ public final class SPMenus
         {
             debug(item);
         }
+        
+        for (ESPSubMenuSettings item : ESPSubMenuSettings.values())
+        {
+            debug(item);
+        }
         SPUtils.debug("");
     }
     
@@ -78,24 +84,30 @@ public final class SPMenus
     public enum ESPMenuItem
     implements ISPMenuItem
     {
-        FIND   (0, R.drawable.menu_item_find_green_wifi,       new TreeSet<ISPSubMenuItem>()),
-        PEOPLE (1, R.drawable.menu_item_sign_in_men_colorful,  new TreeSet<ISPSubMenuItem>()),
-        MAP    (2, R.drawable.menu_item_map_optiond_starthere, new TreeSet<ISPSubMenuItem>()),
-        EXIT   (3, R.drawable.menu_item_exit_door_greener,     null),
+        FIND   (0, R.drawable.menu_item_find_green_wifi,   ESPSubMenuFind.class  ),
+        PEOPLE (1, R.drawable.menu_item_sign_in_men_colorful,  ESPSubMenuPeople.class),
+        SETTINGS (2, R.drawable.menu_item_sign_in_men_colorful,  ESPSubMenuSettings.class),
+        MAP    (4, R.drawable.menu_item_map_optiond_starthere, ESPSubMenuMap.class),
+        EXIT   (3, R.drawable.menu_item_exit_door_greener, null),
         ;
 
         private final int                       index;
         private final int                       resIconId;
         private final SortedSet<ISPSubMenuItem> subItems;     
         
-        private ESPMenuItem(int index, int resIconId, SortedSet<ISPSubMenuItem> subItems)
+        private ESPMenuItem(int index, int resIconId, Class<? extends ISPSubMenuItem> subItems)
         {
-            //SPUtils.debugFuncStart("ESPMenuItem", index, resIconId, subMenuItems);
-            //SPUtils.debug("id = " + this.getItemId());
-            
+           
             this.index     = index;
             this.resIconId = resIconId;
-            this.subItems  = subItems;
+            this.subItems  = new TreeSet<ISPSubMenuItem>();
+            if (null == subItems ){
+            	return;
+            }
+            for (ISPSubMenuItem item : subItems.getEnumConstants())	{
+            	this.subItems.add(item);
+            }
+            
         }
         
         
@@ -176,14 +188,10 @@ public final class SPMenus
         
         private ESPSubMenuFind(int index, int resIconId)
         {
-            //SPUtils.debugFuncStart("ESPSubMenuFind", index, resIconId);
-            //SPUtils.debug("id = " + this.getItemId());
-            
             this.index     = index ;
             this.resIconId = resIconId;
-            ESPMenuItem.FIND.addSubItem(this);
+            
         }
-        
         
         
         public String title()
@@ -220,7 +228,67 @@ public final class SPMenus
     }
 
     
-    
+    public enum ESPSubMenuSettings
+    implements ISPSubMenuItem
+    {
+        
+        PROFILE      (0, R.drawable.menu_item_user_red_sruga ),
+        FACEBOOK (1, R.drawable.menu_item_mesure_package_graphics),
+        VIEW  (2, R.drawable.menu_item_place_dark_blue),
+        
+        ;
+          
+        public ISPMenuItem getParent()
+        {
+             return ESPMenuItem.SETTINGS;
+        }
+        
+        private final int index;
+        private final int resIconId;
+        
+        
+        private ESPSubMenuSettings(int index, int resIconId)
+        {
+                
+            this.index     = index ;
+            this.resIconId = resIconId;
+           // ESPMenuItem.SETTINGS.addSubItem(this);
+        }
+        
+        
+        
+        public String title()
+        {
+            return this.toString().replace('_', ' ').toUpperCase();
+        }
+                
+        public int id()
+        {
+            return this.index + ESPMenuItem.SETTINGS.offsetId();
+        }
+                
+        public int resIconId()
+        {           
+            return resIconId;
+        }
+
+        public int index()
+        {
+            return this.index;
+        }
+
+
+
+        public boolean hasSubMenu()
+        {
+            return false;
+        }
+        
+        public ISPSubMenuItem[] getSubMenuItems()
+        {
+            return null;
+        }
+    }
     
     
     /**
@@ -249,7 +317,7 @@ public final class SPMenus
         {
             this.index     = index ;
             this.resIconId = resIconId;
-            ESPMenuItem.PEOPLE.addSubItem(this);
+          //  ESPMenuItem.PEOPLE.addSubItem(this);
         }
         
         
@@ -321,7 +389,7 @@ public final class SPMenus
         {
             this.index     = index ;
             this.resIconId = resIconId;
-            ESPMenuItem.MAP.addSubItem(this);
+           // ESPMenuItem.MAP.addSubItem(this);
         }
         
         

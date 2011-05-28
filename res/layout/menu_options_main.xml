@@ -36,6 +36,11 @@
         >
         <!-- Empty. --> 
     </TableRow> 
-    
+    <TableRow android:id      = "@+id/mom_items_row2"
+        android:layout_width  = "fill_parent" 
+        android:layout_height = "wrap_content"
+        >
+        <!-- Empty. --> 
+    </TableRow> 
     
 </TableLayout>

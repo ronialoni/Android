@@ -31,6 +31,8 @@ public class SPMenu
     private static final int SP_MENU_ITEM_SIZE = 64;
     
     private static final int SP_MENU_RES_ROOT  = R.layout.menu_options_main;
+    
+    private static final int _sItemsPerRow = 4;
     //private static final int SP_MENU_ITEM_RES_ID = R.id.mom_items_row;
     
     
@@ -147,7 +149,7 @@ public class SPMenu
         itemView.setGravity(Gravity.CENTER);
         UIUtils.setPadding(itemView, 5);
         itemView.setFadingEdgeLength(5);
-        itemView.setWidth(UIUtils.getContextWidth(activity) / this.items.length);
+        itemView.setWidth(UIUtils.getContextWidth(activity) / Math.min(this.items.length ,_sItemsPerRow));
         itemView.setText(item.title());
         itemView.setCompoundDrawablesWithIntrinsicBounds(0, item.resIconId(), 0, 0);
         itemView.setBackgroundResource(R.drawable.selector_menu_item);
@@ -193,10 +195,15 @@ public class SPMenu
         menuWindow.setTouchable(true);
         menuWindow.setOutsideTouchable(true);
         
+        TableRow[] itemTableRows = new TableRow[2];
         
-        
-        TableRow itemTableRow = (TableRow) menuRoot.findViewById(R.id.mom_items_row);
-        itemTableRow.removeAllViews();
+       itemTableRows[0]= (TableRow) menuRoot.findViewById(R.id.mom_items_row);
+       
+        itemTableRows[1] = (TableRow) menuRoot.findViewById(R.id.mom_items_row2);
+        for (TableRow row :  itemTableRows){
+        	  row.removeAllViews();
+        }
+      
                 
         TextView  itemView  = null;
         for (final ISPMenuItem item : this.items)
@@ -261,15 +268,14 @@ public class SPMenu
                         SPMenu.this.menuWindow.getContentView().measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
                         
                         
-                        final int menuItemWidth = SPMenu.this.menuWindow.getContentView().getMeasuredWidth() / ESPMenuItem.values().length;
+                        final int menuItemWidth = SPMenu.this.menuWindow.getContentView().getMeasuredWidth() / Math.min(_sItemsPerRow,items.length);
                         final int menuHight     = SPMenu.this.menuWindow.getContentView().getMeasuredHeight();
                         //pwin.setFocusable(true);
                         subWindow.setOutsideTouchable(true);
                         subWindow.setTouchable(true);
                                         
-                        SPUtils.debug("x = " + (menuItemWidth * ESPMenuItem.values().length) + ", y = " + menuHight);
-                        
-                        subWindow.showAtLocation(activity.findViewById(buttomViewResId), Gravity.BOTTOM | Gravity.LEFT, menuItemWidth * (item.index()), menuHight);
+                                              
+                        subWindow.showAtLocation(activity.findViewById(buttomViewResId), Gravity.BOTTOM | Gravity.LEFT, menuItemWidth * (item.index()%_sItemsPerRow), menuHight / (1+(item.index()/_sItemsPerRow)));
                       
                         
                         SPMenu.this.menuListener.onMenuItemSelected(item, v);
@@ -286,8 +292,8 @@ public class SPMenu
             
             
             
-            itemTableRow.addView(itemView, item.index());
-            //itemTableRow.addView(itemView);
+            itemTableRows[item.index()/_sItemsPerRow].addView(itemView, (item.index()%_sItemsPerRow));
+           
         }        
         
         

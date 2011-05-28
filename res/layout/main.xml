@@ -20,7 +20,7 @@
 		android:layout_height="wrap_content"
 		android:text=""
 		android:singleLine="True"
-		android:visibility = "gone"
+		
 		/>	
     	
    	<il.ac.tau.team3.shareaprayer.SPMapView   	

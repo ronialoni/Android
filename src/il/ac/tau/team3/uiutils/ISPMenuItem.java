@@ -34,7 +34,7 @@ public interface ISPMenuItem
     extends ISPMenuItem
     {
         abstract public ISPMenuItem getParent();
-        
+       
     }
     
 }

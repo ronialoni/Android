@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
     <TableLayout 
-    	android:id				="@+id/tableLayout1" 
+    	android:id				="@+id/DPRtableLayout1" 
     	android:layout_width	="fill_parent" 
     	android:layout_height	="fill_parent" 
+		    android:background = "@drawable/background"
     	xmlns:android			="http://schemas.android.com/apk/res/android">
         
-        <LinearLayout android:id	="@+id/linearLayout1" 
-        	android:layout_width	="fill_parent" 
-        	android:layout_height	="wrap_content">
-        </LinearLayout>
+        <TextView 
+        	android:text="Title" 
+        	android:id="@+id/DPRTitle" 
+        	android:layout_height="wrap_content"
+        	android:gravity="center"
+	    	android:layout_width="fill_parent"
+		    android:textStyle = "bold"
+		    android:typeface  = "serif"
+		    android:textSize = "20dp"
+		    android:background = "@drawable/background"
+        	/>
         
         <TextView 
         	android:text			="Address:" 
@@ -39,7 +47,7 @@
         	android:id				="@+id/DPRdates"></TextView>
         
         <TableRow 
-        	android:id				="@+id/tableRow12" 
+        	android:id				="@+id/DPRtableRow12" 
         	android:layout_width	="fill_parent" 
         	android:layout_height	="wrap_content">
             
@@ -77,7 +85,7 @@
         </TableRow>
         
         <TableRow 
-        	android:id				="@+id/tableRow1" 
+        	android:id				="@+id/DPRtableRow13" 
         	android:layout_width	="fill_parent" 
         	android:layout_height	="wrap_content">
             
@@ -116,7 +124,7 @@
         </TableRow>
        
         <TableRow 
-        	android:id				="@+id/tableRow2" 
+        	android:id				="@+id/DPRtableRow23" 
         	android:layout_width	="wrap_content" 
         	android:layout_height	="wrap_content">
             
@@ -155,7 +163,7 @@
         </TableRow>
         
         <TableRow 
-        	android:id				="@+id/tableRow3" 
+        	android:id				="@+id/DPRtableRow33" 
         	android:layout_width	="wrap_content" 
         	android:layout_height	="wrap_content">
             
@@ -193,7 +201,7 @@
         </TableRow>
         
         <LinearLayout 
-            android:id="@+id/linearLayout1" 
+            android:id="@+id/DPRlinearLayout11" 
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content">
             

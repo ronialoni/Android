@@ -419,10 +419,13 @@ public class UIUtils {
 		} 
  
 		final Context activity = placeOverlay.getActivity();
-		final Dialog dialog = new Dialog(activity);
+		final NoTitleDialog dialog = new NoTitleDialog(activity);
 		dialog.setContentView(R.layout.dialog_place_registration);
-		dialog.setTitle(place.getName());
 		dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		
+		// Title
+		TextView title = (TextView) dialog.findViewById(R.id.DPRTitle);
+		title.setText(place.getName());
 		
 		// Address and Dates
 		TextView placeAddress = (TextView) dialog.findViewById(R.id.DPRaddress);
@@ -608,7 +611,7 @@ public class UIUtils {
 	
 	private static class CreatePlaceDialog	
 	{		
-		private Dialog dialog;
+		private NoTitleDialog dialog;
 		private EditText editAddress;
 		private Calendar startDate = new GregorianCalendar(); 
 		private Calendar endDate = new GregorianCalendar(); 
@@ -867,7 +870,7 @@ public class UIUtils {
 			  
 			activity = a_activity;
 			
-			dialog = new Dialog(activity);
+			dialog = new NoTitleDialog(activity);
 			dialog.setCancelable(true);
 			dialog.setContentView(R.layout.dialog_place_create);
 			dialog.setTitle(R.string.create_place_title);

@@ -49,11 +49,11 @@ public final class SPMenus
     implements ISPMenuItem
     {
         FIND   (0, R.drawable.menu_item_find_green_wifi,   ESPSubMenuFind.class  ),
-        PLACES   (1, R.drawable.menu_item_find_green_wifi,   ESPSubMenuPlaces.class  ),
-        SETTINGS (2, R.drawable.menu_item_sign_in_men_colorful,  ESPSubMenuSettings.class),
-        FACEBOOK (3, R.drawable.menu_item_sign_in_men_colorful,  null),
-        STATUS    (4, R.drawable.menu_item_map_optiond_starthere, null),
-        EXIT   (5, R.drawable.menu_item_exit_door_greener, null),
+        PLACES   (1, R.drawable.place_white_david,   ESPSubMenuPlaces.class  ),
+        SETTINGS (2, R.drawable.settings_icon,  ESPSubMenuSettings.class),
+        FACEBOOK (3, R.drawable.fb_icon,  null),
+        STATUS    (4, R.drawable.status_icon, null),
+        EXIT   (5, R.drawable.exit_icon, null),
         ;
 
         private final int                       index;
@@ -256,9 +256,9 @@ public final class SPMenus
     implements ISPSubMenuItem
     {
         
-        CREATE	(0, R.drawable.menu_item_user_red_sruga ),
-    	OWNED   (1, R.drawable.menu_item_user_red_sruga ),
-        JOINED 	(2, R.drawable.menu_item_mesure_package_graphics),
+        CREATE	(0, R.drawable.create_icon ),
+    	OWNED   (1, R.drawable.owned_icon ),
+        JOINED 	(2, R.drawable.joined_icon),
         ;
           
         public ISPMenuItem getParent()

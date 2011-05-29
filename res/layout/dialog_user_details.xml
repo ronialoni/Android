@@ -56,7 +56,7 @@
 		    	android:layout_height="wrap_content" 
 		    	android:text="fetching..." 
 		    	android:layout_width="fill_parent"
-		    	android:drawableLeft="@drawable/user_blue_small" 
+		    	android:drawableLeft="@drawable/radar_icon" 
 		    	android:paddingBottom = "20dp"
 		    	android:gravity="center_horizontal">
 		    	</TextView>

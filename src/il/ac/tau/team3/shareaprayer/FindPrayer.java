@@ -544,7 +544,6 @@ extends MapActivity
 		otherUsersOverlay   = new UserArrayItemizedOverlay(othersDefaultMarker, this);
 		mapView.getOverlays().add(otherUsersOverlay);	 
 		
-		
         // Define a listener that responds to location updates
     	locationListener = new ILocationProv() 
     	{

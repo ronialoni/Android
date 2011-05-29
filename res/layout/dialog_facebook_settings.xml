@@ -1,40 +1,45 @@
-<LinearLayout xmlns:android = "http://schemas.android.com/apk/res/android"
-             android:id    = "@+id/DFS_root" 
-    android:layout_width   = "fill_parent" 
-    android:layout_height  = "match_parent"
-    android:orientation    = "vertical"
-    android:layout_gravity = "fill"
-    android:padding        = "5dp"
-    > 
-      <TextView android:id="@+id/DFS_Header" 
+<LinearLayout
+	  xmlns:android="http://schemas.android.com/apk/res/android"
+	  android:layout_width="fill_parent" 
+	  android:layout_height="match_parent" 
+	  android:orientation="vertical"
+	  >
+
+    	<TextView 
+    		android:id="@+id/DFS_Header" 
             android:text="Facebook Settings:" 
             android:layout_width="fill_parent" 
             android:layout_height="wrap_content"
             android:textStyle = "bold"
+            android:gravity="center"
+            android:typeface  = "serif"
+		    android:textSize = "25dp"
+		    android:drawableLeft = "@drawable/fb_icon"
+    	    android:drawableRight = "@drawable/fb_icon"
+		    android:background = "@drawable/background"
             android:textColor = "#ffffff"
             />
-              <TextView android:id="@+id/DFS_ButtonTitle" 
-            android:text="Click to setup your facebook account" 
-            android:layout_width="fill_parent" 
-            android:layout_height="wrap_content"
-            android:textStyle = "bold"
-            android:textColor = "#ffffff"
-            />
-  <Button android:id         = "@+id/DFS_setup_button" 
-                        android:text          = "Setup Account" 
-                        android:textSize      = "10dp" 
-                        android:layout_height = "wrap_content" 
-                        android:layout_width  = "wrap_content" 
-                        
-                        />    
+              
+      <LinearLayout 
+      
+	    android:id    = "@+id/DFS_body" 
+	    android:layout_width   = "fill_parent" 
+	    android:layout_height  = "match_parent"
+	    android:background = "@drawable/background"
+	    android:orientation="vertical"
+	    android:padding        = "5dp"
+	    >         
+              <Button android:text="Click to setup your facebook account" android:layout_height="wrap_content" android:layout_gravity="center" android:minWidth="100dp" android:id="@+id/DFS_setup_button" android:layout_width="fill_parent"></Button>    
  
  <CheckBox 
-                android:text="Share my evants on Facebook" 
+                android:text="Share my events on Facebook" 
                 android:id="@+id/DFS_share"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_weight = "1"
                 android:textColor = "#bbbbbb"
                 ></CheckBox>
+ <Button android:text="Close" android:id="@+id/DFS_Close" android:minWidth="100dp" android:layout_gravity = "center" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
                 
+                
+                </LinearLayout>
   </LinearLayout>

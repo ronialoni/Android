@@ -464,7 +464,7 @@ extends MapActivity
         				(event.getAction() == KeyEvent.ACTION_DOWN) && 
         				(event.getKeyCode() == KeyEvent.KEYCODE_ENTER)))
         		    {
-        			statusBar.write("searching for the place...", 2000);
+        			statusBar.write("searching for the place...", R.drawable.action_refresh, 2000);
 					comm.searchForAddress(v.getText().toString(), new ACommHandler<MapsQueryLocation>() {
 						public void onRecv(final MapsQueryLocation Obj)	{
 							FindPrayer.this.runOnUiThread(new Runnable() {
@@ -485,7 +485,7 @@ extends MapActivity
 										searchQueryOverlay.addItem(new OverlayItem(gp, "Search query result", v.getText().toString()));
 										Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
 										toast.show();
-										statusBar.write("place found!", 2000);
+										statusBar.write("place found!", R.drawable.status_bar_accept_icon, 2000);
 									} catch (NullPointerException e)	{
 										
 									} catch (ArrayIndexOutOfBoundsException e)	{

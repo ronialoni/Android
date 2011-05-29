@@ -49,7 +49,7 @@ public final class SPMenus
     implements ISPMenuItem
     {
         FIND   (0, R.drawable.menu_item_find_green_wifi,   ESPSubMenuFind.class  ),
-        PLACES   (1, R.drawable.place_white_david,   ESPSubMenuPlaces.class  ),
+        PLACES   (1, R.drawable.places_icon,   ESPSubMenuPlaces.class  ),
         SETTINGS (2, R.drawable.settings_icon,  ESPSubMenuSettings.class),
         FACEBOOK (3, R.drawable.fb_icon,  null),
         STATUS    (4, R.drawable.status_icon, null),
@@ -196,7 +196,7 @@ public final class SPMenus
     {
         
         PROFILE      (0, R.drawable.menu_item_user_red_sruga ),
-        VIEW  (1, R.drawable.menu_item_place_dark_blue),
+        VIEW  (1, R.drawable.settings_view_icon),
         
         ;
           

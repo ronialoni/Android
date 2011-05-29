@@ -14,12 +14,12 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class MenuFacebookUtils {
 	public MenuFacebookUtils(final FindPrayer context)	{
-		final Dialog dialog = new Dialog(context);
+		final NoTitleDialog dialog = new NoTitleDialog(context);
 		dialog.setContentView(R.layout.dialog_facebook_settings);
-		dialog.setTitle("Facebook Settings");
 		dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 
 		Button setup = (Button)dialog.findViewById(R.id.DFS_setup_button);
+		Button close = (Button)dialog.findViewById(R.id.DFS_Close);
 		CheckBox cb = (CheckBox)dialog.findViewById(R.id.DFS_share);
 		
 		if (!context.getFacebookConnector().isFacebook_configured())	{
@@ -46,6 +46,13 @@ public class MenuFacebookUtils {
 
 			public void onClick(View v) {
 				context.getFacebookConnector().connect();				
+				dialog.dismiss();
+			}
+		});
+		
+		close.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
 				dialog.dismiss();
 			}
 		});

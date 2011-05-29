@@ -17,12 +17,11 @@ import il.ac.tau.team3.shareaprayer.R;
 public class MenuStatusUtils {
 	
 	public static void createEditStatusDialog(final GeneralUser user, final FindPrayer activity){
-		final Dialog dialog = new Dialog(activity);
+		 final NoTitleDialog dialog = new NoTitleDialog(activity);
 		 dialog.setContentView(R.layout.dialog_set_status);
 		 dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		 final EditText status = (EditText)dialog.findViewById(R.id.dss_status);
          status.setText(user.getStatus());
-         dialog.setTitle("Status");
          Button okButton = (Button) dialog.findViewById(R.id.dss_button_ok);
          
          

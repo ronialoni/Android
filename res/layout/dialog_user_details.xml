@@ -48,7 +48,7 @@
 		    	android:minLines = "3"
 		    	android:typeface = "serif"
 		    	android:paddingTop = "20dp"
-		    	android:paddingBottom = "20dp"
+		    	android:paddingBottom = "10dp"
 		    	></TextView>
     	
 		    <TextView 
@@ -57,8 +57,9 @@
 		    	android:text="fetching..." 
 		    	android:layout_width="fill_parent"
 		    	android:drawableLeft="@drawable/radar_icon" 
-		    	android:paddingBottom = "20dp"
-		    	android:gravity="center_horizontal">
+		    	android:paddingBottom = "30dp"
+		    	android:gravity="center"
+		    	>
 		    	</TextView>
 		    	
 		    <LinearLayout 

@@ -98,16 +98,19 @@ public class SPGenComm {
 			    	   if (null != retObj)
 			    		   retObj.onError(null);
 			           Log.e("ShareAPrayer", "RestClientException in call to requestGet(...) of URL" + url + " Message:" + rce.getMessage(), rce);
+			           return;
 			       } 
 			       catch (NullPointerException e)	
 			       {
 			           // FIXME
 			           Log.e("*ShareAPrayer*", "NullPointerException in call to requestGet(...) of URL" + url + " Message:"  + e.getMessage(), e);
+			           return;
 			       }
 			       catch (IllegalArgumentException e)    
                    {
                        // FIXME This happened on CreatePlaceDialog (while in the SearchBar), when "Enter" on pc keyboard was pressed.
                        Log.e("*ShareAPrayer*", "IllegalArgumentException in call to requestGet(...) of URL" + url + " Message:"  + e.getMessage(), e);
+                       return;
                    }
 			       
 			       if (null != retObj)
@@ -142,8 +145,10 @@ public class SPGenComm {
 		        	if (null != retObj)
 		     		   retObj.onError(null);
 		            Log.e("ShareAPrayer", "Exception in call to requestGet(...)" + rce.getMessage(), rce);
+		            return;
 		        } catch (NullPointerException e)	{
 		        	Log.e("ShareAPrayer", "NULL Exception in call to requestGet(...)" + e.getMessage(), e);
+		        	return;
 		        }
 		     
 		        try	{

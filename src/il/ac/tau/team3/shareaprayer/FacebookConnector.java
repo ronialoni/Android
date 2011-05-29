@@ -41,7 +41,7 @@ public class FacebookConnector {
 
 
 
-	private Activity activity;
+	private FindPrayer activity;
 	
 	private SharedPreferences settings;
 	
@@ -119,7 +119,7 @@ public class FacebookConnector {
 		}
 	}
 
-    public FacebookConnector(Activity a)	{
+    public FacebookConnector(FindPrayer a)	{
     	activity = a;
     	
     	settings = a.getSharedPreferences("ShareAPrayer", 0);
@@ -157,11 +157,12 @@ public class FacebookConnector {
 
 			public void onComplete(String response, Object state) {
 				Log.e("Share-A-Prayer", "Facebook post response: " + response);
+				activity.getStatusBar().write("Facebook: Posted On Wall!", R.drawable.fb_icon, 2000);
 				
 			}
 
 			public void onFacebookError(FacebookError e, Object state) {
-				// TODO Auto-generated method stub
+				activity.getStatusBar().write("Facebook: Limit of posts reached", R.drawable.fb_icon, 2000);
 				
 			}
 

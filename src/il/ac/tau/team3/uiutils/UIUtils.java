@@ -107,6 +107,7 @@ public class UIUtils {
 		public void onRecv(T Obj) {
 			synchronized (activity.getRefreshTask()) {
 				activity.getRefreshTask().notify();
+				postSuccessStatus(activity, Obj);
 			
 			}
 		}
@@ -115,7 +116,17 @@ public class UIUtils {
 		public void onError(T Obj) {
 			synchronized (activity.getRefreshTask()) {
 				activity.getRefreshTask().notify();
+				postSuccessFailed(activity, Obj);
 			}
+			
+		}
+		
+		protected void postSuccessStatus(FindPrayer activity, T Obg)	{
+			
+		}
+		
+		protected void postSuccessFailed(FindPrayer activity, T Obg)	{
+			
 		}
 	}
 	
@@ -302,30 +313,28 @@ public class UIUtils {
 				.getActivity()
 				.getSPComm()
 				.requestPostRegister(place, user, praysWishes,
-						new UpdateUI<String>(placeOverlay
-								.getActivity()));
+						new UpdateUI<Integer>(placeOverlay.getActivity()) {
+							protected void postSuccessStatus(FindPrayer activity, Integer Obg)	{
+								activity.getStatusBar().write("Accepted your changes to " + place.getName(), 2000);
+							}
+							
+							protected void postSuccessFailed(FindPrayer activity, Integer Obg)	{
+								activity.getStatusBar().write("Couldn't update your registrations in " + place.getName(), 2000);
+							}
+						}
+				);
 		
 		boolean[] changedPlus = new boolean[praysWishes.length];
+		boolean[] changedMinus = new boolean[praysWishes.length];
 		final String[] praysNames = new String[]{"Shaharit", "Minha", "Arvit"};
 		boolean anyChange = false;
 		for (int i = 0; i < praysWishes.length; i++)	{
 			try	{
 				changedPlus[i] = (!(place.getPrayByName(praysNames[i]).isJoinerSigned(user)) && praysWishes[i]);
+				changedMinus[i] = (place.getPrayByName(praysNames[i]).isJoinerSigned(user) && !(praysWishes[i]));
 				anyChange |= changedPlus[i];
 			} catch (Exception e)	{
 				changedPlus[i] = false;
-			}
-			
-		}
-		
-		boolean[] changedMinus = new boolean[praysWishes.length];
-		//final String[] praysNames = new String[]{"Shaharit", "Minha", "Arvit"};
-		
-		for (int i = 0; i < praysWishes.length; i++)	{
-			try	{
-				changedMinus[i] = (place.getPrayByName(praysNames[i]).isJoinerSigned(user) && !(praysWishes[i]));
-				//anyChange |= changedMinus[i];
-			} catch (Exception e)	{
 				changedMinus[i] = false;
 			}
 			
@@ -396,15 +405,23 @@ public class UIUtils {
 					.getActivity()
 					.getSPComm()
 					.deletePlace(place,
-							new UpdateUI<String>(placeOverlay
-									.getActivity()));
+							new UpdateUI<Long>(placeOverlay
+									.getActivity())	{
+						protected void postSuccessStatus(FindPrayer activity, Long Obg)	{
+							activity.getStatusBar().write("Deleted place " + place.getName(), 2000);
+						}
+						
+						protected void postSuccessFailed(FindPrayer activity, Long Obg)	{
+							activity.getStatusBar().write("Couldn't delete  " + place.getName(), 2000);
+						}
+					});
 		} else {
 			createAlertDialog(_sUserNotOwnerMsg, placeOverlay
 					.getActivity(), "Close");
 		}
 	}
 
-	static void UnregisterClick(final GeneralPlace place,
+	/*static void UnregisterClick(final GeneralPlace place,
 			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
 		GeneralUser user = getThisUser(placeOverlay.getActivity());
 		if (user == null) {
@@ -428,7 +445,7 @@ public class UIUtils {
 
 	
 
-	}
+	}*/
 	
 	static class PrayUIObj	{
 		public TextView prayTime;
@@ -1077,7 +1094,18 @@ public class UIUtils {
 		}
 
 		activity.getSPComm().requestPostNewPlace(newMinyan,
-				new UpdateUI<Long>(activity));
+				new UpdateUI<Long>(activity) {
+			@Override
+			protected void postSuccessStatus(FindPrayer activity, Long Obg)	{
+				activity.getStatusBar().write("Created a new place!", 2000);
+			}
+			
+			@Override
+			protected void postSuccessFailed(FindPrayer activity, Long Obg)	{
+				activity.getStatusBar().write("Failed to create a new place", 2000);
+			}
+			
+		});
 		
 		FacebookConnector fc = activity.getFacebookConnector();
 		fc.publishOnFacebook(formatFacebookHeader_NewPlace(newMinyan.getAddress()) , formatFacebookDesc_NewPlace(placeName,prays));

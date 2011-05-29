@@ -79,10 +79,10 @@ public class SPComm {
 
     }
     
-    public void requestPostRegister(GeneralPlace to ,GeneralUser user, boolean[] praysWishes, ICommHandler<String> callback)
+    public void requestPostRegister(GeneralPlace to ,GeneralUser user, boolean[] praysWishes, ICommHandler<Integer> callback)
     {
     	PlaceAndUser pau = new PlaceAndUser(user, to,praysWishes);
-        com.requestPost(pau, String.class, POST_FOR_OBJECT_ADD_JOINER, callback);
+        com.requestPost(pau, Integer.class, POST_FOR_OBJECT_ADD_JOINER, callback);
     }
     
     public void requestPostNewPlace(GeneralPlace place, ICommHandler<Long> callback)
@@ -93,14 +93,14 @@ public class SPComm {
         
     }
     
-    public void removeJoiner(GeneralPlace place, GeneralUser joiner,boolean[] praysWishes, ICommHandler<Void> callback)	{
+    /*public void removeJoiner(GeneralPlace place, GeneralUser joiner,boolean[] praysWishes, ICommHandler<Void> callback)	{
     	PlaceAndUser pau = new PlaceAndUser(joiner, place,praysWishes);
     	
     	com.requestPost(pau, Void.class, POST_FOR_OBJECT_REMOVE_JOINER, callback);
-    }
+    }*/
     
-    public void deletePlace(GeneralPlace place, ICommHandler<String> callback)	{
-    	com.requestPost(place, String.class, POST_FOR_OBJECT_DELETE_PLACE, callback);
+    public void deletePlace(GeneralPlace place, ICommHandler<Long> callback)	{
+    	com.requestPost(place, Long.class, POST_FOR_OBJECT_DELETE_PLACE, callback);
     }
     
     public void updateUserByName(GeneralUser user, ICommHandler<Long> callback){

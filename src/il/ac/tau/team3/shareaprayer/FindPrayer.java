@@ -96,7 +96,9 @@ extends MapActivity
 	private FacebookConnector facebookConnector = null;
 	
 
-	
+	public IStatusWriter getStatusBar()	{
+		return statusBar;
+	}
 	
 	private Integer calculateViewableRadius(SPGeoPoint center)	{
 		if (center == null)

@@ -21,7 +21,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.text.TextPaint;
 
-public class StatusBarOverlay extends Overlay {
+public class StatusBarOverlay extends Overlay implements IStatusWriter {
 
 	   
 	    private String currentMessage = "Test";

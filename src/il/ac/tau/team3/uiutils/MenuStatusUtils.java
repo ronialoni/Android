@@ -31,12 +31,13 @@ public class MenuStatusUtils {
          {                
              public void onClick(View v)
              {
-            	activity.setStatus(status.getText().toString());
+            	
             	if(!(oldStatus.equals(status.getText().toString()))){
             		FacebookConnector fc = activity.getFacebookConnector();
             		fc.publishOnFacebook(formatFacebookHeader_Status(status.getText().toString()) , formatFacebookDesc_Status(user));
                 
             	}
+            	activity.setStatus(status.getText().toString());
             	dialog.dismiss();
              }
          });

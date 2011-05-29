@@ -408,11 +408,11 @@ public class UIUtils {
 							new UpdateUI<Long>(placeOverlay
 									.getActivity())	{
 						protected void postSuccessStatus(FindPrayer activity, Long Obg)	{
-							activity.getStatusBar().write("Deleted " + place.getName(), R.drawable.status_bar_accept_icon, 2000);
+							activity.getStatusBar().write("Place deleted", R.drawable.status_bar_accept_icon, 2000);
 						}
 						
 						protected void postSuccessFailed(FindPrayer activity, Long Obg)	{
-							activity.getStatusBar().write("Couldn't delete  " + place.getName(), R.drawable.status_bar_error_icon, 2000);
+							activity.getStatusBar().write("Couldn't delete place" , R.drawable.status_bar_error_icon, 2000);
 						}
 					});
 		} else {

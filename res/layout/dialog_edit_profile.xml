@@ -3,8 +3,8 @@
 <TableLayout xmlns:android = "http://schemas.android.com/apk/res/android"
              android:id    = "@+id/dep_root" 
     android:layout_width   = "fill_parent" 
-    android:layout_height  = "match_parent"
-    android:layout_gravity = "fill"
+    android:layout_height  = "wrap_content"
+    android:background = "@drawable/background"
     android:padding        = "5dp" 
     >   
     
@@ -12,16 +12,17 @@
     <!-- Head -->
     
     <TextView android:id      = "@+id/dep_head"
-        android:gravity       = "center_vertical"
         android:layout_width  = "fill_parent"
         android:layout_height = "wrap_content"
         android:textColor     = "#ffffff"
         android:textSize      = "20sp"
         android:textStyle     = "bold"
+        android:background = "@drawable/background"
+        android:drawableRight="@drawable/user_red_sruga" 
         android:typeface      = "serif"
-        android:text          = "Your details :"
+        android:text          = "  Your details :"
        
-        />    
+        android:gravity="center|center_vertical"/>    
      
      
     <!-- Name -->
@@ -33,6 +34,7 @@
         android:layout_width  = "fill_parent"
         android:layout_height = "wrap_content"
         android:gravity       = "center_vertical"
+        
         
         >
         

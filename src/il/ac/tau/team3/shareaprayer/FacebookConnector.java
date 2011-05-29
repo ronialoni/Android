@@ -26,13 +26,13 @@ public class FacebookConnector {
 	private final String FACEBOOK_CONFIGURED_KEY = "FACEBOOK_CONFIGURED";
 	private final String FACEBOOK_SHARE_KEY = "FACEBOOK_SHARE";
 	
-	private boolean facebook_connectStatup = false;
+	private boolean facebook_connectStartup = false;
 	private boolean facebook_share = false;
 	private boolean facebook_configured = false;
 	
 	
-	public boolean isFacebook_connectStatup() {
-		return facebook_connectStatup;
+	public boolean isFacebook_connectStartup() {
+		return facebook_connectStartup;
 	}
 	
 	public boolean isFacebook_configured() {
@@ -46,9 +46,9 @@ public class FacebookConnector {
 	private SharedPreferences settings;
 	
 	public void setConnectOnStartup(boolean startup)	{
-		facebook_connectStatup = startup;
+		facebook_connectStartup = startup;
 		SharedPreferences.Editor edit = settings.edit();
-		edit.putBoolean(FACEBOOK_STARTUP_KEY, facebook_connectStatup);
+		edit.putBoolean(FACEBOOK_STARTUP_KEY, facebook_connectStartup);
 		edit.commit();
 	}
 	
@@ -124,11 +124,11 @@ public class FacebookConnector {
     	
     	settings = a.getSharedPreferences("ShareAPrayer", 0);
     	
-    	facebook_connectStatup = settings.getBoolean(FACEBOOK_STARTUP_KEY, false);
+    	facebook_connectStartup = settings.getBoolean(FACEBOOK_STARTUP_KEY, false);
     	facebook_configured = settings.getBoolean(FACEBOOK_CONFIGURED_KEY, false);
     	facebook_share = settings.getBoolean(FACEBOOK_SHARE_KEY, false);
     	
-    	if (facebook_connectStatup)	{
+    	if (facebook_connectStartup)	{
     		connect();
     	}
     		

@@ -12,11 +12,14 @@ import android.widget.RadioGroup;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.shareaprayer.FacebookConnector;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
+import il.ac.tau.team3.shareaprayer.IStatusWriter;
 import il.ac.tau.team3.shareaprayer.R;
+import il.ac.tau.team3.shareaprayer.StatusBarOverlay;
 
 public class MenuStatusUtils {
 	
 	public static void createEditStatusDialog(final GeneralUser user, final FindPrayer activity){
+		 final IStatusWriter statusBar = activity.getStatusBar();
 		 final NoTitleDialog dialog = new NoTitleDialog(activity);
 		 dialog.setContentView(R.layout.dialog_set_status);
 		 dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
@@ -38,6 +41,7 @@ public class MenuStatusUtils {
                 
             	}
             	activity.setStatus(status.getText().toString());
+            	statusBar.write("status set", R.drawable.status_bar_accept_icon, 2000);
             	dialog.dismiss();
              }
          });

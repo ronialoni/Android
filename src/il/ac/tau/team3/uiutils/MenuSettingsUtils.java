@@ -5,6 +5,7 @@ import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.Pray;
 import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
+import il.ac.tau.team3.shareaprayer.IStatusWriter;
 import il.ac.tau.team3.shareaprayer.R;
 import android.accounts.Account;
 import android.app.Activity;
@@ -12,6 +13,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -97,6 +99,7 @@ public class MenuSettingsUtils {
 	
 	public static String[] createEditDetailsDialog(final GeneralUser user, final FindPrayer activity){
 		final Dialog dialog = new Dialog(activity);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		final String account = user.getName();
 		 dialog.setContentView(R.layout.dialog_edit_profile);
 		 final EditText editTextFirstName = (EditText)dialog.findViewById(R.id.dep_name_first);
@@ -125,7 +128,8 @@ public class MenuSettingsUtils {
             	 names[1] = editTextLastName.getText().toString();
             	 names[2] = account;
             	 activity.setUser(names);
-            	 
+            	 final IStatusWriter statusBar = activity.getStatusBar();
+            	 statusBar.write("User details updated", R.drawable.status_bar_accept_icon, 2000);
             	 dialog.dismiss();
             	 }
              }

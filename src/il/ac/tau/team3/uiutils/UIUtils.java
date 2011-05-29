@@ -315,11 +315,11 @@ public class UIUtils {
 				.requestPostRegister(place, user, praysWishes,
 						new UpdateUI<Integer>(placeOverlay.getActivity()) {
 							protected void postSuccessStatus(FindPrayer activity, Integer Obg)	{
-								activity.getStatusBar().write("Accepted your changes to " + place.getName(), 2000);
+								activity.getStatusBar().write("Accepted your changes to " + place.getName(),R.drawable.status_bar_accept_icon, 2000);
 							}
 							
 							protected void postSuccessFailed(FindPrayer activity, Integer Obg)	{
-								activity.getStatusBar().write("Couldn't update your registrations in " + place.getName(), 2000);
+								activity.getStatusBar().write("Couldn't update your registrations in " + place.getName(),R.drawable.status_bar_error_icon, 2000);
 							}
 						}
 				);
@@ -408,11 +408,11 @@ public class UIUtils {
 							new UpdateUI<Long>(placeOverlay
 									.getActivity())	{
 						protected void postSuccessStatus(FindPrayer activity, Long Obg)	{
-							activity.getStatusBar().write("Deleted place " + place.getName(), 2000);
+							activity.getStatusBar().write("Deleted " + place.getName(), R.drawable.status_bar_accept_icon, 2000);
 						}
 						
 						protected void postSuccessFailed(FindPrayer activity, Long Obg)	{
-							activity.getStatusBar().write("Couldn't delete  " + place.getName(), 2000);
+							activity.getStatusBar().write("Couldn't delete  " + place.getName(), R.drawable.status_bar_error_icon, 2000);
 						}
 					});
 		} else {
@@ -1097,12 +1097,12 @@ public class UIUtils {
 				new UpdateUI<Long>(activity) {
 			@Override
 			protected void postSuccessStatus(FindPrayer activity, Long Obg)	{
-				activity.getStatusBar().write("Created a new place!", 2000);
+				activity.getStatusBar().write("Created a new place!", R.drawable.status_bar_accept_icon, 2000);
 			}
 			
 			@Override
 			protected void postSuccessFailed(FindPrayer activity, Long Obg)	{
-				activity.getStatusBar().write("Failed to create a new place", 2000);
+				activity.getStatusBar().write("Failed to create a new place", R.drawable.status_bar_error_icon, 2000);
 			}
 			
 		});

@@ -21,7 +21,8 @@ public class MenuStatusUtils {
 		 dialog.setContentView(R.layout.dialog_set_status);
 		 dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		 final EditText status = (EditText)dialog.findViewById(R.id.dss_status);
-         status.setText(user.getStatus());
+		 final String oldStatus = user.getStatus();
+         status.setText(oldStatus);
          Button okButton = (Button) dialog.findViewById(R.id.dss_button_ok);
          
          
@@ -31,9 +32,12 @@ public class MenuStatusUtils {
              public void onClick(View v)
              {
             	activity.setStatus(status.getText().toString());
-            	FacebookConnector fc = activity.getFacebookConnector();
-        		fc.publishOnFacebook(formatFacebookHeader_Status(status.getText().toString()) , formatFacebookDesc_Status(user));
-                dialog.dismiss();
+            	if(!(oldStatus.equals(status.getText().toString()))){
+            		FacebookConnector fc = activity.getFacebookConnector();
+            		fc.publishOnFacebook(formatFacebookHeader_Status(status.getText().toString()) , formatFacebookDesc_Status(user));
+                
+            	}
+            	dialog.dismiss();
              }
          });
       

@@ -36,12 +36,13 @@ public class MenuStatusUtils {
              {
             	
             	if(!(oldStatus.equals(status.getText().toString()))){
+            		statusBar.write("status set", R.drawable.status_bar_accept_icon, 2000);
             		FacebookConnector fc = activity.getFacebookConnector();
             		fc.publishOnFacebook(formatFacebookHeader_Status(status.getText().toString()) , formatFacebookDesc_Status(user));
-                
+            		
             	}
             	activity.setStatus(status.getText().toString());
-            	statusBar.write("status set", R.drawable.status_bar_accept_icon, 2000);
+            	
             	dialog.dismiss();
              }
          });

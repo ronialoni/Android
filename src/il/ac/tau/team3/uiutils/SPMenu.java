@@ -32,7 +32,7 @@ public class SPMenu
     
     private static final int SP_MENU_RES_ROOT  = R.layout.menu_options_main;
     
-    private static final int _sItemsPerRow = 4;
+    private static final int _sItemsPerRow = 3;
     //private static final int SP_MENU_ITEM_RES_ID = R.id.mom_items_row;
     
     

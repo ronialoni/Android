@@ -85,6 +85,7 @@ extends MapActivity
 	private Drawable othersDefaultMarker;
 	private Drawable synagougeMarker;
 	private Drawable synagougeClosestMarker;
+	private Drawable searchMarker;
 	
 	private PrayerArrayItemizedOverlay userOverlay;
 	private PrayerArrayItemizedOverlay searchQueryOverlay;
@@ -517,7 +518,8 @@ extends MapActivity
 		userOverlay       = new UserArrayItemizedOverlay(userDefaultMarker, this);
         mapView.getOverlays().add(userOverlay);
         
-        searchQueryOverlay = new PrayerArrayItemizedOverlay(userDefaultMarker, this);
+        searchMarker = this.getResources().getDrawable(R.drawable.search_found_icon_green);
+        searchQueryOverlay = new PrayerArrayItemizedOverlay(searchMarker, this);
         mapView.getOverlays().add(searchQueryOverlay);
 
         

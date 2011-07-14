@@ -1,4 +1,4 @@
-package il.ac.tau.team3.uiutils;
+package il.ac.tau.team3.uiutils; 
 
 import android.accounts.Account;
 import android.app.Dialog;

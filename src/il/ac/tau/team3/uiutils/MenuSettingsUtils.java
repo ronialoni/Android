@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MenuSettingsUtils {
 	
@@ -80,21 +81,28 @@ public class MenuSettingsUtils {
 	public static void CreateChooseMinMaxDialog(Activity activity){
 		final CharSequence[] items = {"Show MAX prayers of all daily prays", "Show MIN prayers of all daily prays"};
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-		builder.setTitle(_sChooseMinMaxText);
-		builder.setSingleChoiceItems(items, (getShowMax()? 0:1), new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int item) {
-		        if(item == 0){
-		        	setShowMax(true);
-		        }else{
-		        	setShowMax(false);
-		        }
-		        dialog.dismiss();
-		       
-		    }
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
+		try {
+			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+			builder.setTitle(_sChooseMinMaxText);
+			builder.setSingleChoiceItems(items, (getShowMax()? 0:1), new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int item) {
+			        if(item == 0){
+			        	setShowMax(true);
+			        }else{
+			        	setShowMax(false);
+			        }
+			        dialog.dismiss();
+			       
+			    }
+			});
+			AlertDialog alert = builder.create();
+			alert.show();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			Toast toast = new Toast(activity);
+			toast.setDuration(3000);
+			toast.setText("Unable to show sub-menu.");
+		}
 	}
 	
 	public static String[] createEditDetailsDialog(final GeneralUser user, final FindPrayer activity){
@@ -108,7 +116,6 @@ public class MenuSettingsUtils {
          editTextLastName.setText(user.getLastName());
          final TextView accountView = (TextView)dialog.findViewById(R.id.dep_accounts_email);
          accountView.setText(account);
-         dialog.setTitle("Settings");
          Button okButton = (Button) dialog.findViewById(R.id.dep_button_ok);
                
          final String names[] = new String[3];

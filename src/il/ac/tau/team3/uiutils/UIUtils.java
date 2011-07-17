@@ -87,14 +87,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
  
 public class UIUtils {
- 
-	static String _sNewPlaceQues = "Do you want to create a public praying place?";
-	static String _sNoPraySelected = "Please select at least one pray before creating a new place.";
-	static String _sAlreadyRegisterAlertMsg = "You are already registered to this place.";
-	static String _sWantToRegisterQues = "Would you like to register to this place?";
-	static String _sUserNotRegisterMsg = "You are not register to this place.";
-	static String _sUserNotOwnerMsg = "You can't delete this place, because you are not the owner.";
-	static String _sWelcomeMsg = "Welcome to Share-A-Prayer!";
 
 	static class UpdateUI<T> extends ACommHandler<T> {
 		FindPrayer activity;
@@ -185,7 +177,7 @@ public class UIUtils {
 	static void CreateNoAccountsDialog(final FindPrayer activity){
 		final Dialog dialog = new Dialog(activity);
 		  dialog.setContentView(R.layout.dialog_startup_async);
-          dialog.setTitle(_sWelcomeMsg);
+          dialog.setTitle(activity.getString(R.string.WelcomeMsg));
           Button exitButton = (Button) dialog.findViewById(R.id.dsa_button_exit);
           Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
           
@@ -216,7 +208,7 @@ public class UIUtils {
 		 dialog.setContentView(R.layout.dialog_startup_sync);
 		 final EditText editTextFirstName = (EditText)dialog.findViewById(R.id.startup_name_first);
          final EditText editTextLastName = (EditText)dialog.findViewById(R.id.startup_name_last);
-         dialog.setTitle(_sWelcomeMsg);
+         dialog.setTitle(activity.getString(R.string.WelcomeMsg));
          Button exitButton = (Button) dialog.findViewById(R.id.startup_button_exit);
          Button startButton = (Button) dialog.findViewById(R.id.startup_button_start);
          final int accountId[] = new int[1];
@@ -416,7 +408,7 @@ public class UIUtils {
 						}
 					});
 		} else {
-			createAlertDialog(_sUserNotOwnerMsg, placeOverlay
+			createAlertDialog(placeOverlay.getActivity().getString(R.string.UserNotOwnerMsg), placeOverlay
 					.getActivity(), "Close");
 		}
 	}

@@ -11,53 +11,61 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 
 public class MenuFacebookUtils {
 	public MenuFacebookUtils(final FindPrayer context)	{
-		final NoTitleDialog dialog = new NoTitleDialog(context);
-		dialog.setContentView(R.layout.dialog_facebook_settings);
-		dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		try {
+			final NoTitleDialog dialog = new NoTitleDialog(context);
+			dialog.setContentView(R.layout.dialog_facebook_settings);
+			dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 
-		Button setup = (Button)dialog.findViewById(R.id.DFS_setup_button);
-		Button close = (Button)dialog.findViewById(R.id.DFS_Close);
-		CheckBox cb = (CheckBox)dialog.findViewById(R.id.DFS_share);
-		
-		if (!context.getFacebookConnector().isFacebook_configured())	{
-			cb.setEnabled(true);
-		}
-		
-		if (context.getFacebookConnector().isFacebook_configured())	{
-			setup.setEnabled(false);
-		}
-		
-		cb.setChecked(context.getFacebookConnector().isFacebook_share());
-		
-		cb.setOnCheckedChangeListener(new OnCheckedChangeListener()	{
-
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				context.getFacebookConnector().setFacebook_share(isChecked);
-				
+			Button setup = (Button)dialog.findViewById(R.id.DFS_setup_button);
+			Button close = (Button)dialog.findViewById(R.id.DFS_Close);
+			CheckBox cb = (CheckBox)dialog.findViewById(R.id.DFS_share);
+			
+			if (!context.getFacebookConnector().isFacebook_configured())	{
+				cb.setEnabled(true);
 			}
 			
-		});
-
-		setup.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				context.getFacebookConnector().connect();				
-				dialog.dismiss();
+			if (context.getFacebookConnector().isFacebook_configured())	{
+				setup.setEnabled(false);
 			}
-		});
-		
-		close.setOnClickListener(new OnClickListener() {
+			
+			cb.setChecked(context.getFacebookConnector().isFacebook_share());
+			
+			cb.setOnCheckedChangeListener(new OnCheckedChangeListener()	{
 
-			public void onClick(View v) {
-				dialog.dismiss();
-			}
-		});
-		
-		dialog.show();
+				public void onCheckedChanged(CompoundButton buttonView,
+						boolean isChecked) {
+					context.getFacebookConnector().setFacebook_share(isChecked);
+					
+				}
+				
+			});
+
+			setup.setOnClickListener(new OnClickListener() {
+
+				public void onClick(View v) {
+					context.getFacebookConnector().connect();				
+					dialog.dismiss();
+				}
+			});
+			
+			close.setOnClickListener(new OnClickListener() {
+
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+			
+			dialog.show();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			Toast toast = new Toast(context);
+			toast.setDuration(3000);
+			toast.setText("Unable to show sub-menu.");
+		}
 
 	}
 

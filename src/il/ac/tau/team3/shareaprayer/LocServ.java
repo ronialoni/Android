@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
+import android.text.format.Time;
 import android.util.Log;
 
 
@@ -49,6 +50,11 @@ extends Service
 
 	
 	private LocationManager locMgr;
+	private Location	lastGpsLocation = null;
+	private Location	lastNetworkLocation = null;
+	private LocationListener gpsLocationListener = null;
+	private LocationListener networkLocationListener = null;
+	private Location lastPostLocation = null;
 	
 	
 	public class LocalBinder  extends Binder implements ILocationSvc 
@@ -277,6 +283,52 @@ extends Service
 
 	private HandlerThread updateThread;
 	private Handler		  updateHandler;
+	
+	private void updateAllListeners(Location loc)	{
+		lastPostLocation = getCurrentLocation(loc);
+		
+		if (null == user)	{
+			return;
+		}
+
+		updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
+		
+		try	
+		{
+			for (ILocationProv locProv : locationProvs)
+			{
+				locProv.LocationChanged(curr_loc);
+				//locProv.OnUserChange(user);
+			}
+		} 
+		catch (Exception e)
+		{
+			Log.e("bind service", e.getMessage());
+			// Do nothing
+		}
+	}
+	
+	static private Location getAccuracyTimeLocation(Location oldLoc, Location newLoc)	{
+		if ((newLoc.getTime() - oldLoc.getTime())>120*1000)	{
+			return newLoc;
+		}
+		
+		return oldLoc;
+	}
+	
+	private Location getCurrentLocation(Location newLocation)	{
+		try	{
+			if (newLocation.getAccuracy() > lastPostLocation.getAccuracy())	{
+				return newLocation;
+			}
+			
+			
+			return getAccuracyTimeLocation(lastPostLocation, newLocation);
+		} catch (NullPointerException e)	{
+			return newLocation;
+		}
+		
+	}
 
 	@Override
 	public void onCreate()
@@ -301,32 +353,15 @@ extends Service
         updateHandler = new Handler(updateThread.getLooper());
 		
 		
-		LocationListener locationListener = new LocationListener() 
+		gpsLocationListener = new LocationListener() 
     	{
 	    	// Called when a new location is found by the network location provider.
     		public void onLocationChanged(Location loc) 
     	    { 	
-    			if (null == user)	{
-    				return;
-    			}
-    	    	
-
-    			updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
     			
-    			try	
-    			{
-    				for (ILocationProv locProv : locationProvs)
-    				{
-    					locProv.LocationChanged(curr_loc);
-    					//locProv.OnUserChange(user);
-    				}
-    			} 
-    			catch (Exception e)
-    			{
-    				Log.e("bind service", e.getMessage());
-    				// Do nothing
-    			}
+    			LocServ.this.lastGpsLocation = loc;
     			
+    			LocServ.this.updateAllListeners(loc);
     	    }
 
 			public void onProviderDisabled(String provider) {
@@ -346,7 +381,36 @@ extends Service
 			}
     	};
     	
-		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER , 0, 0, locationListener);
+    	networkLocationListener = new LocationListener() 
+    	{
+	    	// Called when a new location is found by the network location provider.
+    		public void onLocationChanged(Location loc) 
+    	    { 	
+    			
+    			LocServ.this.lastNetworkLocation = loc;   
+    			
+    			LocServ.this.updateAllListeners(loc);
+    	    }
+
+			public void onProviderDisabled(String provider) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onProviderEnabled(String provider) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+				// TODO Auto-generated method stub
+				
+			}
+    	};
+    	
+    	locMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER , 0, 0, networkLocationListener);
+		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER , 0, 0, gpsLocationListener);
 		
 	}
 	

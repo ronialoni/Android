@@ -31,6 +31,7 @@ import il.ac.tau.team3.shareaprayer.ServiceNotConnected;
 import il.ac.tau.team3.shareaprayer.UserNotFoundException;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;

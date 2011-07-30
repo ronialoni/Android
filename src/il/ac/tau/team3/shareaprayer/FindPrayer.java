@@ -31,6 +31,7 @@ import il.ac.tau.team3.uiutils.UIUtils;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -608,10 +609,16 @@ extends MapActivity
                     Log.e("ShareAPrayer", "Service is not connected", e);
                 } catch (UserNotFoundException e)	{
                 		
-                		String[] names; 
-	                    Account[] accounts = AccountManager.get(FindPrayer.this).getAccounts();
+                		String[] names;
+                		List<Account> accounts = new LinkedList<Account>();
+	                    for (Account a : AccountManager.get(FindPrayer.this).getAccounts())	{
+	                    	if (a.name.contains("@"))	{
+	                    		accounts.add(a);
+	                    	}
+	                    }
+	                    
 	                    try	{
-	                    	names = UIUtils.HandleFirstTimeDialog(accounts, FindPrayer.this);
+	                    	names = UIUtils.HandleFirstTimeDialog(accounts.toArray(new Account[0]), FindPrayer.this);
 	                    	service.setNames(names);
 	                    } catch (NullPointerException e_)	{
 	                    	// no accounts

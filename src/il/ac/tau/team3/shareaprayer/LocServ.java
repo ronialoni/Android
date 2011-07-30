@@ -50,8 +50,6 @@ extends Service
 
 	
 	private LocationManager locMgr;
-	private Location	lastGpsLocation = null;
-	private Location	lastNetworkLocation = null;
 	private LocationListener gpsLocationListener = null;
 	private LocationListener networkLocationListener = null;
 	private Location lastPostLocation = null;
@@ -359,8 +357,7 @@ extends Service
     		public void onLocationChanged(Location loc) 
     	    { 	
     			
-    			LocServ.this.lastGpsLocation = loc;
-    			
+
     			LocServ.this.updateAllListeners(loc);
     	    }
 
@@ -386,8 +383,6 @@ extends Service
 	    	// Called when a new location is found by the network location provider.
     		public void onLocationChanged(Location loc) 
     	    { 	
-    			
-    			LocServ.this.lastNetworkLocation = loc;   
     			
     			LocServ.this.updateAllListeners(loc);
     	    }

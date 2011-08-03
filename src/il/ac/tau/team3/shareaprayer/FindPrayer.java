@@ -693,6 +693,12 @@ extends MapActivity
         });        
         
         
+        
+        
+        
+        
+        
+        
 	}//@END: onCreate(..)
 	
 	
@@ -969,7 +975,7 @@ extends MapActivity
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
-    {
+    {    	   	
         SPUtils.debugFuncStart("onCreateOptionsMenu", menu);
         this.initializeMenu();
         
@@ -987,10 +993,8 @@ extends MapActivity
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        SPUtils.debugFuncStart("onPrepareOptionsMenu", menu);
-        
-        this.menu.handleMenuButtonClick(this, R.id.view1);
+    {       	
+    	this.menu.handleMenuButtonClick(this, R.id.view1);
         //super.onPrepareOptionsMenu(menu);
         return true; 
     }

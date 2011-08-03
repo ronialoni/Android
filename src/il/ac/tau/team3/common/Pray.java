@@ -1,5 +1,6 @@
 package il.ac.tau.team3.common;
 
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -76,7 +77,8 @@ public class Pray  implements Serializable{
 		return false;
 	}
 	
-	public int numberOfJoiners(){
+	public int numberOfJoiners()
+	{
 		return this.joiners.size();
 	}
 	

@@ -166,10 +166,16 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
         }
 
         @JsonIgnore  
-        public int getNumberOfPrayers(int prayNumber){
-                try     {
-                return this.praysOfTheDay.get(prayNumber).numberOfJoiners();
-                }  catch (IndexOutOfBoundsException e)  {       
+        public int getNumberOfPrayers(int prayNumber)
+        {
+        	
+        	
+        	try     
+        	{
+        		return this.praysOfTheDay.get(prayNumber).numberOfJoiners();
+        	}  
+        	catch (IndexOutOfBoundsException e)  
+        	{       
                 return -1;
             } catch (NullPointerException e)    {
                 return -1;

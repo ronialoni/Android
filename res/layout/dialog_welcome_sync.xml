@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+    
+    
+<!-- ROOT -->
+    
+<RelativeLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+                android:id    = "@+id/startup_root" 
+    style = "@style/SP.Dialog.Root"
+        
+    android:layout_alignParentTop = "true"
+    > 
+    
+    
+    <!-- TITLE -->
+        
+    <TextView android:id = "@+id/startup_head" 
+        style = "@style/SP.Dialog.Title"
+        
+        android:text = "@string/WelcomeMsg"
+        />
+    
+    
+    
+    <!-- BUTTONS -->
+    
+    <LinearLayout android:id = "@+id/startup_buttons"
+        style = "@style/SP.Dialog.Buttons"
+        
+        android:layout_alignParentBottom = "true"
+        >
+                
+        <Button android:id = "@+id/startup_button_start" 
+            style = "@style/SP.Button"
+            
+            android:layout_weight = "1"
+            
+            android:text = "Start"
+            />
+            
+        <Button android:id = "@+id/startup_button_exit" 
+            style = "@style/SP.Button"
+            
+            android:layout_weight = "1"
+            
+            android:text = "Exit" 
+            />
+           
+    </LinearLayout>
+    
+    
+       
+    <!-- BODY -->
+    
+    <ScrollView android:id = "@+id/startup_scroll"
+        android:layout_height = "fill_parent"
+        android:layout_width  = "fill_parent"
+                
+        android:fillViewport = "true"
+        
+        android:layout_below = "@id/startup_head"
+        android:layout_above = "@id/startup_buttons"
+        > 
+    
+    <TableLayout  
+        style = "@style/SP.Dialog.Body"
+        > 
+        
+                
+        <!-- NAME -->
+        
+        <TextView 
+            style = "@style/SP.Dialog.Header"
+                
+            android:text = "Your Name:" 
+            
+            android:drawableLeft = "@drawable/icon"
+            />
+                
+        
+        <!-- NAME.FIRST -->        
+        
+        <EditText android:id = "@+id/startup_name_first" 
+            
+            android:hint          = "First"
+            android:textColorHint = "@color/hint" 
+            />
+
+        
+        <!-- NAME.LAST -->
+        
+        <EditText android:id = "@+id/startup_name_last" 
+            
+            android:hint          = "Last"
+            android:textColorHint = "@color/hint" 
+            />
+        
+        
+        <!-- ACCOUNTS -->
+    
+        <TextView 
+            style = "@style/SP.Dialog.Header"
+
+            android:text = "Choose Account"
+            
+            android:drawableLeft = "@drawable/mail_icon"
+            />
+                  
+        <RadioGroup android:id    = "@+id/startup_accounts_radios"
+            android:layout_height = "wrap_content"     
+            android:layout_width  = "match_parent"
+            />
+        
+        
+        <!-- FACEBOOK -->
+    
+    
+        
+        
+        <TextView 
+            style = "@style/SP.Dialog.Header"
+
+            android:text = "Facebook"
+            
+            android:drawableLeft = "@drawable/fb_icon48"
+            />
+    
+        <CheckBox android:id = "@+id/welcome_facebook_startup"
+            android:layout_height = "wrap_content"
+            android:layout_width  = "wrap_content"
+                
+            android:paddingRight = "4dip"
+                
+            android:text      = "Sign in" 
+            android:textStyle = "bold"
+            android:typeface  = "serif"
+            />
+            
+        
+    </TableLayout>
+     
+    </ScrollView>
+    
+    
+</RelativeLayout>
+
+

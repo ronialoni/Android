@@ -15,7 +15,6 @@ public class ACommHandler<T> implements ICommHandler<T> {
 
 
 	public void onTimeout(T Obj) {
-		// TODO Auto-generated method stub
 		
 	}
 

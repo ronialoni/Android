@@ -22,7 +22,7 @@ public class FacebookConnector {
 	private boolean facebookConnected = false;
 	private final String desc_footer = "<br>For futher details: download http://share-a-prayer.googlecode.com/files/ShareAPrayer.apk";
 	
-	private final String FACEBOOK_STARTUP_KEY = "FACEBOOK_STARTUP";
+	public final String FACEBOOK_STARTUP_KEY = "FACEBOOK_STARTUP";   ////CHANGE: was `private`
 	private final String FACEBOOK_CONFIGURED_KEY = "FACEBOOK_CONFIGURED";
 	private final String FACEBOOK_SHARE_KEY = "FACEBOOK_SHARE";
 	
@@ -119,21 +119,26 @@ public class FacebookConnector {
 		}
 	}
 
-    public FacebookConnector(FindPrayer a)	{
+	
+    public FacebookConnector(FindPrayer a)	
+    {
     	activity = a;
-    	
     	settings = a.getSharedPreferences("ShareAPrayer", 0);
     	
     	facebook_connectStartup = settings.getBoolean(FACEBOOK_STARTUP_KEY, false);
-    	facebook_configured = settings.getBoolean(FACEBOOK_CONFIGURED_KEY, false);
-    	facebook_share = settings.getBoolean(FACEBOOK_SHARE_KEY, false);
-    	
-    	if (facebook_connectStartup)	{
-    		connect();
-    	}
-    		
-      }
+    	facebook_configured     = settings.getBoolean(FACEBOOK_CONFIGURED_KEY, false);
+    	facebook_share          = settings.getBoolean(FACEBOOK_SHARE_KEY, false);
+    }
 
+    
+    public void connectOnStartup()
+    {
+    	if (facebook_connectStartup)	
+    	{
+    		connect();
+    	}    	
+    }
+    
 	
 	
 	public void publishOnFacebook(final String headline, final String description)	{

@@ -1,5 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- COPY & PASTE -->
+<!-- <item name = "" ></item> -->
+<!-- style = @style/SP. -->
+
 <resources>
+    
+    <style name = "SP" />
+    
+    
+    
+    <!-- BUTTON -->
+    
+    <style name = "SP.Button" 
+        parent  = "@style/SP.Text.Primary.Widget"
+        >        
+        <item name = "android:layout_height" >wrap_content</item>    
+        <item name = "android:layout_width"  >wrap_content</item>    
+
+        <item name ="android:layout_margin" >2dip</item>
+        
+        <item name = "android:gravity"    >center</item>
+        <item name = "android:background" >@drawable/selector_button</item>    
+        
+        <item name = "android:textColor" >@drawable/selector_button_text</item>
+        <item name = "android:textSize"  >16dp</item>
+    </style>
+    
+        
+        <!-- CHANGE (DATE) -->
+        
+        <style name = "SP.Button.Change" >
+            
+            <item name = "android:layout_height" >fill_parent</item>
+        
+            <item name ="android:layout_marginLeft"  >16dip</item>
+            <item name ="android:layout_marginRight" >16dip</item>
+            
+            <item name ="android:text"     >Change</item>
+            <item name ="android:textSize" >12dp</item>
+            
+        </style>
+        
+        
+        
+    <!-- TABLE ROW -->
+    
+    <style name = "SP.Tablerow" >
+        <item name = "android:layout_height" >match_parent</item>    
+        <item name = "android:layout_width"  >match_parent</item>    
+        
+        <item name = "android:padding" >4dip</item> 
+    </style>
+    
+    
+    <!-- TEXT -->
+        
+    <style name = "SP.Text" >
+        
+        <item name = "android:layout_width"  >wrap_content</item>
+        <item name = "android:layout_height" >wrap_content</item>
+        <!-- 
+        <item name = "android:layout_height" >wrap_content</item>
+        <item name = "android:layout_width"  >wrap_content</item>
+        
+        <item name = "android:gravity" >center_vertical</item>
+                 
+        <item name = "android:drawablePadding" >4dip</item>   
+         -->
+        
+        <item name = "android:typeface" >serif</item>
+    </style>
+        
+        <!-- TEXT.PRIMARY -->
+        <style name = "SP.Text.Primary" >            
+            <item name = "android:textStyle" >bold</item>
+        </style>
+       
+            <!-- TEXT.PRIMARY.WIDGET -->
+            <style name = "SP.Text.Primary.Widget" >
+                <item name = "android:textSize"  >16dp</item>
+                <item name = "android:textStyle" >bold</item>
+            </style>
+        
+            <!-- TEXT.PRIMARY.HEADER -->
+            <style name = "SP.Text.Primary.Header" >
+                <item name = "android:textSize" >24dp</item>
+            </style>
+        
+            <!-- TEXT.PRIMARY.TITLE -->        
+            <style name = "SP.Text.Primary.Title" >
+                <item name = "android:textSize" >32dp</item>
+            </style>
+            
+                   
+    <!-- VIEW -->  
+    
+    <style name = "SP.View" />
+    
+    
+                   
+        <!-- VIEW.TEXT -->  
+        
+        <style name = "SP.View.Text" 
+            parent  = "SP.Text"
+            >            
+            <item name = "android:layout_height" >wrap_content</item>
+            <item name = "android:layout_width"  >wrap_content</item>
+            <item name = "android:gravity" >center_vertical</item>
+            <item name = "android:drawablePadding" >8dip</item>
+        </style>    
+        
+            <style name = "SP.View.Text.Primary" 
+                parent  = "SP.Text.Primary"
+                >            
+                <item name = "android:gravity" >center_vertical</item>
+                <item name = "android:padding" >16dip</item>
+            </style> 
+        
+        
+            <!-- VIEW.TEXT.HEADER -->                         
+            <style name = "SP.View.Text.Primary.Header" 
+                parent  = "SP.Text.Primary.Header"
+                >            
+                <item name = "android:layout_width" >fill_parent</item>
+                
+                <item name = "android:paddingLeft"  >4dip</item>
+                <item name = "android:paddingRight" >4dip</item>
+            </style>    
+            
+            <!-- VIEW.TEXT.HEADER.TITLE --> 
+            <style name = "SP.View.Text.Primary.Header.Title" 
+                parent  = "SP.Text.Primary.Title"
+                >            
+                <item name = "android:gravity" >center_horizontal</item>
+            </style>    
+
+            <!-- VIEW.TEXT.TITLE --> 
+            <style name = "SP.View.Text.Primary.Title" 
+                parent  = "SP.View.Text.Primary.Header.Title"
+                />            
+            
+
+            
+    
+    
+    <!-- LAYOUT -->  
+    
+    <style name = "SP.Layout" />    
+    
+                                            
+            
+    <!-- DIALOG -->  
+    
+    <style name = "SP.Dialog" >  
+        <item name = "android:layout_height" >wrap_content</item>
+        <item name = "android:layout_width"  >fill_parent</item>
+        <item name = "android:padding" >4dip</item>
+    </style>    
+    
+    
+        
+        <!-- ROOT -->
+        
+        <style name = "SP.Dialog.Root" >
+            <item name = "android:orientation" >vertical</item>
+            
+            <item name = "android:layout_height" >fill_parent</item>
+            
+            <item name = "android:background" >@drawable/background</item>
+        </style>  
+    
+    
+        <!-- BUTTONS -->
+        
+        <style name = "SP.Dialog.Buttons" >
+            <item name = "android:orientation" >horizontal</item>
+            
+            <item name = "android:gravity" >center</item>
+            
+            <item name = "android:background" >@drawable/background</item>
+            
+        </style>  
+    
+        
+    
+        <!-- BODY -->        
+        <style name = "SP.Dialog.Body" >
+            <item name = "android:orientation" >vertical</item>
+        </style>  
+                        
+        
+        <!-- TITLE -->        
+        <style name = "SP.Dialog.Title"
+            parent  = "@style/SP.View.Text.Primary.Title"
+            >            
+            <item name = "android:background" >@drawable/background</item>
+        </style> 
+    
+    
+        <!-- HEADER -->    
+        <style name = "SP.Dialog.Header"
+            parent  = "@style/SP.View.Text.Primary.Header"
+            >            
+            <item name = "android:background" >@drawable/menu_item_background_pressed</item>
+        </style> 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 	<style name="Animations" />
 
 	<!-- PopDownMenu -->

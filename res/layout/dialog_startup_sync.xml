@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <TableLayout xmlns:android = "http://schemas.android.com/apk/res/android"
-             android:id    = "@+id/startup_root" 
+             android:id    = "@+id/_startup_root" 
     android:layout_width   = "fill_parent" 
     android:layout_height  = "match_parent"
     android:layout_gravity = "fill"
@@ -11,7 +11,7 @@
     
     <!-- Head -->
     
-    <TextView android:id      = "@+id/startup_head"
+    <TextView android:id      = "@+id/_startup_head"
         android:gravity       = "center_vertical"
         android:layout_width  = "fill_parent"
         android:layout_height = "wrap_content"
@@ -26,7 +26,7 @@
      
     <!-- Name -->
     
-    <TextView android:id      = "@+id/startup_name_text"
+    <TextView android:id      = "@+id/_startup_name_text"
         android:layout_width  = "fill_parent"
         android:layout_height = "wrap_content"
         android:textColor     = "#ffffff"
@@ -53,7 +53,7 @@
             android:text          = "First:"
             />
         
-	    <EditText android:id      = "@+id/startup_name_first"
+	    <EditText android:id      = "@+id/_startup_name_first"
 	        android:layout_width  = "fill_parent" 
 	        android:layout_height = "wrap_content"
 	        android:layout_weight = "1"
@@ -80,7 +80,7 @@
             android:text          = "Last:"
             />
         
-        <EditText android:id      = "@+id/startup_name_last"
+        <EditText android:id      = "@+id/_startup_name_last"
             android:layout_width  = "fill_parent" 
             android:layout_height = "wrap_content"
             android:layout_weight = "1"
@@ -97,7 +97,7 @@
     
     <!-- Accounts -->
     
-    <TextView android:id      = "@+id/startup_accounts_text"
+    <TextView android:id      = "@+id/_startup_accounts_text"
         android:layout_width  = "fill_parent"
         android:layout_height = "wrap_content"
         android:textColor     = "#ffffff"
@@ -108,7 +108,7 @@
         />
      
      
-    <RadioGroup android:id    = "@+id/startup_accounts_radios"
+    <RadioGroup android:id    = "@+id_/startup_accounts_radios"
         android:layout_width  = "fill_parent"
         android:layout_height = "wrap_content"     
         >
@@ -125,15 +125,15 @@
         android:layout_height = "wrap_content"
         >
             
-        <Button android:id        = "@+id/startup_button_start" 
+        <Button android:id        = "@+id/_startup_button_start" 
             android:layout_width  = "fill_parent"
             android:layout_height = "wrap_content" 
             android:layout_weight = "1"
             android:text          = "Start" 
             />
         
-        <Button android:id        = "@+id/startup_button_exit" 
-            android:layout_width  = "fill_parent"
+        <Button android:id        = "@+id/_startup_button_exit" 
+            android:layout_width  = "match_parent"
             android:layout_height = "wrap_content" 
             android:layout_weight = "1"
             android:text          = "Exit" 
@@ -144,52 +144,3 @@
 </TableLayout>
 
 
-
-   <!-- 
-     <ListView android:id      = "@+id/startup_accounts_list"    
-        android:layout_width  = "fill_parent"    
-        android:layout_height = "wrap_content"           
-        >
-    </ListView>
-      --> 
-      
-        <!-- android:layout_above = "@id/bottom_view" --> 
-        <!-- android:cacheColorHint = "#00000000" -->
-        
-
-
-
-<!-- Icons -->
-<!-- 
-    <LinearLayout android:id  = "@+id/startup_icons"
-        android:orientation   = "horizontal"
-        android:layout_width  = "wrap_content"
-        android:layout_height = "wrap_content"
-        >     
-            <ImageButton android:id   = "@+id/startup_image_1"
-                android:layout_width  = "wrap_content"
-                android:layout_height = "wrap_content"
-                android:background    = "#000"
-                android:src           = "@drawable/user_red_sruga_small"
-                /> 
-    
-            <ImageButton android:id   = "@+id/startup_image_2"
-                android:layout_width  = "wrap_content"
-                android:layout_height = "wrap_content"
-                android:src           = "@drawable/user_red_nahman_small"
-                /> 
-            
-            <ImageView android:id   = "@+id/startup_image_3"
-                android:layout_width  = "wrap_content"
-                android:layout_height = "wrap_content"
-                android:src           = "@drawable/user_red_hassid_small"
-                /> 
-            
-            <ImageView android:id   = "@+id/startup_image_4"
-                android:layout_width  = "wrap_content"
-                android:layout_height = "wrap_content"
-                android:background    = "#000"
-                android:src           = "@drawable/user_red_hat_small"
-                /> 
-    </LinearLayout>          
---> 

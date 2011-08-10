@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resources>
+
+    <color name = "black" >#FF000000</color>
+    <color name = "white" >#FFFFFFFF</color>
+    
+    <color name = "blue"   >#FF0000FF</color>
+    <color name = "green"  >#FF00FF00</color>
+    <color name = "red"    >#FFFF0000</color>
+    <color name = "yellow" >#FFFFFF00</color>
+    
+    
+    <color name = "orange" >#FFFFA500</color>
+    <color name = "orange_dark" >#FFFF8C00</color>
+    <color name = "orange_red"  >#FFFF4500</color>
+    
+    
+    <color name = "gray"       >#FF888888</color>
+    <color name = "grey_dark"  >#FF444444</color>
+    <color name = "gray_light" >#FFCCCCCC</color>
+    
+    <color name = "hint" >#4444FFFF</color>
+
+</resources>

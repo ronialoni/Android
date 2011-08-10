@@ -51,6 +51,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -152,10 +153,8 @@ extends MapActivity
 		} catch (UnknownLocationException e)	{
 			return null;
 		} catch (ServiceNotConnected e) {
-			// TODO Auto-generated catch block
 			return null;
 		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
 			return null;
 		}
 		
@@ -182,69 +181,91 @@ extends MapActivity
     	        {    	            
     	            public void run()
     	            {
-    	                // TODO Auto-generated method stub
+    	            	ILocationSvc locSvc;
+    	            	GeneralUser thisUser = null;
+    	            	
+    	                try 
+    	                {
+							locSvc = svcGetter.getService();
+						}
+    	                catch (ServiceNotConnected e) 
+						{
+							e.printStackTrace();
+							return;
+						}
+    	                
     	                try
     	                {
-    	                    GeneralUser thisUser = svcGetter
-    	                    .getService().getUser();
-    	                    List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
-    	                    userOverlayList.add(new UserOverlayItem(
-    	                            thisUser));
-                                    userOverlay.changeItems(userOverlayList);
+    	                	thisUser = locSvc.getUser();
     	                }
-    	                catch (UserNotFoundException e)
+    	                catch (UserNotFoundException e) 
     	                {
-    	                    // invalid user
-    	                    // TODO Auto-generated catch block
-    	                    e.printStackTrace();
+    	                	e.printStackTrace();
+    	                	return;
+						}
+    	                catch (NullPointerException e)
+    	                {
+    	                	e.printStackTrace();
     	                }
+    	                
+    	                
+    	                try
+    	                {	
+    	                    
+    	                    List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
+    	                    userOverlayList.add(new UserOverlayItem(thisUser));
+                            userOverlay.changeItems(userOverlayList);
+    	                }
+//    	                catch (UserNotFoundException e)
+//    	                {
+//    	                    // invalid user
+//    	                    e.printStackTrace();
+//    	                }
     	                catch (UnknownLocationException e)
     	                {
-    	                    // TODO Auto-generated catch block
     	                    e.printStackTrace();
     	                }
-    	                catch (ServiceNotConnected e)
-    	                {
-    	                    // service wasn't initialized yet
-    	                    // TODO Auto-generated catch block
-    	                    e.printStackTrace();
-    	                }
+//    	                catch (ServiceNotConnected e)
+//    	                {
+//    	                    // service wasn't initialized yet
+//    	                    e.printStackTrace();
+//    	                }
     	                catch (NullPointerException npe)
     	                {
     	                    SPUtils.error("NullPointerException - Should have been WRAPED !!!", npe);
     	                    npe.printStackTrace();
     	                }
-                                
+                        
+    	                
     	                if (null != users)
     	                {
-    	                    List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(
-    	                            users.length);
+    	                    List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(users.length);
     	                    for (GeneralUser user : users)
     	                    {
     	                        try
     	                        {
-    	                            GeneralUser thisUser = svcGetter.getService().getUser();
+    	                            //GeneralUser thisUser = svcGetter.getService().getUser();
     	                            if (!thisUser.getName().equals(user.getName()))
     	                            {
     	                                usersOverlayList.add(new UserOverlayItem(user));
     	                            }
     	                        }
-    	                        catch (UserNotFoundException e)
-    	                        {
-    	                            // TODO Auto-generated catch block
-                                    e.printStackTrace();
-    	                        }
+//    	                        catch (UserNotFoundException e)
+//    	                        {
+//                                    e.printStackTrace();
+//    	                        }
     	                        catch (UnknownLocationException e)
     	                        {
-    	                            // TODO Auto-generated catch block
     	                            e.printStackTrace();
     	                        }
-    	                        catch (ServiceNotConnected e)
+//    	                        catch (ServiceNotConnected e)
+//    	                        {
+//    	                            e.printStackTrace();
+//    	                        }
+    	                        catch (NullPointerException e)
     	                        {
-    	                            // TODO Auto-generated catch block
-    	                            e.printStackTrace();
-    	                        }catch (NullPointerException e)
-    	                        {}
+    	                        	
+    	                        }
     	                    }
     	                    otherUsersOverlay.changeItems(usersOverlayList);
     	                }
@@ -275,14 +296,12 @@ extends MapActivity
     						
 
 							public void run() {
-    							// TODO Auto-generated method stub
     							GeneralPlace closestPlace = determineClosestPlace(places);
     					        if(closestPlace!=null){
     					        	List<PlaceOverlayItem> closestPlacesOverlayList = new ArrayList<PlaceOverlayItem>();
     					        	try {
 										closestPlacesOverlayList.add(new PlaceOverlayItem(closestPlace, closestPlace.getName(), closestPlace.getAddress(), synagougeClosestMarker, glowClosestMarker));
 									} catch (UnknownLocationException e) {
-										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
     					        	closestPlaceOverlay.changeItems(closestPlacesOverlayList);
@@ -299,7 +318,6 @@ extends MapActivity
     					            		try {
 												placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress(), synagougeMarker));
 											} catch (UnknownLocationException e) {
-												// TODO Auto-generated catch block
 												e.printStackTrace();
 											}
     					            	}
@@ -414,14 +432,22 @@ extends MapActivity
     }
 	
 	@Override
-	protected void onStart ()	{
+	protected void onStart ()	
+	{
 		super.onStart();
+		
+	    ////CHANGE: moved to onStart()
+        //facebookConnector = new FacebookConnector(this);
+        ////facebookConnector.setConnectOnStartup(false/*this.facebookConnector.isFacebook_connectStartup()*/); ////CHANGE: was `true`
+		
+			
 		
 		bindService(new Intent(LocServ.ACTION_SERVICE), svcConn, BIND_AUTO_CREATE);
         
         Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
         toast.show();
 		
+        
 	}
         
 	private void registerUser(GeneralUser user)	{
@@ -440,7 +466,7 @@ extends MapActivity
          };
 	}
     	
-		
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 	
 	{		
@@ -460,54 +486,87 @@ extends MapActivity
         
         
         
-        editText.setOnEditorActionListener (new EditText.OnEditorActionListener()	{
-
-
-        	public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
+        editText.setOnEditorActionListener (new EditText.OnEditorActionListener()	
+        {
+        	public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) 
+        	{
         		if ((EditorInfo.IME_ACTION_DONE == actionId) || ((event != null) && 
         				(event.getAction() == KeyEvent.ACTION_DOWN) && 
         				(event.getKeyCode() == KeyEvent.KEYCODE_ENTER)))
-        		    {
+        		{
         			statusBar.write("searching for the place...", R.drawable.action_refresh, 2000);
-					comm.searchForAddress(v.getText().toString(), new ACommHandler<MapsQueryLocation>() {
-						public void onRecv(final MapsQueryLocation Obj)	{
-							FindPrayer.this.runOnUiThread(new Runnable() {
-
-								public void run() {
-									try	{
+        			
+        			editText.setBackgroundResource(R.drawable.selector_edittext_yellow);
+        			editText.refreshDrawableState();
+        			
+        			comm.searchForAddress(v.getText().toString(), new ACommHandler<MapsQueryLocation>() 
+					{
+						@Override
+						public void onRecv(final MapsQueryLocation Obj)	
+						{
+							FindPrayer.this.runOnUiThread(new Runnable() 
+							{
+								public void run() 
+								{
+									try	
+									{
 										double latitude = Obj.getResults()[0].getGeometry().getLocation().getLat();
 										double longitude = Obj.getResults()[0].getGeometry().getLocation().getLng(); 
 										
 										GeoPoint gp = new GeoPoint(latitude, longitude);
 										mapView.getController().setCenter(gp);
 										mapView.getController().setZoom(mapView.getMaxZoomLevel());
+										
 										synchronized(refreshTask)	
 										{
 											refreshTask.notify();
 										}
+										
 										searchQueryOverlay.clear();
 										searchQueryOverlay.addItem(new OverlayItem(gp, "Search query result", v.getText().toString()));
+										
 										Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
 										toast.show();
+										
 										statusBar.write("place found!", R.drawable.status_bar_accept_icon, 2000);
-									} catch (NullPointerException e)	{
 										
-									} catch (ArrayIndexOutOfBoundsException e)	{
-										
-									}
-							
-									
+										editText.setBackgroundResource(R.drawable.selector_edittext_green);
+										editText.refreshDrawableState();
+									} 
+									catch (NullPointerException e)
+									{
+										onError(Obj);
+									} 
+									catch (ArrayIndexOutOfBoundsException e)	
+									{
+										onError(Obj);
+									}	
 								}
 							
-							});
+							});//@END: Runnable.
 						}
-					});
+						
+						
+						@Override
+						public void onError(MapsQueryLocation Obj) 
+						{
+							editText.setBackgroundResource(R.drawable.selector_edittext_red);	
+							editText.refreshDrawableState();
+							super.onError(Obj);
+						}
+						
+						
+						
+					});//@END: ACommHandler<MapsQueryLocation>
+					
 					return true;
 				}
+        		
+        		editText.setBackgroundResource(R.drawable.selector_edittext_yellow);
 				return false;
 			}
         	
-        });
+        });//@END: OnEditorActionListener
         
         
             
@@ -608,22 +667,47 @@ extends MapActivity
                 {
                     Log.e("ShareAPrayer", "Service is not connected", e);
                 } catch (UserNotFoundException e)	{
-                		
-                		String[] names;
-                		List<Account> accounts = new LinkedList<Account>();
-	                    for (Account a : AccountManager.get(FindPrayer.this).getAccounts())	{
-	                    	if (a.name.contains("@"))	{
-	                    		accounts.add(a);
-	                    	}
-	                    }
-	                    
-	                    try	{
-	                    	names = UIUtils.HandleFirstTimeDialog(accounts.toArray(new Account[0]), FindPrayer.this);
-	                    	service.setNames(names);
-	                    } catch (NullPointerException e_)	{
-	                    	// no accounts
-	                    }
-                }
+            		
+            		String[] names;
+            		List<Account> accounts = new LinkedList<Account>();
+                    for (Account a : AccountManager.get(FindPrayer.this).getAccounts())	{
+                    	if (a.name.contains("@"))	{
+                    		accounts.add(a);
+                    	}
+                    }
+                    
+                    try	{
+                    	names = UIUtils.HandleFirstTimeDialog(accounts.toArray(new Account[0]), FindPrayer.this);
+                    	service.setNames(names);
+                    	
+                    } catch (NullPointerException e_)	{
+                    	// no accounts
+                    }
+				} 
+//                finally /* (UserNotFoundException e) */
+//				{
+//
+//					String[] names;
+//					List<Account> accounts = new LinkedList<Account>();
+//					for (Account a : AccountManager.get(FindPrayer.this).getAccounts()) 
+//					{
+//						if (a.name.contains("@")) 
+//						{
+//							accounts.add(a);
+//						}
+//					}
+//
+//					try 
+//					{
+//						names = UIUtils.HandleFirstTimeDialog(accounts.toArray(new Account[0]), FindPrayer.this);
+//						service.setNames(names);
+//
+//					} 
+//					catch (NullPointerException e_) 
+//					{
+//						// no accounts
+//					}
+//				}
 	          
             }
            
@@ -659,9 +743,11 @@ extends MapActivity
 			}
         });
         
-       facebookConnector = new FacebookConnector(this);
-
-       facebookConnector.setConnectOnStartup(true);
+        
+        ////CHANGE: moved to onStart()
+        facebookConnector = new FacebookConnector(this);
+                
+        //facebookConnector.setConnectOnStartup(this.facebookConnector.isFacebook_connectStartup()); ////CHANGE: was `true`
         
         
 /////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -700,6 +786,8 @@ extends MapActivity
         
         
 	}//@END: onCreate(..)
+	
+	
 	
 	
 	
@@ -774,19 +862,6 @@ extends MapActivity
         
         this.mapView.getController().setCenter(SPUtils.toGeoPoint(center));
     }
-    
-    
-    
-    private Account[] getAccounts()
-    {
-        Account[] accounts = AccountManager.get(FindPrayer.this).getAccounts();
-        if (null == accounts)
-        {
-            accounts = new Account[0];
-        }
-        
-        return accounts;  
-    }    
     
     
     

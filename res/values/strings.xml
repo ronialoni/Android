@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <string name="hello">Hello World, FindPrayer!</string>
-    <string name="app_name">Share-A-Prayer</string>
-    <string name="create_place_title">Create Place: Properties</string>
-	<string name="Shaharit">Shaharit</string>
-	<string name="Minha">Minha</string>
-	<string name="Arvit">Arvit</string>
-	<string name="userUnknownTitle">Security Error</string>
-	<string name="userUnknownMessage">Sorry, but your current location is unknown. Share-A-Prayer does not allow users whom their current location is unknown to create or registers to places due to security restrictions.</string>
-	<string name="NewPlaceQues">Do you want to create a public praying place?</string>  
-	<string name="NoPraySelected">Please select at least one pray before creating a new place.</string>  
+
+    <string name = "app_name" >Share-A-Prayer</string>
+    
+    <string name = "WelcomeMsg" >Welcome to Share-A-Prayer!</string>
+    
+    <string name = "Shaharit" >Shaharit</string>
+    <string name = "Minha"    >Minha</string>
+    <string name = "Arvit"    >Arvit</string>
+        
+    <string name = "create_place_title" >Create Place: Properties</string>
+	<string name = "NewPlaceQues">Do you want to create a public praying place?</string>  
+    
+    <string name = "NoPraySelected" >Please select at least one pray before creating a new place.</string>  
+    
+    <string name = "userUnknownTitle"   >Security Error</string>
+    <string name="userUnknownMessage" >Sorry, but your current location is unknown. Share-A-Prayer does not allow users whom their current location is unknown to create or registers to places due to security restrictions.</string>
+	
+    
 	<string name="AlreadyRegisterAlertMsg">You are already registered to this place.</string>  
 	<string name="WantToRegisterQues">Would you like to register to this place?</string>  
 	<string name="UserNotRegisterMsg">You are not register to this place.</string>  
 	<string name="UserNotOwnerMsg">You can\'t delete this place, because you are not the owner.</string> 
-	<string name="WelcomeMsg">Welcome to Share-A-Prayer!</string>
+	
 </resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    
+    <!--
+    <item>
+        <color android:color ="@color/orange_dark" />
+    </item>             
+    -->
+             
+    <item
+        android:top    = "2dip"
+        android:bottom = "2dip"
+        android:right  = "2dip"
+        android:left   = "2dip"
+        >
+        <bitmap android:src ="@drawable/talabheim_paper_128x94" />    
+    </item>
+    
+       
+</layer-list>

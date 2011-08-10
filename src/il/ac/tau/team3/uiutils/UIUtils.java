@@ -1,5 +1,6 @@
 package il.ac.tau.team3.uiutils;
 
+import java.text.ChoiceFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mapsforge.android.maps.MapView.TextField;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import il.ac.tau.team3.addressQuery.MapsQueryLocation;
 import il.ac.tau.team3.common.GeneralPlace;
@@ -44,6 +46,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.provider.Settings;
@@ -85,6 +91,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.TimePicker;
  
 public class UIUtils {
@@ -158,7 +165,7 @@ public class UIUtils {
 	    searchBar.setHintTextColor(Color.LTGRAY);	    
         
 	    searchBar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_item_new_edit_find_replace, 0);
-	    searchBar.setCompoundDrawablePadding(4);
+	    searchBar.setCompoundDrawablePadding(8);
 	}
 	
 	
@@ -166,114 +173,249 @@ public class UIUtils {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
-	public static String[] HandleFirstTimeDialog(Account[] accounts, FindPrayer activity){
-		if (accounts.length == 0){
+	public static String[] HandleFirstTimeDialog(Account[] accounts, FindPrayer activity)
+	{
+		if (accounts.length == 0)
+		{
 			CreateNoAccountsDialog(activity);
 			return null;
-		}else{
+		}
+		else
+		{
 			return createChooseAccountsDialog(accounts, activity);
 		}
 	}
 	
-	static void CreateNoAccountsDialog(final FindPrayer activity){
+	
+	static void CreateNoAccountsDialog(final FindPrayer activity)
+	{
 		final Dialog dialog = new Dialog(activity);
-		  dialog.setContentView(R.layout.dialog_startup_async);
-          dialog.setTitle(activity.getString(R.string.WelcomeMsg));
-          Button exitButton = (Button) dialog.findViewById(R.id.dsa_button_exit);
-          Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
-          
-          exitButton.setOnClickListener(new OnClickListener()
-          {                
-              public void onClick(View v)
-              {
-                 dialog.dismiss();
-                 activity.finish();
-              }
-          });
-          
-          syncButton.setOnClickListener(new OnClickListener()
-          {                
-              public void onClick(View v)
-              {
-            	  activity.startActivity(new Intent(Settings.ACTION_SYNC_SETTINGS));
-            	  dialog.dismiss();
-                  activity.finish();
-              }
-          });
-          dialog.show();
+		dialog.setContentView(R.layout.dialog_startup_async);
+		//dialog.setTitle(activity.getString(R.string.WelcomeMsg));
 		
+		Button exitButton = (Button) dialog.findViewById(R.id.dsa_button_exit);
+		Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
+		
+		exitButton.setOnClickListener(new OnClickListener()
+		{                
+			public void onClick(View v)
+			{
+				dialog.dismiss();
+				activity.finish();
+			}
+		});
+		
+		syncButton.setOnClickListener(new OnClickListener()
+		{                
+			public void onClick(View v)
+			{
+				activity.startActivity(new Intent(Settings.ACTION_SYNC_SETTINGS));
+				dialog.dismiss();
+				activity.finish();
+			}
+		});
+		
+		dialog.show();
 	}
 	
-	public static String[] createChooseAccountsDialog(final Account[] accounts, final FindPrayer activity){
-		final Dialog dialog = new Dialog(activity);
-		 dialog.setContentView(R.layout.dialog_startup_sync);
-		 final EditText editTextFirstName = (EditText)dialog.findViewById(R.id.startup_name_first);
-         final EditText editTextLastName = (EditText)dialog.findViewById(R.id.startup_name_last);
-         dialog.setTitle(activity.getString(R.string.WelcomeMsg));
-         Button exitButton = (Button) dialog.findViewById(R.id.startup_button_exit);
-         Button startButton = (Button) dialog.findViewById(R.id.startup_button_start);
-         final int accountId[] = new int[1];
-         final String names[] = new String[3];
-         
-         exitButton.setOnClickListener(new OnClickListener()
-         {                
-             public void onClick(View v)
-             {
-                dialog.dismiss();
-                activity.finish();
-             }
-         });
-         
-         startButton.setOnClickListener(new OnClickListener()
-         {                
-             public void onClick(View v)
-             {
-            	 if(editTextFirstName.getText() == null || editTextFirstName.getText().toString() == null ||
-            			 editTextFirstName.getText().toString().equals("") || 
-            			 editTextLastName.getText() == null || editTextLastName.getText().toString() == null ||
-            			 editTextLastName.getText().toString().equals("")){
-            		 createAlertDialog("Please enter your first and last name", activity, "OK");
-            	 }else{
-            	 names[0] = editTextFirstName.getText().toString();
-            	 names[1] = editTextLastName.getText().toString();
-            	 names[2] = accounts[accountId[0]].name;
-            	 activity.setUser(names);
-            	 
-            	 dialog.dismiss();
-            	 }
-             }
-         });
-         
-         RadioGroup  accountsRadioGroup = (RadioGroup) dialog.findViewById(R.id.startup_accounts_radios);
-         RadioButton tempRadioButton;
-         
-         for (int i = 0; i < accounts.length; i++)
-         {
-             tempRadioButton = new RadioButton(activity);
-             tempRadioButton.setId(i);
-             tempRadioButton.setText(accounts[i].name);
-                     
-             accountsRadioGroup.addView(tempRadioButton);
-         }
-         
-          
-         
-         accountsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-         {
-             //@Override
-             public void onCheckedChanged(RadioGroup group, int checkedId)
-             {
-                 accountId[0] = checkedId;
-             }
-			
-         });
-     
-     
-         dialog.show();
-
-     return names;
+	
+	
+	
+	
+	private static abstract class ConditionChecker
+	{		
+		public abstract boolean condition();
 		
+		protected void positive() {}
+		protected void negative() {}
+		protected void allways()  {}
+		
+		protected void check()
+		{
+			if (condition())
+			{
+				positive();
+			}
+			else
+			{
+				negative();
+			}
+			
+			allways();
+		}
 	}
+	
+	
+	private static abstract class UserSetToStartChecker
+	extends ConditionChecker
+	{
+		public boolean isEmpty(EditText edittext)
+		{
+			if (null != edittext)
+			{
+				String text = edittext.getText().toString();				
+				return null == text || 0 == text.trim().length();			
+			}
+			
+			return true;
+		}
+	}
+	
+	
+	public static String[] createChooseAccountsDialog(final Account[] accounts, final FindPrayer activity)
+	{
+		final Dialog dialog = new NoTitleDialog(activity);
+		dialog.setContentView(R.layout.dialog_welcome_sync);
+		
+		final EditText editTextFirstName = (EditText) dialog.findViewById(R.id.startup_name_first);
+		final EditText editTextLastName  = (EditText) dialog.findViewById(R.id.startup_name_last);
+		
+		dialog.setTitle(activity.getString(R.string.WelcomeMsg));
+		
+		final Button exitButton  = (Button) dialog.findViewById(R.id.startup_button_exit);
+		final Button startButton = (Button) dialog.findViewById(R.id.startup_button_start);
+		
+		
+		//startButton.setTextColor(activity.getResources().getColorStateList(R.drawable.selector_button_text_disabled));
+		
+		
+		
+		final RadioGroup  accountsRadioGroup = (RadioGroup) dialog.findViewById(R.id.startup_accounts_radios);
+		
+		final int    accountId[] = new int[1];
+		final String names[]     = new String[3];
+			
+		
+		// XXX Check if this is a smart idea  ?!? 
+		final UserSetToStartChecker userSetToStartChecker = new UserSetToStartChecker() 
+		{			
+			@Override
+			public boolean condition() 
+			{
+				return (-1 != accountsRadioGroup.getCheckedRadioButtonId()) && (! isEmpty(editTextFirstName)) && (! isEmpty(editTextLastName));
+			}
+			
+			@Override
+			protected void positive() 
+			{
+				startButton.setTextColor(activity.getResources().getColorStateList(R.drawable.selector_button_text));
+				
+			}
+
+			@Override
+			protected void negative() 
+			{
+				startButton.setTextColor(activity.getResources().getColorStateList(R.drawable.selector_button_text_disabled));
+			}
+
+			@Override
+			protected void allways() 
+			{
+				startButton.refreshDrawableState();
+			}
+		};
+		
+		userSetToStartChecker.check();
+		
+		
+		exitButton.setOnClickListener(new OnClickListener()
+		{                
+			public void onClick(View v)
+			{
+				dialog.dismiss();
+				activity.finish();
+			}
+		});
+
+		startButton.setOnClickListener(new OnClickListener()
+		{                
+			public void onClick(View v)
+			{
+//				if(editTextFirstName.getText() == null || editTextFirstName.getText().toString() == null ||
+//						editTextFirstName.getText().toString().equals("") || 
+//						editTextLastName.getText() == null || editTextLastName.getText().toString() == null ||
+//						editTextLastName.getText().toString().equals("")){
+				if (! userSetToStartChecker.condition())
+				{
+					if (-1 == accountsRadioGroup.getCheckedRadioButtonId())
+					{
+						createAlertDialog("Please select a Google account.", activity, "OK");
+					}
+					else
+					{
+						createAlertDialog("Please enter your first and last name", activity, "OK");
+					}
+				}
+				else
+				{
+					names[0] = editTextFirstName.getText().toString();
+					names[1] = editTextLastName.getText().toString();
+					names[2] = accounts[accountId[0]].name;
+					activity.setUser(names);
+
+					CheckBox          facebookCheckbox = (CheckBox) dialog.findViewById(R.id.welcome_facebook_startup);
+					FacebookConnector facebook         = activity.getFacebookConnector();
+					facebook.setConnectOnStartup(facebookCheckbox.isChecked());
+					facebook.connectOnStartup();
+					
+					dialog.dismiss();
+				}
+					
+			}
+		});
+				
+		
+		RadioButton tempRadioButton;
+
+		for (int i = 0; i < accounts.length; i++)
+		{
+			tempRadioButton = new RadioButton(activity);
+			tempRadioButton.setId(i);
+			tempRadioButton.setText(accounts[i].name);
+
+			accountsRadioGroup.addView(tempRadioButton);
+		}
+
+		accountsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+		{
+			//@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId)
+			{
+				/*
+				 * @imp: meant to enable only on the first still, same reasult.
+				 */
+				userSetToStartChecker.check();
+				
+				accountId[0] = checkedId;
+			}			
+		});
+		
+		
+		editTextFirstName.setOnEditorActionListener(new OnEditorActionListener()
+		{			
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) 
+			{				
+				userSetToStartChecker.check();
+				return false;
+			}
+		});
+		
+		editTextLastName.setOnEditorActionListener(new OnEditorActionListener()
+		{			
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) 
+			{
+				userSetToStartChecker.check();
+				return false;
+			}
+		});
+		
+		
+		dialog.show();
+		return names;
+	}
+		
+	
+	
 	
 	private static GeneralUser getThisUser(FindPrayer activity)	{
 		try {
@@ -466,6 +608,8 @@ public class UIUtils {
 	
 	
 	
+	
+	
 	/*package*/ public static void createRegisterDialog(final GeneralPlace place, final PlaceArrayItemizedOverlay placeOverlay)
 	{
 		GeneralUser user = getThisUser(placeOverlay.getActivity()); 
@@ -507,19 +651,24 @@ public class UIUtils {
 											    (CheckBox) dialog.findViewById(R.id.DPRcheckboxArvit),
 											    (Button) dialog.findViewById(R.id.DPRnumberOfUsersArvit)));
 		
-		for (final Pray p : place.getPraysOfTheDay())	{
-			if (null != p)	{
+		
+		for (final Pray p : place.getPraysOfTheDay())	
+		{
+			if (null != p)	
+			{
 				final PrayUIObj uiObj = JoinersUI.get(p.getName());
-				if (uiObj == null)	{
+				if (uiObj == null)
+				{
 					continue;
 				}
 				uiObj.exists = true;
 				uiObj.prayTime.setText(printTimeFromCalendar(p.getStartTime()));
 				uiObj.prayTime.setTextColor(Color.WHITE);
-				uiObj.prayCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				uiObj.prayCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() 
+				{
 
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
+					{
 						uiObj.wish = isChecked;
 					}
 				});
@@ -529,38 +678,56 @@ public class UIUtils {
 				uiObj.prayCheckBox.setTextColor(Color.WHITE);
 				uiObj.prayNumOfUsers.setText(Integer.toString(p.numberOfJoiners()));
 				uiObj.prayNumOfUsers.setTextColor(Color.BLACK);
-				uiObj.prayNumOfUsers.setOnClickListener(new OnClickListener(){
-					public void onClick(View view) {
+				uiObj.prayNumOfUsers.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View view) 
+					{
 						final Dialog listDialog = new Dialog(placeOverlay.getActivity());
 						listDialog.setCancelable(true);
 						listDialog.setCanceledOnTouchOutside(true);
 						listDialog.setContentView(R.layout.dialog_registered_users_list);
-						if(p.getJoiners()== null || p.getJoiners().size() == 0 ){
+						if(p.getJoiners() == null || p.getJoiners().size() == 0 )
+						{							
 							listDialog.setTitle("No prayers registered.");
-						}else{
+						}
+						else
+						{
 							listDialog.setTitle("Registered for " + p.getName() + ":");
 						}
 						ListView lv = (ListView) listDialog.findViewById(R.id.DRUList);
 						
 						lv.setTextFilterEnabled(true);
-						lv.setOnItemClickListener(new OnItemClickListener() {
-						    public void onItemClick(AdapterView<?> parent, View view,
-						        int position, long id) {
-						    	try{
-						    	String clickedUserName = ((String) ((TextView) view).getText());
-						    	GeneralUser clickedUser = getUserByName(p.getJoiners(), clickedUserName);
-						    	if (clickedUser != null) new UserDetailsDialog(clickedUser, (FindPrayer) activity);
+						lv.setOnItemClickListener(new OnItemClickListener()
+						{
+						    public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
+						    {
+						    	try
+						    	{
+						    		String      clickedUserName = ((String) ((TextView) view).getText());
+						    		GeneralUser clickedUser     = getUserByName(p.getJoiners(), clickedUserName);
+						    		if (clickedUser != null) 
+						    			new UserDetailsDialog(clickedUser, (FindPrayer) activity);
 						    	}
-						    	catch (NullPointerException npe){}
+						    	catch (NullPointerException npe)
+						    	{
+						    		
+						    	}
 						    }
-						  });
+						});
 						
 						Button closebutton = (Button) listDialog.findViewById(R.id.DRUCloseButton);
-						closebutton.setOnClickListener(new OnClickListener(){ public void onClick(View view){ listDialog.dismiss();	};});
+						closebutton.setOnClickListener(new OnClickListener()
+						{
+							public void onClick(View view)
+							{ 
+								listDialog.dismiss();	
+							}
+						});
 						
 						ArrayList<HashMap<String, String>> prayersList = new ArrayList<HashMap<String, String>>();
 						
-						for (GeneralUser joiner : p.getJoiners()){
+						for (GeneralUser joiner : p.getJoiners())
+						{
 							HashMap<String, String> tempmap = new HashMap<String, String>();
 							// TODO Change back to Full name once it's not buggy
 							String userName = (joiner.getFullName()==null || joiner.getFullName()=="" ? joiner.getName() : joiner.getFullName());
@@ -570,38 +737,47 @@ public class UIUtils {
 						
 						SimpleAdapter mPrays = new SimpleAdapter(placeOverlay.getActivity(), prayersList, R.layout.dialog_registered_users_row,
 						            new String[] {"User"}, new int[] {R.id.DRUUsername});
-						try{
+						try
+						{
 							lv.setAdapter(mPrays);
-						}catch (NullPointerException npe){}
+						}
+						catch (NullPointerException npe)
+						{
+							
+						}
+						
 						listDialog.show();
 					}
 				});
 			}
 		}
 		
+		
 		// Delete Set and Cancel Buttons:
 		Button setButton = (Button) dialog.findViewById(R.id.DPRSetButton);
 		Button closeButton = (Button) dialog.findViewById(R.id.DPRCloseButton);
 		Button deleteButton = (Button) dialog.findViewById(R.id.DPRDeleteButton);
-		 
+				 
 		deleteButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 				builder.setMessage("Are you sure you want to delete this Minyan place?");
 				builder.setCancelable(true);
-				builder.setNegativeButton("No",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								//dialog.dismiss();
-							}
-						});
-				builder.setPositiveButton("Yes",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								DeleteClick(place, placeOverlay);
-								//dialog.dismiss();
-							}
-						});
+				builder.setNegativeButton("No", new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int id) 
+					{
+						//dialog.dismiss();
+					}
+				});
+				builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() 
+				{
+					public void onClick(DialogInterface dialog, int id) 
+					{
+						DeleteClick(place, placeOverlay);
+						//dialog.dismiss();
+					}
+				});
 				AlertDialog alert = builder.create();
 				alert.show();
 				dialog.dismiss();
@@ -671,6 +847,27 @@ public class UIUtils {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
+	private static abstract class SetToCreateChecker
+	extends ConditionChecker
+	{
+		private boolean outerCondition = false;
+    	
+		protected void setOuterCondition(boolean outerCondition)
+    	{
+    		this.outerCondition = outerCondition;
+    		this.check();
+    	}
+    	
+    	
+    	protected boolean getOuterCondition()
+    	{
+    		return this.outerCondition;
+    	}
+    	
+	}
+	
+	
+	
 	private static class CreatePlaceDialog	
 	{		
 		private Dialog dialog;
@@ -693,6 +890,14 @@ public class UIUtils {
         private String lastEditText ="";
         
         
+        public void show()
+        {
+        	dialog.show();
+        	placeSetToCreateChecker.check();
+        }
+        
+        
+        private SetToCreateChecker placeSetToCreateChecker;
         
         
         private class DatePickerClickListener implements OnClickListener	
@@ -843,7 +1048,9 @@ public class UIUtils {
                 {
                     timeTextView.setText("");
                     prays[index] = isChecked;    /** @imp ... = false; */  
-                }                    
+                }
+                
+                CreatePlaceDialog.this.placeSetToCreateChecker.check();
             }
         }
         
@@ -856,46 +1063,65 @@ public class UIUtils {
         	}
         
         	@Override
-			public void onRecv(final MapsQueryLocation Obj) {
-					activity.runOnUiThread(new Runnable()	{
+			public void onRecv(final MapsQueryLocation Obj) 
+        	{
+        		activity.runOnUiThread(new Runnable()	
+        		{
+        			public void run()
+        			{
+        				try	
+        				{
+        					if (! editAddress.getText().toString().equals(typed_address))	
+        					{
+        						return;
+        					}
+        					location = new SPGeoPoint(  Obj.getResults()[0].getGeometry().getLocation().getLat(), 
+        							Obj.getResults()[0].getGeometry().getLocation().getLng()  );
+        					
+        					editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
+        					//createButton.setEnabled(true);
+        					placeSetToCreateChecker.setOuterCondition(true);
+        					
 
-						public void run() {
-							try	{
-							 if (! editAddress.getText().toString().equals(typed_address))	
-							 {
-								 return;
-							 }
-							 location = new SPGeoPoint(Obj.getResults()[0].getGeometry().getLocation().getLat(), 
-									 Obj.getResults()[0].getGeometry().getLocation().getLng());
-							 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
-							 
-							 createButton.setEnabled(true);
-							 
-							} catch (Exception e)	{
-								if (!editAddress.getText().toString().equals(typed_address))	{
-									 return;
-								 }
-								editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
-								createButton.setEnabled(false);
-							}
-						}
-						
-					});
-			}
+
+        				}
+        				catch (Exception e)	
+        				{
+        					if (!editAddress.getText().toString().equals(typed_address))	
+        					{
+        						return;
+        					}
+        					
+        					editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
+        					//createButton.setEnabled(false);
+        					placeSetToCreateChecker.setOuterCondition(false);
+        					
+        					
+        				}
+        			}
+
+        		});
+        	}
         	
         	@Override
         	public void onError(final MapsQueryLocation Obj)	{
         		if (!editAddress.getText().toString().equals(typed_address))	{
 					 return;
 				 }
+        		
         		editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
-				createButton.setEnabled(false);
+				//createButton.setEnabled(false);
+				placeSetToCreateChecker.setOuterCondition(false);
         	}
         	
         }
         
-        private  void verifyAddress(String address)	{
+        private  void verifyAddress(String address)	
+        {
             editAddress.setBackgroundResource(R.drawable.selector_edittext_yellow);
+            //////////////////////////
+            placeSetToCreateChecker.setOuterCondition(false);
+            
         	activity.getSPComm().searchForAddress(address, new MapsQueryAddress(address));
         }
         
@@ -935,18 +1161,20 @@ public class UIUtils {
 			dialog = new NoTitleDialog(activity);
 			dialog.setCancelable(true);
 			dialog.setContentView(R.layout.dialog_place_create);
+			
 			dialog.setTitle(R.string.create_place_title);
 			
 			createButton  = (Button) dialog.findViewById(R.id.CPDCreateButton);
 			cancelButton  = (Button) dialog.findViewById(R.id.CPDCancelButton);
 			
-			createButton.setEnabled(false);
+			//createButton.setEnabled(false);
 			
 			editAddress = (EditText) dialog.findViewById(R.id.CPDeditText1);
 			initSearchBar(editAddress);
 			
 			
 			editAddress.setBackgroundResource(R.drawable.selector_edittext_yellow);
+			
 			
 			location = point;
 			
@@ -974,10 +1202,12 @@ public class UIUtils {
 									try	{
 									 editAddress.setText(Obj.getResults()[0].getFormatted_address());
 									 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
-									 createButton.setEnabled(true);
+									 //createButton.setEnabled(true);
+									 placeSetToCreateChecker.setOuterCondition(true);
 									 
 									} catch (Exception e)	{
 										editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
+										placeSetToCreateChecker.setOuterCondition(false);
 									}
 								}
 								
@@ -985,8 +1215,10 @@ public class UIUtils {
 					}
 					
 					@Override
-					public void onError(MapsQueryLocation Obj) {
+					public void onError(MapsQueryLocation Obj)
+					{
 						editAddress.setText("Error fetching address");
+						placeSetToCreateChecker.setOuterCondition(false);
 					}
 				});
 			} else	{
@@ -1048,7 +1280,42 @@ public class UIUtils {
 			});
 			
 			
-			dialog.show();
+			//dialog.show();
+			//placeSetToCreateChecker.check();
+			placeSetToCreateChecker = new SetToCreateChecker() 
+			{
+	        	
+				@Override
+				public boolean condition() 
+				{
+					boolean condition = false;
+					
+					for (CheckBox oneCondition : CreatePlaceDialog.this.checkBoxes)
+					{
+						condition = condition || oneCondition.isChecked();
+					}
+					
+					return condition && this.getOuterCondition();
+				}
+				
+				@Override
+				protected void positive() 
+				{
+					createButton.setTextColor(activity.getResources().getColorStateList(R.drawable.selector_button_text));
+				}
+
+				@Override
+				protected void negative() 
+				{
+					createButton.setTextColor(activity.getResources().getColorStateList(R.drawable.selector_button_text_disabled));
+				}
+
+				@Override
+				protected void allways() 
+				{
+					createButton.refreshDrawableState();
+				}
+			};
 		}
 	}
 	
@@ -1056,9 +1323,16 @@ public class UIUtils {
 	
 	public static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
 	{
-		try {
-			new CreatePlaceDialog(point, activity, user);
-		} catch (NullPointerException e)	{
+		try 
+		{
+			new CreatePlaceDialog(point, activity, user).show();
+		}
+		catch (NullPointerException e)	
+		{
+			Log.w("SECURITY===>", "activity " + (null != activity ? "SABABA" : "OSE BAAYOT"));
+			Log.w("SECURITY===>", "point " + (null != point ? "SABABA" : "OSE BAAYOT"));
+			Log.w("SECURITY===>", "user " + (null != user ? "SABABA" : "OSE BAAYOT"));
+
 			createUnknownUserDialog(activity);
 		}
     }
@@ -1105,6 +1379,7 @@ public class UIUtils {
 		
 		
 	}
+	
 	
 	static String formatFacebookHeader_NewPlace(String address){
 		return "Just created a new Minyan place!" + (null == address? "" : " (" + address + ")");

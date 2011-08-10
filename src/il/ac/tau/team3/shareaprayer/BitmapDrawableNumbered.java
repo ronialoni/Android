@@ -122,13 +122,13 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
             	arg.drawBitmap(glow, x, y, new Paint());
             }
             
-            p.setColor(Color.WHITE);
-                    p.setStyle(Paint.Style.STROKE);
-                    p.setStrokeWidth(2);
-                    //p.setARGB(255, 255, 0, 0);
-                    p.setTypeface(Typeface.DEFAULT);
-                    p.setTextSize(16);
-            
+            p.setColor(Color.BLACK);
+            p.setStyle(Paint.Style.STROKE);
+            p.setStrokeWidth(2);
+            //p.setARGB(255, 255, 0, 0);
+            p.setTypeface(Typeface.DEFAULT);
+            p.setTextSize(16);
+
             p.setAntiAlias(true);
             arg.drawText((new Integer(numToDisplay)).toString() , 
                             getBounds().left + getBitmap().getWidth()/2 - 5, 

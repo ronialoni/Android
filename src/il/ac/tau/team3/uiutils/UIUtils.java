@@ -22,6 +22,7 @@ import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.shareaprayer.FacebookConnector;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
+import il.ac.tau.team3.shareaprayer.IStatusWriter;
 import il.ac.tau.team3.shareaprayer.PlaceArrayItemizedOverlay;
 import il.ac.tau.team3.shareaprayer.R;
 import il.ac.tau.team3.shareaprayer.FindPrayer.StringArray;
@@ -62,6 +63,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -93,6 +95,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.TimePicker;
+
+
  
 public class UIUtils {
 
@@ -246,10 +250,14 @@ public class UIUtils {
 	}
 	
 	
+	
+	
+	
+	
 	private static abstract class UserSetToStartChecker
 	extends ConditionChecker
 	{
-		public boolean isEmpty(EditText edittext)
+		public boolean isEmpty(EditText edittext)////
 		{
 			if (null != edittext)
 			{
@@ -269,16 +277,23 @@ public class UIUtils {
 		
 		final EditText editTextFirstName = (EditText) dialog.findViewById(R.id.startup_name_first);
 		final EditText editTextLastName  = (EditText) dialog.findViewById(R.id.startup_name_last);
+		final EditText editTextStatus    = (EditText) dialog.findViewById(R.id.startup_status);
 		
 		dialog.setTitle(activity.getString(R.string.WelcomeMsg));
 		
 		final Button exitButton  = (Button) dialog.findViewById(R.id.startup_button_exit);
 		final Button startButton = (Button) dialog.findViewById(R.id.startup_button_start);
+				
+		final CheckBox facebookCheckbox       = (CheckBox) dialog.findViewById(R.id.welcome_facebook_startup);
+		final CheckBox faceboockCheckboxShare = (CheckBox) dialog.findViewById(R.id.welcome_facebook_share);
 		
-		
-		//startButton.setTextColor(activity.getResources().getColorStateList(R.drawable.selector_button_text_disabled));
-		
-		
+		facebookCheckbox.setOnCheckedChangeListener(new OnCheckedChangeListener() 
+		{			
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+			{
+				faceboockCheckboxShare.setEnabled(isChecked);
+			}
+		});
 		
 		final RadioGroup  accountsRadioGroup = (RadioGroup) dialog.findViewById(R.id.startup_accounts_radios);
 		
@@ -299,7 +314,6 @@ public class UIUtils {
 			protected void positive() 
 			{
 				startButton.setTextColor(activity.getResources().getColorStateList(R.drawable.selector_button_text));
-				
 			}
 
 			@Override
@@ -312,8 +326,20 @@ public class UIUtils {
 			protected void allways() 
 			{
 				startButton.refreshDrawableState();
+				editTextFirstName.refreshDrawableState();
+				editTextLastName.refreshDrawableState();
 			}
+			
+			@Override
+			protected void check() 
+			{
+				editTextFirstName.setBackgroundResource(isEmpty(editTextFirstName) ? R.drawable.selector_edittext_red : R.drawable.selector_edittext_green);
+				editTextLastName.setBackgroundResource(isEmpty(editTextLastName)   ? R.drawable.selector_edittext_red : R.drawable.selector_edittext_green);
+				super.check();
+			}
+			
 		};
+		
 		
 		userSetToStartChecker.check();
 		
@@ -353,14 +379,38 @@ public class UIUtils {
 					names[2] = accounts[accountId[0]].name;
 					activity.setUser(names);
 
-					CheckBox          facebookCheckbox = (CheckBox) dialog.findViewById(R.id.welcome_facebook_startup);
-					FacebookConnector facebook         = activity.getFacebookConnector();
+					
+					FacebookConnector facebook = activity.getFacebookConnector();
+					facebook.setFacebook_share(facebookCheckbox.isChecked() && faceboockCheckboxShare.isChecked());
 					facebook.setConnectOnStartup(facebookCheckbox.isChecked());
 					facebook.connectOnStartup();
 					
+					
+	            	
+	            	
 					dialog.dismiss();
 				}
 					
+			}
+		});
+		
+		dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+		{
+			public void onDismiss(DialogInterface dialog) 
+			{
+				IStatusWriter statusBar = activity.getStatusBar();
+				GeneralUser   user      = getThisUser(activity);
+				
+				if(! userSetToStartChecker.isEmpty(editTextStatus))
+				{
+            		statusBar.write("status set", R.drawable.status_bar_accept_icon, 2000);
+            		
+            		String status = editTextStatus.getText().toString();
+            		activity.setStatus(status);
+            		
+            		FacebookConnector fc = activity.getFacebookConnector();
+            		fc.publishOnFacebook(MenuStatusUtils.formatFacebookHeader_Status(status), MenuStatusUtils.formatFacebookDesc_Status(user));
+				}		
 			}
 		});
 				
@@ -382,7 +432,7 @@ public class UIUtils {
 			public void onCheckedChanged(RadioGroup group, int checkedId)
 			{
 				/*
-				 * @imp: meant to enable only on the first still, same reasult.
+				 * @imp: meant to enable only on the first still, same result.
 				 */
 				userSetToStartChecker.check();
 				
@@ -391,25 +441,43 @@ public class UIUtils {
 		});
 		
 		
-		editTextFirstName.setOnEditorActionListener(new OnEditorActionListener()
+		editTextStatus.setBackgroundResource(R.drawable.selector_edittext_yellow);
+		editTextStatus.setOnKeyListener(new OnKeyListener()
 		{			
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) 
-			{				
-				userSetToStartChecker.check();
+			public boolean onKey(View v, int keyCode, KeyEvent event) 
+			{
+				if (userSetToStartChecker.isEmpty(editTextStatus))
+				{
+					editTextStatus.setBackgroundResource(R.drawable.selector_edittext_yellow);
+				}
+				else
+				{
+					editTextStatus.setBackgroundResource(R.drawable.selector_edittext_green);
+				}
+				
 				return false;
 			}
 		});
 		
-		editTextLastName.setOnEditorActionListener(new OnEditorActionListener()
+		
+		editTextFirstName.setOnKeyListener(new OnKeyListener()
 		{			
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) 
+			public boolean onKey(View v, int keyCode, KeyEvent event)
 			{
 				userSetToStartChecker.check();
 				return false;
 			}
 		});
 		
-		
+		editTextLastName.setOnKeyListener(new OnKeyListener()
+		{			
+			public boolean onKey(View v, int keyCode, KeyEvent event)
+			{
+				userSetToStartChecker.check();				
+				return false;
+			}
+		});
+				
 		dialog.show();
 		return names;
 	}
@@ -1178,10 +1246,14 @@ public class UIUtils {
 			
 			location = point;
 			
-			editAddress.setOnKeyListener(new OnKeyListener()	{
-
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					if (lastEditText.equals(editAddress.getText().toString()))	{
+			editAddress.setOnKeyListener(new OnKeyListener()	
+			{
+				public boolean onKey(View v, int keyCode, KeyEvent event) 
+				{
+					placeSetToCreateChecker.check();
+					
+					if (lastEditText.equals(editAddress.getText().toString()))	
+					{
 						return false;
 					}
 					lastEditText = editAddress.getText().toString();
@@ -1317,8 +1389,7 @@ public class UIUtils {
 				}
 			};
 		}
-	}
-	
+	}	
 	
 	
 	public static void createNewPlaceDialog(final SPGeoPoint point, final FindPrayer activity, final GeneralUser user) 
@@ -1329,9 +1400,7 @@ public class UIUtils {
 		}
 		catch (NullPointerException e)	
 		{
-			Log.w("SECURITY===>", "activity " + (null != activity ? "SABABA" : "OSE BAAYOT"));
-			Log.w("SECURITY===>", "point " + (null != point ? "SABABA" : "OSE BAAYOT"));
-			Log.w("SECURITY===>", "user " + (null != user ? "SABABA" : "OSE BAAYOT"));
+			Log.e("Share-A-Prayer", "Security error (Unknown user).");
 
 			createUnknownUserDialog(activity);
 		}

@@ -15,14 +15,14 @@
     /-->
     	<!-- /*not needed in mapsforge*/ android:apiKey = "Your Maps API Key goes here" -->
     
-    <EditText android:id="@+id/addressBar"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:text=""
-		android:singleLine="True"
-        
+    <EditText android:id = "@+id/addressBar"
+		android:layout_width  = "fill_parent"
+		android:layout_height = "wrap_content"
+		
         android:hint = "Address"		
-		/>	
+		
+        android:singleLine = "true"
+        />	
     	
    	<il.ac.tau.team3.shareaprayer.SPMapView   	
         android:id="@+id/view1"

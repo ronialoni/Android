@@ -4,7 +4,7 @@
     <item android:state_pressed = "false"
           android:state_focused = "false"
         
-        android:drawable = "@drawable/talabheim_paper_128x94"
+        android:drawable = "@drawable/talabheim_paper_87x64"
         />
     
     <item android:state_pressed = "true"

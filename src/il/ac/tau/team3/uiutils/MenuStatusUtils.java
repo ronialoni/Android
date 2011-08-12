@@ -55,7 +55,7 @@ public class MenuStatusUtils {
 	}
 	
 	
-	static String formatFacebookHeader_Status(String status){
+	public static String formatFacebookHeader_Status(String status){
 		return status;
 	}
 	

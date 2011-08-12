@@ -73,16 +73,22 @@
                 
             android:text = "Your Name:" 
             
-            android:drawableLeft = "@drawable/icon"
+            android:drawableLeft = "@drawable/icon48"
+            
             />
                 
         
         <!-- NAME.FIRST -->        
         
         <EditText android:id = "@+id/startup_name_first" 
-            
+
+            android:layout_height = "40dip"
+            android:layout_margin = "4dip"
+                                    
             android:hint          = "First"
             android:textColorHint = "@color/hint" 
+            
+            android:singleLine = "true"
             />
 
         
@@ -90,8 +96,17 @@
         
         <EditText android:id = "@+id/startup_name_last" 
             
+            android:layout_height = "40dip"
+            android:layout_margin = "4dip"
+            
             android:hint          = "Last"
             android:textColorHint = "@color/hint" 
+            
+
+
+
+
+            android:inputType = "textPersonName"
             />
         
         
@@ -107,14 +122,29 @@
                   
         <RadioGroup android:id    = "@+id/startup_accounts_radios"
             android:layout_height = "wrap_content"     
-            android:layout_width  = "match_parent"
+            android:layout_width  = "wrap_content"
             />
         
+                
+        
+        
+        <!-- STATUS -->
+        
+        <!-- 
+        <TextView 
+            style = "@style/SP.Dialog.Header"
+
+            android:text = "Status"
+            
+            android:drawableLeft = "@drawable/status_icon48"
+            />
+         -->
+        
+        
+        
+                    
         
         <!-- FACEBOOK -->
-    
-    
-        
         
         <TextView 
             style = "@style/SP.Dialog.Header"
@@ -124,17 +154,62 @@
             android:drawableLeft = "@drawable/fb_icon48"
             />
     
+        <!-- FACEBOOK.SETUP -->
+    
         <CheckBox android:id = "@+id/welcome_facebook_startup"
             android:layout_height = "wrap_content"
             android:layout_width  = "wrap_content"
                 
-            android:paddingRight = "4dip"
-                
-            android:text      = "Sign in" 
+            android:paddingRight = "8dip"            
+                 
+            android:text      = "Connect with Facebook" 
             android:textStyle = "bold"
             android:typeface  = "serif"
             />
             
+        
+        <!-- FACEBOOK.SHARE -->
+    
+        <CheckBox android:id = "@+id/welcome_facebook_share"
+            android:layout_height = "wrap_content"
+            android:layout_width  = "wrap_content"
+                
+            android:paddingRight = "8dip"            
+                 
+            android:text      = "Share events on my wall" 
+            android:textStyle = "bold"
+            android:typeface  = "serif"            
+            
+            
+            android:layout_marginLeft = "16dip"            
+            android:checked = "true"
+            android:enabled = "false"
+            />
+        
+        
+        <!-- STATUS -->
+        
+        <TextView 
+            style = "@style/SP.Dialog.Header"
+
+            android:text = "Status"
+            
+            android:drawableLeft = "@drawable/status_icon48"
+            />
+        
+        <EditText android:id = "@+id/startup_status" 
+            
+            android:layout_margin = "4dip"
+            
+            android:hint          = "What's in your heart? \n"
+            android:textColorHint = "@color/hint" 
+                        
+            android:minLines  = "2"
+            
+            android:imeOptions = "actionDone"
+            />
+        
+        
         
     </TableLayout>
      

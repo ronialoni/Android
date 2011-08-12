@@ -26,14 +26,16 @@
         
         
         <!-- SEARCH BAR -->
-        
-        <EditText android:id = "@+id/CPDeditText1" 
-            android:layout_height = "wrap_content"
-            android:layout_width  = "match_parent"
             
-    
+        <EditText android:id = "@+id/CPDeditText1"             
+            
+            android:layout_height = "36dip"
+            android:layout_margin = "4dip"
+                
             android:hint          = "Address"
             android:textColorHint = "@color/hint" 
+            
+            android:singleLine = "true"
             />
         
         
@@ -50,16 +52,20 @@
             
         <TableRow android:id="@+id/CPDDatestableRow1" 
             style = "@style/SP.Tablerow"
+            
+            android:paddingTop = "10dip"
             >
                 
             <TextView android:id      = "@+id/CPDFromtextView" 
                 style = "@style/SP.Text.Primary.Widget"
+                
+                android:gravity     = "center_vertical"
                                         
                 android:text = "From:" 
                 />                
                 
             <LinearLayout android:id = "@+id/ll1"
-                android:layout_height = "match_parent"
+                android:layout_height = "wrap_content"
                 android:layout_width  = "wrap_content"
                 android:layout_weight = "1"
                 
@@ -68,8 +74,6 @@
                                     
                 <TextView android:id = "@+id/CPDFromDatetextView" 
                     style = "@style/SP.View.Text" 
-                    
-                    android:padding = "-4dip"                   
                     
                     android:text = "dd/mm/yyyy" 
                     />
@@ -89,16 +93,20 @@
             
         <TableRow android:id="@+id/CPDDatestableRow2" 
             style = "@style/SP.Tablerow"
+            
+            android:paddingBottom = "10dip"
             >
                 
             <TextView android:id      = "@+id/CPDTotextView" 
                 style = "@style/SP.Text.Primary.Widget"
                 
-                android:text = "From:" 
+                android:gravity = "center_vertical"
+                                        
+                android:text = "To:" 
                 />                
                 
             <LinearLayout android:id = "@+id/ll2"
-                android:layout_height = "match_parent"
+                android:layout_height = "wrap_content"
                 android:layout_width  = "wrap_content"
                 android:layout_weight = "1"
                 
@@ -107,8 +115,7 @@
                                     
                 <TextView android:id      = "@+id/CPDToDatetextView" 
                     style = "@style/SP.View.Text"
-                    
-                    android:padding = "-4dip"                    
+                                        
                     
                     android:text = "dd/mm/yyyy" 
                     />
@@ -144,7 +151,7 @@
                 android:layout_height = "match_parent"
                 android:layout_width  = "wrap_content"
                     
-                android:paddingRight = "4dip"
+                android:paddingRight = "8dip"
                 
                 android:text      = "Shaharit" 
                 android:textStyle = "bold"
@@ -192,6 +199,8 @@
             <CheckBox android:id = "@+id/CPDcheckBox2"
                 android:layout_height = "match_parent"
                 android:layout_width  = "wrap_content"
+                
+                android:paddingRight = "8dip"
                     
                 android:text      = "Minha" 
                 android:textStyle = "bold"
@@ -240,7 +249,9 @@
             <CheckBox android:id = "@+id/CPDcheckBox3"
                 android:layout_height = "match_parent"
                 android:layout_width  = "wrap_content"
-                    
+                
+                android:paddingRight = "8dip"    
+                
                 android:text      = "Arvit" 
                 android:textStyle = "bold"
                 android:typeface  = "serif"

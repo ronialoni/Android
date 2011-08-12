@@ -6,7 +6,7 @@
     
     <item>
         <bitmap android:src     = "@drawable/menu_item_tools_on_papper"
-                android:gravity = "center" 
+                android:gravity = "center"
                 />
     </item>
     

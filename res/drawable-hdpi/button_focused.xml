@@ -16,7 +16,7 @@
         android:right  = "-2dip"
         android:left   = "-2dip"
         >
-        <bitmap android:src ="@drawable/talabheim_paper_128x94" />    
+        <bitmap android:src ="@drawable/talabheim_paper_87x64" />    
     </item>
     
        

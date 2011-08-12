@@ -124,9 +124,8 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
             
             p.setColor(Color.BLACK);
             p.setStyle(Paint.Style.STROKE);
-            p.setStrokeWidth(2);
-            //p.setARGB(255, 255, 0, 0);
-            p.setTypeface(Typeface.DEFAULT);
+            p.setStrokeWidth(1.5f);
+            p.setTypeface(Typeface.SERIF);
             p.setTextSize(16);
 
             p.setAntiAlias(true);

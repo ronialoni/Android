@@ -20,6 +20,6 @@
     <color name = "grey_dark"  >#FF444444</color>
     <color name = "gray_light" >#FFCCCCCC</color>
     
-    <color name = "hint" >#4444FFFF</color>
+    <color name = "hint" >@color/gray_light</color>
 
 </resources>

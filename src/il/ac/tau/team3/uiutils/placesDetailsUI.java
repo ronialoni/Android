@@ -83,7 +83,12 @@ public class placesDetailsUI {
 		// TODO Auto-generated method stub
 		progress.dismiss();
 		String[] names = new String[places.length];
-		for (int i = 0; i < places.length; names[i]=places[i].toString(), i++);
+		if(places.length == 0){
+			names = new String[1];
+			names[0]= "No places listed yet.";
+		}else{
+			for (int i = 0; i < places.length; names[i]=places[i].toString(), i++);
+		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setTitle(message);
 

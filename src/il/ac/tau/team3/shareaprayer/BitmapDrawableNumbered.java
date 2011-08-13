@@ -122,7 +122,7 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
             	arg.drawBitmap(glow, x, y, new Paint());
             }
             
-            p.setColor(Color.BLACK);
+            p.setColor(Color.WHITE);
             p.setStyle(Paint.Style.STROKE);
             p.setStrokeWidth(1.5f);
             p.setTypeface(Typeface.SERIF);

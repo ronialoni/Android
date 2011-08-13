@@ -1,6 +1,7 @@
 package il.ac.tau.team3.uiutils;
 
 import il.ac.tau.team3.shareaprayer.FindPrayer;
+import il.ac.tau.team3.shareaprayer.IStatusWriter;
 import il.ac.tau.team3.shareaprayer.R;
 import android.app.Activity;
 import android.app.Dialog;
@@ -17,6 +18,7 @@ public class MenuFacebookUtils {
 	public MenuFacebookUtils(final FindPrayer context)	{
 		try {
 			final NoTitleDialog dialog = new NoTitleDialog(context);
+			final IStatusWriter statusBar = context.getStatusBar();
 			dialog.setContentView(R.layout.dialog_facebook_settings);
 			dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 
@@ -39,7 +41,7 @@ public class MenuFacebookUtils {
 				public void onCheckedChanged(CompoundButton buttonView,
 						boolean isChecked) {
 					context.getFacebookConnector().setFacebook_share(isChecked);
-					
+					statusBar.write("facebook settings updated", R.drawable.status_bar_accept_icon, 2000);
 				}
 				
 			});

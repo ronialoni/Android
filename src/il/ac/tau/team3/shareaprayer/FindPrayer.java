@@ -451,8 +451,7 @@ extends MapActivity
 	}
         
 	private void registerUser(GeneralUser user)	{
-		 /*publicPlaceOverlay.setThisUser(user);
-         closestPlaceOverlay.setThisUser(user);*/
+		
          refreshTask.start();
          try {
 			mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
@@ -684,30 +683,7 @@ extends MapActivity
                     	// no accounts
                     }
 				} 
-//                finally /* (UserNotFoundException e) */
-//				{
-//
-//					String[] names;
-//					List<Account> accounts = new LinkedList<Account>();
-//					for (Account a : AccountManager.get(FindPrayer.this).getAccounts()) 
-//					{
-//						if (a.name.contains("@")) 
-//						{
-//							accounts.add(a);
-//						}
-//					}
-//
-//					try 
-//					{
-//						names = UIUtils.HandleFirstTimeDialog(accounts.toArray(new Account[0]), FindPrayer.this);
-//						service.setNames(names);
-//
-//					} 
-//					catch (NullPointerException e_) 
-//					{
-//						// no accounts
-//					}
-//				}
+
 	          
             }
            
@@ -747,18 +723,7 @@ extends MapActivity
         ////CHANGE: moved to onStart()
         facebookConnector = new FacebookConnector(this);
                 
-        //facebookConnector.setConnectOnStartup(this.facebookConnector.isFacebook_connectStartup()); ////CHANGE: was `true`
-        
-        
-/////////////////////////////////////////////////////////////////////////////////////////////////////// 
-
-
-        
-        
-/////////////////////////////////////////////////////////////////////////////////////////////////////// 
-
-        
-
+     
         /*
          * Registering one listener for passing all events to activity with out making it consume them.
          */
@@ -921,7 +886,7 @@ extends MapActivity
                         }
                         else
                         {
-                            Toast.makeText(FindPrayer.this, "Sorry, there seem to be no plces open for prayers.\nPlese consider creating one.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(FindPrayer.this, "Sorry, there seem to be no places open for prayers.\nPlese consider creating one.", Toast.LENGTH_LONG).show();
                         }
                         FindPrayer.this.menu.hide();
                     }   

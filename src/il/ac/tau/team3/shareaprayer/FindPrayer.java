@@ -493,7 +493,7 @@ extends MapActivity
         				(event.getAction() == KeyEvent.ACTION_DOWN) && 
         				(event.getKeyCode() == KeyEvent.KEYCODE_ENTER)))
         		{
-        			statusBar.write("searching for the place...", R.drawable.action_refresh, 2000);
+        			statusBar.write("Searching for the place...", R.drawable.action_refresh, 2000);
         			
         			editText.setBackgroundResource(R.drawable.selector_edittext_yellow);
         			editText.refreshDrawableState();
@@ -527,17 +527,25 @@ extends MapActivity
 										Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
 										toast.show();
 										
-										statusBar.write("place found!", R.drawable.status_bar_accept_icon, 2000);
+										statusBar.write("Search: place found!", R.drawable.status_bar_accept_icon, 2000);
 										
 										editText.setBackgroundResource(R.drawable.selector_edittext_green);
 										editText.refreshDrawableState();
 									} 
 									catch (NullPointerException e)
 									{
+										if(statusBar != null){
+										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_accept_icon, 2000);
+										}
+										Log.e("FindPrayer",e.getMessage());
 										onError(Obj);
 									} 
 									catch (ArrayIndexOutOfBoundsException e)	
 									{
+										if(statusBar != null){
+										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_accept_icon, 2000);
+										}
+										Log.e("FindPrayer",e.getMessage());
 										onError(Obj);
 									}	
 								}

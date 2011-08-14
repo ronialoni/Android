@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -134,9 +135,15 @@ public class MenuSettingsUtils {
             	 names[0] = editTextFirstName.getText().toString();
             	 names[1] = editTextLastName.getText().toString();
             	 names[2] = account;
-            	 activity.setUser(names);
             	 final IStatusWriter statusBar = activity.getStatusBar();
-            	 statusBar.write("User details updated", R.drawable.status_bar_accept_icon, 2000);
+            	 try{
+            		 activity.setUser(names);
+            		 statusBar.write("User details updated", R.drawable.status_bar_accept_icon, 2000);
+            	 }catch (Exception e){
+            		 Log.e("MenuSettingsUtils: createEditDetailsDialog", e.getMessage());
+            		 statusBar.write("An Error accoured. User details weren't updated", R.drawable.status_bar_accept_icon, 2000);
+            	 }
+            	            	
             	 dialog.dismiss();
             	 }
              }

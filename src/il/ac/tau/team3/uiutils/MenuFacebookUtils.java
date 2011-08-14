@@ -1,10 +1,13 @@
 package il.ac.tau.team3.uiutils;
 
+import java.util.logging.Logger;
+
 import il.ac.tau.team3.shareaprayer.FindPrayer;
 import il.ac.tau.team3.shareaprayer.IStatusWriter;
 import il.ac.tau.team3.shareaprayer.R;
 import android.app.Activity;
 import android.app.Dialog;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -40,8 +43,16 @@ public class MenuFacebookUtils {
 
 				public void onCheckedChanged(CompoundButton buttonView,
 						boolean isChecked) {
+					try{
 					context.getFacebookConnector().setFacebook_share(isChecked);
 					statusBar.write("facebook settings updated", R.drawable.status_bar_accept_icon, 2000);
+					}catch(Exception e){
+						Log.e("MenuFacebookUtils: Ctor", e.getMessage());
+						if(statusBar != null){
+							statusBar.write("An error accoured. Settings wasn't updated", R.drawable.status_bar_accept_icon, 2000);
+						}
+					}
+					
 				}
 				
 			});

@@ -49,7 +49,7 @@ public final class SPMenus
     implements ISPMenuItem
     {
         FIND   (0, R.drawable.menu_item_find_green_wifi,   ESPSubMenuFind.class  ),
-        PLACES   (1, R.drawable.places_icon,   ESPSubMenuPlaces.class  ),
+        PLACES   (1, R.drawable.place_red_david,   ESPSubMenuPlaces.class  ),
         SETTINGS (2, R.drawable.settings_icon,  ESPSubMenuSettings.class),
         FACEBOOK (3, R.drawable.fb_icon,  null),
         STATUS    (4, R.drawable.status_icon, null),
@@ -311,83 +311,5 @@ public final class SPMenus
         }
     }
 
-    
-    
-    
-   
-    
-    
-    
-    
-    
-    /**
-     * 
-     * @author Team3
-     *
-     */
-/*    public enum ESPSubMenuMap
-    implements ISPSubMenuItem
-    {
-                
-        NUMBERS (0, R.drawable.menu_item_numbers_blcakboard),
-        MAX_MIN (1, R.drawable.menu_item_maxmin_calc),
-        COLORS  (2, R.drawable.menu_item_colors),
-        
-        ;
-          
-        public ISPMenuItem getParent()
-        {
-             return ESPMenuItem.MAP;
-        }
-        
-        private final int index;
-        private final int resIconId;
-        
-        
-        private ESPSubMenuMap(int index, int resIconId)
-        {
-            this.index     = index ;
-            this.resIconId = resIconId;
-           // ESPMenuItem.MAP.addSubItem(this);
-        }
-        
-        
-        
-        public String title()
-        {
-            return this.toString().replace('_', ' ').toUpperCase();
-        }
-                
-        public int id()
-        {
-            return this.index + ESPMenuItem.MAP.offsetId();
-        }
-                
-        public int resIconId()
-        {           
-            return resIconId;
-        }
-
-        public int index()
-        {
-            return this.index;
-        }
-
-
-
-        public boolean hasSubMenu()
-        {
-            return false;
-        }
-        
-        public ISPSubMenuItem[] getSubMenuItems()
-        {
-            return null;
-        }
-        
-    }
-*/    
-    
-    
-    
+      
 }

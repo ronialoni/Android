@@ -162,28 +162,39 @@ public class FacebookConnector {
 
 			public void onComplete(String response, Object state) {
 				Log.e("Share-A-Prayer", "Facebook post response: " + response);
+				if(activity.getStatusBar() != null){
 				activity.getStatusBar().write("Facebook: Posted On Wall!", R.drawable.fb_icon, 2000);
-				
+				}
 			}
 
 			public void onFacebookError(FacebookError e, Object state) {
+				if(activity.getStatusBar() != null){
 				activity.getStatusBar().write("Facebook: Limit of posts reached", R.drawable.fb_icon, 2000);
-				
+				}
 			}
 
 			public void onFileNotFoundException(
 					FileNotFoundException e, Object state) {
+				if(activity.getStatusBar() != null){
+				activity.getStatusBar().write("An Error accoured. Post wasn't updated.", R.drawable.fb_icon, 2000);
+				}
 				// TODO Auto-generated method stub
 				
 			}
 
 			public void onIOException(IOException e, Object state) {
+				if(activity.getStatusBar() != null){
+				activity.getStatusBar().write("An Error accoured. Post wasn't updated.", R.drawable.fb_icon, 2000);
+				}
 				// TODO Auto-generated method stub
 				
 			}
 
 			public void onMalformedURLException(
 					MalformedURLException e, Object state) {
+				if(activity.getStatusBar() != null){
+				activity.getStatusBar().write("An Error accoured. Post wasn't updated.", R.drawable.fb_icon, 2000);
+				}
 				// TODO Auto-generated method stub
 				
 			}

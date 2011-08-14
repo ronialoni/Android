@@ -2,6 +2,7 @@ package il.ac.tau.team3.uiutils;
 
 import android.accounts.Account;
 import android.app.Dialog;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -19,6 +20,7 @@ import il.ac.tau.team3.shareaprayer.StatusBarOverlay;
 public class MenuStatusUtils {
 	
 	public static void createEditStatusDialog(final GeneralUser user, final FindPrayer activity){
+			
 		 final IStatusWriter statusBar = activity.getStatusBar();
 		 final NoTitleDialog dialog = new NoTitleDialog(activity);
 		 dialog.setContentView(R.layout.dialog_set_status);
@@ -36,10 +38,17 @@ public class MenuStatusUtils {
              {
             	
             	if(!(oldStatus.equals(status.getText().toString()))){
-            		statusBar.write("status set", R.drawable.status_bar_accept_icon, 2000);
-            		FacebookConnector fc = activity.getFacebookConnector();
-            		fc.publishOnFacebook(formatFacebookHeader_Status(status.getText().toString()) , formatFacebookDesc_Status(user));
-            		
+            		try{
+            			FacebookConnector fc = activity.getFacebookConnector();
+            			fc.publishOnFacebook(formatFacebookHeader_Status(status.getText().toString()) , formatFacebookDesc_Status(user));
+            			statusBar.write("Status set.", R.drawable.status_bar_accept_icon, 2000);
+            		}catch(Exception e){
+            			Log.e("MenuStatusUtils", e.getMessage());
+            			if(statusBar != null){
+            				statusBar.write("Status failed to be published on facebook.", R.drawable.status_bar_accept_icon, 2000);
+            			}
+            			
+            		}
             	}
             	activity.setStatus(status.getText().toString());
             	

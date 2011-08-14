@@ -56,6 +56,7 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.GestureDetector.OnGestureListener;
@@ -69,14 +70,7 @@ import android.view.GestureDetector.OnGestureListener;
 public class SPMapView
 extends MapView
 {	
-	
-    
-    
     private List<IMapTapDetect> tapListeners;
-	
-    
-    
-    
 	
 	/*** @constructors ***/
 		
@@ -139,9 +133,6 @@ extends MapView
 	    }
 	}
 	
-//	private long startTime;
-//	private long timeElapsed;
-	
 	private float startPosX;
 	private float startPosY;
 	
@@ -178,11 +169,6 @@ extends MapView
         MaxPosX = Math.max(Math.abs(event.getX() - startPosX), MaxPosX);
         MaxPosY = Math.max(Math.abs(event.getY() - startPosY), MaxPosY);		
 		
-		//startPosX = event.getX();
-        //startPosY = event.getY();
-		/*
-		 * 
-		 */
 		//if ((event.getX() == startPosX) && (event.getY() == startPosY))
 		{          
 			//timeElapsed = event.getEventTime() - startTime;
@@ -195,12 +181,10 @@ extends MapView
 				
 				GeoPoint   p          = this.getProjection().fromPixels((int) event.getX(), (int) event.getY());
 				SPGeoPoint eventPoint = new SPGeoPoint(p.getLatitudeE6(),p.getLongitudeE6());
-				//createDialog("Do you want to create a public praying place?");
-				for (IMapTapDetect tap : tapListeners)	
-				{
+				
+				for (IMapTapDetect tap : tapListeners){
 					tap.onTouchEvent(eventPoint);
-					//this.mapActivity.createDialog("Do you want to create a public praying place?", eventPoint);
-				}
+					}
 				
 			}
 		}
@@ -216,28 +200,16 @@ extends MapView
 			for (IMapTapDetect tap : tapListeners)	
 			{
 				tap.onMoveEvent(eventPoint);
-				//this.mapActivity.createDialog("Do you want to create a public praying place?", eventPoint);
 			}
 		}
 		
-		
-		
-		/*
-		 * I guess super.onT... return false.
-		 * Because thats the return value (hard coded) that prevents FindPrayer.onT... from invoking.
-		 * (So, We'll return true and deal with that in the activity.) - I wish!...
-		 * It prevents  the map view's listener from invoke.
-		 * 
-		 * The try&catch is regardless.
-		 */		
 		try
 		{
-		    /*return*/ super.onTouchEvent(event);    
+		  super.onTouchEvent(event);    
 		}
         catch (NullPointerException npe)
         {
-            // FIXME Another (one strange time) exception caught!
-            SPUtils.error("NullPointerException - Should have been WRAPED !!!", npe);
+            Log.e("SPMapView:onTouchEvent", npe.getMessage());
             npe.printStackTrace();
         } 
         

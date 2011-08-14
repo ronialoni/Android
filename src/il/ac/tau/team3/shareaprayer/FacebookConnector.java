@@ -176,7 +176,7 @@ public class FacebookConnector {
 			public void onFileNotFoundException(
 					FileNotFoundException e, Object state) {
 				if(activity.getStatusBar() != null){
-				activity.getStatusBar().write("An Error accoured. Post wasn't updated.", R.drawable.fb_icon, 2000);
+				activity.getStatusBar().write("An Error accoured. Post wasn't updated.", R.drawable.status_bar_error_icon, 2000);
 				}
 				// TODO Auto-generated method stub
 				
@@ -184,7 +184,7 @@ public class FacebookConnector {
 
 			public void onIOException(IOException e, Object state) {
 				if(activity.getStatusBar() != null){
-				activity.getStatusBar().write("An Error accoured. Post wasn't updated.", R.drawable.fb_icon, 2000);
+				activity.getStatusBar().write("An Error accoured. Post wasn't updated.", R.drawable.status_bar_error_icon, 2000);
 				}
 				// TODO Auto-generated method stub
 				
@@ -193,7 +193,7 @@ public class FacebookConnector {
 			public void onMalformedURLException(
 					MalformedURLException e, Object state) {
 				if(activity.getStatusBar() != null){
-				activity.getStatusBar().write("An Error accoured. Post wasn't updated.", R.drawable.fb_icon, 2000);
+				activity.getStatusBar().write("An Error accoured. Post wasn't updated.", R.drawable.status_bar_error_icon, 2000);
 				}
 				// TODO Auto-generated method stub
 				

@@ -21,7 +21,7 @@ import il.ac.tau.team3.uiutils.MenuSettingsUtils;
 import il.ac.tau.team3.uiutils.MenuStatusUtils;
 import il.ac.tau.team3.uiutils.MenuUtils;
 import il.ac.tau.team3.uiutils.SPMenu;
-import il.ac.tau.team3.uiutils.placesDetailsUI;
+import il.ac.tau.team3.uiutils.PlacesDetailsUI;
 import il.ac.tau.team3.uiutils.SPMenu.ISPOnMenuItemSelectedListener;
 import il.ac.tau.team3.uiutils.SPMenus;
 import il.ac.tau.team3.uiutils.SPMenus.ESPMenuItem;
@@ -149,12 +149,16 @@ extends MapActivity
 			return closestPlace;
 			
 		} catch (UserNotFoundException e)	{
+			Log.e("FindPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		} catch (UnknownLocationException e)	{
+			Log.e("FidPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		} catch (ServiceNotConnected e) {
+			Log.e("FinndPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		} catch (NullPointerException e) {
+			Log.e("FindPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		}
 		
@@ -190,6 +194,7 @@ extends MapActivity
 						}
     	                catch (ServiceNotConnected e) 
 						{
+    	                	Log.e("FindPrayer:updateUsersOnMap",e.getMessage());
 							e.printStackTrace();
 							return;
 						}
@@ -200,12 +205,15 @@ extends MapActivity
     	                }
     	                catch (UserNotFoundException e) 
     	                {
+    	                	Log.e("FindPrayer:updateUsersOnMap",e.getMessage());
     	                	e.printStackTrace();
     	                	return;
 						}
     	                catch (NullPointerException e)
     	                {
+    	                	Log.e("FindPrayer:updateUsersOnMap",e.getMessage());
     	                	e.printStackTrace();
+    	                	
     	                }
     	                
     	                
@@ -216,24 +224,15 @@ extends MapActivity
     	                    userOverlayList.add(new UserOverlayItem(thisUser));
                             userOverlay.changeItems(userOverlayList);
     	                }
-//    	                catch (UserNotFoundException e)
-//    	                {
-//    	                    // invalid user
-//    	                    e.printStackTrace();
-//    	                }
     	                catch (UnknownLocationException e)
     	                {
+    	                	Log.e("FindPrayer:updateUsersOnMap",e.getMessage());
     	                    e.printStackTrace();
     	                }
-//    	                catch (ServiceNotConnected e)
-//    	                {
-//    	                    // service wasn't initialized yet
-//    	                    e.printStackTrace();
-//    	                }
-    	                catch (NullPointerException npe)
+    	                catch (NullPointerException e)
     	                {
-    	                    SPUtils.error("NullPointerException - Should have been WRAPED !!!", npe);
-    	                    npe.printStackTrace();
+    	                	Log.e("FindPrayer:updateUsersOnMap",e.getMessage());
+    	                    e.printStackTrace();
     	                }
                         
     	                
@@ -244,27 +243,19 @@ extends MapActivity
     	                    {
     	                        try
     	                        {
-    	                            //GeneralUser thisUser = svcGetter.getService().getUser();
     	                            if (!thisUser.getName().equals(user.getName()))
     	                            {
     	                                usersOverlayList.add(new UserOverlayItem(user));
     	                            }
     	                        }
-//    	                        catch (UserNotFoundException e)
-//    	                        {
-//                                    e.printStackTrace();
-//    	                        }
     	                        catch (UnknownLocationException e)
     	                        {
+    	                        	Log.e("FindPrayer:updateUsersOnMap",e.getMessage());
     	                            e.printStackTrace();
     	                        }
-//    	                        catch (ServiceNotConnected e)
-//    	                        {
-//    	                            e.printStackTrace();
-//    	                        }
     	                        catch (NullPointerException e)
     	                        {
-    	                        	
+    	                        	Log.e("FindPrayer:updateUsersOnMap",e.getMessage());
     	                        }
     	                    }
     	                    otherUsersOverlay.changeItems(usersOverlayList);
@@ -318,6 +309,7 @@ extends MapActivity
     					            		try {
 												placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress(), synagougeMarker));
 											} catch (UnknownLocationException e) {
+												Log.e("FindPrayer:updatePlacesOnMap",e.getMessage());
 												e.printStackTrace();
 											}
     					            	}
@@ -371,13 +363,14 @@ extends MapActivity
     					wait(10000);
     				}
     				try	{
-	    				//if (service.getLocation() != null)
-	    				{
+	    				
 	    					updateUsersOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
 	    					updatePlacesOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
 	    					statusBar.write("refreshing...", R.drawable.action_refresh, 1000);
-	    				}
+	    			
     				} catch (NullPointerException e)	{
+    					Log.e("FindPrayer",e.getMessage());
+    					statusBar.write("Unable to connect to server.", R.drawable.status_bar_error_icon, 1000);
     					
     				}
     			}
@@ -410,11 +403,6 @@ extends MapActivity
 		}
     }
 	
-	
-	
-	
-	/*** @Override ***/	
-	
 	@Override
     public void onDestroy()
     {
@@ -435,13 +423,6 @@ extends MapActivity
 	protected void onStart ()	
 	{
 		super.onStart();
-		
-	    ////CHANGE: moved to onStart()
-        //facebookConnector = new FacebookConnector(this);
-        ////facebookConnector.setConnectOnStartup(false/*this.facebookConnector.isFacebook_connectStartup()*/); ////CHANGE: was `true`
-		
-			
-		
 		bindService(new Intent(LocServ.ACTION_SERVICE), svcConn, BIND_AUTO_CREATE);
         
         Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
@@ -535,7 +516,7 @@ extends MapActivity
 									catch (NullPointerException e)
 									{
 										if(statusBar != null){
-										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_accept_icon, 2000);
+										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
 										Log.e("FindPrayer",e.getMessage());
 										onError(Obj);
@@ -543,7 +524,7 @@ extends MapActivity
 									catch (ArrayIndexOutOfBoundsException e)	
 									{
 										if(statusBar != null){
-										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_accept_icon, 2000);
+										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
 										Log.e("FindPrayer",e.getMessage());
 										onError(Obj);
@@ -564,7 +545,7 @@ extends MapActivity
 						
 						
 						
-					});//@END: ACommHandler<MapsQueryLocation>
+					});
 					
 					return true;
 				}
@@ -573,7 +554,7 @@ extends MapActivity
 				return false;
 			}
         	
-        });//@END: OnEditorActionListener
+        });
         
         
             
@@ -666,9 +647,7 @@ extends MapActivity
                     GeneralUser user = service.getUser();
                     
                     registerUser(user);
-                    
-                    
-                    // send the user to places overlay
+                 
                 }
                 catch (ServiceNotConnected e)
                 {
@@ -688,7 +667,7 @@ extends MapActivity
                     	service.setNames(names);
                     	
                     } catch (NullPointerException e_)	{
-                    	// no accounts
+                    	Log.e("FindPrayer",e_.getMessage());
                     }
 				} 
 
@@ -729,6 +708,7 @@ extends MapActivity
         
         
         ////CHANGE: moved to onStart()
+        /// So Do it!
         facebookConnector = new FacebookConnector(this);
                 
      
@@ -745,41 +725,21 @@ extends MapActivity
             @Override
             public void onAnyEvent(MotionEvent event)
             {
-                SPUtils.debugFuncStart("** mapView.IMapTapDetect.onMoveEvent", event);
-                SPUtils.debug("**    Passing it to the activity (thats it!).");
                 FindPrayer.this.onTouchEvent(event);
             }
         });        
         
         
-        
-        
-        
-        
-        
-        
-	}//@END: onCreate(..)
-	
-	
-	
-	
+	}
 	
 	public FacebookConnector getFacebookConnector() {
 		return facebookConnector;
 	}
 
 
-
-
-
-
 	public void setFacebookConnector(FacebookConnector facebookConnector) {
 		this.facebookConnector = facebookConnector;
 	}
-
-
-
-
 
 
 	@Override
@@ -791,10 +751,6 @@ extends MapActivity
         }
     }
 	
-	
-	
-    
-    
     private void centerMap()
     {
         ILocationSvc service;
@@ -867,10 +823,7 @@ extends MapActivity
                 {
                     
                     final int id = item.id();
-                    
-                    SPUtils.debugToast("Item No. " + id, FindPrayer.this);
-                    
-                    
+                   
                     if (id == SPMenus.ESPSubMenuFind.ME.id())
                     {
                         FindPrayer.this.centerMap();
@@ -903,15 +856,10 @@ extends MapActivity
                     
                     else if (id == SPMenus.ESPSubMenuFind.ADDRESS.id())
                     {
-                        SPUtils.debugToast("The SearchBar is now: " + "Focused. \n(We can make it pop & hide?).", FindPrayer.this);
-                        
-                        // Displaying the search bar
-                        
                         EditText edittext = (EditText) FindPrayer.this.findViewById(R.id.addressBar);
                         edittext.setVisibility(View.VISIBLE);
                         edittext.setFocusable(true);
                         
-                        //FindPrayer.this.menu.hide();  
                         FindPrayer.this.menu.onMenuDismiss(new OnDismissListener()
                         {
                             public void onDismiss()
@@ -945,12 +893,12 @@ extends MapActivity
                         FindPrayer.this.menu.hide();
                     } else if (id == SPMenus.ESPSubMenuPlaces.JOINED.id()){
                     		FindPrayer.this.menu.hide(); 
-                    		new placesDetailsUI(FindPrayer.this, svcGetter, comm, "Places I joined to", placesDetailsUI.Actions.JOINER, publicPlaceOverlay);
+                    		new PlacesDetailsUI(FindPrayer.this, svcGetter, comm, "Places I joined to", PlacesDetailsUI.Actions.JOINER, publicPlaceOverlay);
                     		
 							
                     } else if (id == SPMenus.ESPSubMenuPlaces.OWNED.id()){
                     	FindPrayer.this.menu.hide(); 
-                    	new placesDetailsUI(FindPrayer.this, svcGetter, comm, "Places I own", placesDetailsUI.Actions.OWNER, publicPlaceOverlay);              
+                    	new PlacesDetailsUI(FindPrayer.this, svcGetter, comm, "Places I own", PlacesDetailsUI.Actions.OWNER, publicPlaceOverlay);              
                     } else if (id == ESPSubMenuPlaces.CREATE.id())	{
                     	try {
 							UIUtils.createNewPlaceDialog(null, FindPrayer.this, svcGetter.getService().getUser());
@@ -983,30 +931,21 @@ extends MapActivity
                         {                            
                             public void onDismiss()
                             {
-                                FindPrayer.this.finish(); //FIXME Learn to end the activity !!!
+                                FindPrayer.this.finish();
                             }
                         });                        
-                        
-                        //FindPrayer.this.menu.hide();    // dismissed by: onMenuDismiss().
-                        //return;
+                       
                     }   
                         
                     
                     else
                     {
-                        if (item.hasSubMenu())
-                        {
-                            Log.w("SP Menu Listener", "got an unhandled item id = " + id + "- Due to SUB MENU.");
-                        }
-                        else
-                        {
-                            Log.w("SP Menu Listener", "got an unhandled item id = " + id + "- No sub menu... Hidding menu!!!");
+                        if (!item.hasSubMenu()){
+                      
                             FindPrayer.this.menu.hide();
                         }
                     }              
-                    
-                    //XXX Maybe hide the menu smarter.
-                    //FindPrayer.this.menu.hide();
+                  
                 }
             });
         }
@@ -1023,11 +962,8 @@ extends MapActivity
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
-    {    	   	
-        SPUtils.debugFuncStart("onCreateOptionsMenu", menu);
+    {    
         this.initializeMenu();
-        
-        //super.onCreateOptionsMenu(menu);
         return true; 
     }
     
@@ -1043,7 +979,7 @@ extends MapActivity
     public boolean onPrepareOptionsMenu(Menu menu)
     {       	
     	this.menu.handleMenuButtonClick(this, R.id.view1);
-        //super.onPrepareOptionsMenu(menu);
+      
         return true; 
     }
     
@@ -1056,17 +992,13 @@ extends MapActivity
     @Override
     public final boolean onTouchEvent(MotionEvent event)
     {
-        SPUtils.debugFuncStart("***GOT IT*** FindPrayer.onTouchEvent", event);
-        
         /* Handle menu */
         if (SPMenu.isShowing(this.menu))
         {
-            //this.menu.onOutsideTouch(this.mapView, event);  - canceled.
-            this.menu.hide();  
+             this.menu.hide();  
             
         }
         
-        /*return*/// super.onTouchEvent(event);
         return true;
     } 
     
@@ -1091,63 +1023,24 @@ extends MapActivity
         }
     }
     
- 
-    
-    
-    // DO NOT DELETE THE FOLLOWING...
-    
-    
-    
-    
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event)
-//    {
-//        if (keyCode == KeyEvent.KEYCODE_MENU)
-//        {
-//            SPUtils.debug("*** Menu Key pressed !!!!");
-//            
-//            this.onCreateOptionsMenu(null);
-//            return true; // always eat it!
-//        }
-//        
-//        return super.onKeyDown(keyCode, event);
-//    }
-    
-    
-    
-   
-    
-////  Unused:
-//  
     @Override
     public void onOptionsMenuClosed(Menu menu)
     {
-        SPUtils.debugFuncStart("**?** onOptionsMenuClosed", menu);
         super.onOptionsMenuClosed(menu);
     }
      
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        SPUtils.debugFuncStart("**?** onOptionsItemSelected", item);
         return super.onOptionsItemSelected(item);
     }   
     
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item)
     {
-        SPUtils.debugFuncStart("**?**  onMenuItemSelected", featureId, item);
         return super.onMenuItemSelected(featureId, item);
     }   
-//
-////
-    
-    
-    
-    // THANK YOU.
-    
-    
-    
+ 
 
 
 	public void setUser(String[] names) {
@@ -1178,50 +1071,6 @@ extends MapActivity
 		
 	}
 	
-    public static class StringArray{
-    	private String[] stringArray;
-    	private int index;
-
-    	public StringArray(){
-    		this.stringArray = new String[1];
-    		this.index = 0;
-    	}
-    	
-    	public StringArray(int size){
-    		this.stringArray = new String[size];
-    		this.index = 0;
-    	}
-    	
-		public void setStringArray(String[] stringArray) {
-			this.stringArray = stringArray;
-		}
-
-		public String[] getStringArray() {
-			return stringArray;
-		}
-
-		public void setIndex(int index) {
-			this.index = index;
-		}
-		// Same as getSize()
-		public int getIndex() {
-			return index;
-		}
-    	
-		public void insert(String str){
-			this.stringArray[this.index] = str;
-			this.index++;
-		}
-    	
-    	public String getEverything(){
-    		String result = "";
-    		for (int i=0; i<this.index; i++){
-    			result = result + this.stringArray[i] + "\n";
-    		}
-    		return result;
-    	}
-    	
-    }
     
 }
 

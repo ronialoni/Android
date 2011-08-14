@@ -49,7 +49,7 @@ public class MenuFacebookUtils {
 					}catch(Exception e){
 						Log.e("MenuFacebookUtils: Ctor", e.getMessage());
 						if(statusBar != null){
-							statusBar.write("An error accoured. Settings wasn't updated", R.drawable.status_bar_accept_icon, 2000);
+							statusBar.write("An error accoured. Settings wasn't updated", R.drawable.status_bar_error_icon, 2000);
 						}
 					}
 					

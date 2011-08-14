@@ -49,73 +49,7 @@ public class SPUtils
         
         return EARTH_RADIUS_KM * c * 1000;
     }
-    
-    
-    
-    
-    
-    public static final boolean DEBUGGING = true; 
- 
-    public static final boolean TOASTING  = false;
-    
-    
-    
-    public static void debugToast(String message, Context context)
-    {
-        if (DEBUGGING && TOASTING)
-        {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-        }
-    }
-    
-    
-    
-    
-    public static void debug(String message)
-    {
-        if (DEBUGGING)
-        {
-            Log.d("ShareAPrayer", message);
-        }
-    }
-    
-    public static String debugSafeToString(Object o)
-    {
-        return (null == o  ?  "<null>"  :  o.toString());
-    }
-    
-    public static void debug(Object o)
-    {
-        debug(debugSafeToString(null == o  ?  "<null>"  :  o.toString()));
-    }    
-    
-    public static void debugFuncStart(String funcName, Object... params)
-    {
-        StringBuffer buff = new StringBuffer();
-        String       temp;
-        boolean      isFirst = true;
-        if (null == params || 0 == params.length)
-        {
-            buff.append(debugSafeToString(params));
-        }
-        
-        for (Object param : params)
-        {
-            if (isFirst)
-            {
-                isFirst = false;
-            }            
-            else
-            {
-                buff.append(", ");                
-            }
-            
-            temp = (null == param ? "null" : param.toString());
-            buff.append(temp);
-        }
-        
-        debug("->  " + funcName + "(" + buff + ")");
-    }
+   
     
     
     

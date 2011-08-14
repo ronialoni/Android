@@ -25,7 +25,6 @@ import il.ac.tau.team3.shareaprayer.FindPrayer;
 import il.ac.tau.team3.shareaprayer.IStatusWriter;
 import il.ac.tau.team3.shareaprayer.PlaceArrayItemizedOverlay;
 import il.ac.tau.team3.shareaprayer.R;
-import il.ac.tau.team3.shareaprayer.FindPrayer.StringArray;
 import il.ac.tau.team3.shareaprayer.R.drawable;
 import il.ac.tau.team3.shareaprayer.R.id;
 import il.ac.tau.team3.shareaprayer.R.layout;
@@ -135,31 +134,6 @@ public class UIUtils {
 	}
 
 
-
-	/////////////////////////////////////
-	////////// EditText /////////////////
-	/////////////////////////////////////
-
-
-	//	private static EditText getViewEditText(int resId, View parent)
-	//	{
-	//	    return (EditText) parent.findViewById(resId);
-	//	}
-	//	
-	//	
-	//	private static EditText getSearcBar(int resId, View parent)
-	//	{
-	//	    EditText bar = getViewEditText(resId, parent);
-	//        bar.setMaxLines(1);
-	//	    bar.setHorizontalFadingEdgeEnabled(true);
-	//        bar.setHorizontallyScrolling(true);
-	//        //bar.setFreezesText(true);
-	//        
-	//        bar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_item_new_edit_find_replace, 0);
-	//        bar.setCompoundDrawablePadding(4);
-	//	    return bar;
-	//	}
-
 	public static void initSearchBar(EditText searchBar)
 	{
 		searchBar.setMaxLines(1);
@@ -195,8 +169,7 @@ public class UIUtils {
 	{
 		final Dialog dialog = new Dialog(activity);
 		dialog.setContentView(R.layout.dialog_startup_async);
-		//dialog.setTitle(activity.getString(R.string.WelcomeMsg));
-
+		
 		Button exitButton = (Button) dialog.findViewById(R.id.dsa_button_exit);
 		Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
 
@@ -357,10 +330,6 @@ public class UIUtils {
 		{                
 			public void onClick(View v)
 			{
-				//				if(editTextFirstName.getText() == null || editTextFirstName.getText().toString() == null ||
-				//						editTextFirstName.getText().toString().equals("") || 
-				//						editTextLastName.getText() == null || editTextLastName.getText().toString() == null ||
-				//						editTextLastName.getText().toString().equals("")){
 				if (! userSetToStartChecker.condition())
 				{
 					if (-1 == accountsRadioGroup.getCheckedRadioButtonId())
@@ -398,7 +367,6 @@ public class UIUtils {
 		{
 			public void onDismiss(DialogInterface dialog) 
 			{
-				IStatusWriter statusBar = activity.getStatusBar();
 				GeneralUser   user      = getThisUser(activity);
 
 				if(! userSetToStartChecker.isEmpty(editTextStatus))
@@ -492,14 +460,16 @@ public class UIUtils {
 		try {
 			return activity.getSvcGetter().getService().getUser();
 		} catch (UserNotFoundException e) {
+			Log.e("UIUtils:getThisUser",e.getMessage());
 			return null;
 		} catch (ServiceNotConnected e) {
+			Log.e("UIUtils:getThisUser",e.getMessage());
 			return null;
 		}
 	}
 
 	static void RegisterClick(final GeneralPlace place,
-			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
+		final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
 
 		GeneralUser user = getThisUser(placeOverlay.getActivity());
 
@@ -634,32 +604,6 @@ public class UIUtils {
 					.getActivity(), "Close");
 		}
 	}
-
-	/*static void UnregisterClick(final GeneralPlace place,
-			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
-		GeneralUser user = getThisUser(placeOverlay.getActivity());
-		if (user == null) {
-			Log.d("UIUtils:createRegisterDialog", "Error: user is null");
-			return;
-		} else {
-			String name = user.getName();
-			if (name == null || name == "") {
-				Log.d("UIUtils:createRegisterDialog",
-						"Error: name is null or empty.");
-				return;
-			}
-		}
-
-		placeOverlay
-				.getActivity()
-				.getSPComm()
-				.removeJoiner(place, user, praysWishes,
-						new UpdateUI<Void>(placeOverlay
-								.getActivity()));
-
-
-
-	}*/
 
 	static class PrayUIObj	{
 		public TextView prayTime;
@@ -846,7 +790,7 @@ public class UIUtils {
 				{
 					public void onClick(DialogInterface dialog, int id) 
 					{
-						//dialog.dismiss();
+						
 					}
 				});
 				builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() 
@@ -854,7 +798,7 @@ public class UIUtils {
 					public void onClick(DialogInterface dialog, int id) 
 					{
 						DeleteClick(place, placeOverlay);
-						//dialog.dismiss();
+					
 					}
 				});
 				AlertDialog alert = builder.create();
@@ -888,23 +832,6 @@ public class UIUtils {
 
 		dialog.show();
 	}
-
-
-	//	private static class ListDialog extends ListActivity
-	//	{
-	//		private Map<String, StringArray> map;
-	//		private Activity activity;
-	//		
-	//		public ListDialog(Map<String, StringArray> map, Activity activity ){
-	//			super();
-	//			this.map = map;
-	//			this.activity = activity;
-	//		}
-	//
-	//	}
-
-
-
 
 	static void createAlertDialog(String msg, Context context, String buttonText) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -1010,9 +937,6 @@ public class UIUtils {
 
 		}
 
-
-
-
 		private class SPOnTimeSetListener 
 		implements OnTimeSetListener
 		{
@@ -1027,7 +951,6 @@ public class UIUtils {
 			//@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute)
 			{
-				SPUtils.debugFuncStart("timePickerDialog.onTimeSet", view, hourOfDay, minute);
 				CreatePlaceDialog.this.prays[this.prayIndex] = true;
 				prayTimes[this.prayIndex].set(2000, 1, 1, hourOfDay, minute, 0);
 				Date time = new Date(0, 0, 0, hourOfDay, minute);
@@ -1053,7 +976,7 @@ public class UIUtils {
 				this.setCancelable(true);
 				this.setCanceledOnTouchOutside(true);
 				this.checkBox  = a_checkBox;
-				this.prayIndex = a_prayIndex;                   ////   THIS WAS THE MAIN PROBLAM:  !!!!!!!!!!!
+				this.prayIndex = a_prayIndex;                 
 			}
 
 
@@ -1066,7 +989,6 @@ public class UIUtils {
 			@Override
 			public void cancel()	
 			{
-				SPUtils.debug("<*><*> timePickerDialog.onCancel <*><*>");
 				super.cancel();
 			}
 
@@ -1074,8 +996,6 @@ public class UIUtils {
 			@Override
 			public void dismiss()
 			{
-				SPUtils.debug("timePickerDialog.onDismiss");
-				SPUtils.debug("--> prays[" + this.prayIndex + "] = " + "prays[" + this.prayIndex + "]");
 				this.checkBox.setChecked(CreatePlaceDialog.this.prays[this.prayIndex]);
 				super.dismiss();
 			}
@@ -1117,7 +1037,6 @@ public class UIUtils {
 			 */
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 			{
-				SPUtils.debugFuncStart("pray1.onCheckedChanged", buttonView, isChecked);
 				if (isChecked)
 				{
 					PrayTimePickerDialog goodPractice = new PrayTimePickerDialog(defHour, defMinutes, checkBox, index, resIcon);
@@ -1172,7 +1091,6 @@ public class UIUtils {
 							}
 
 							editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
-							//createButton.setEnabled(false);
 							placeSetToCreateChecker.setOuterCondition(false);
 
 
@@ -1189,7 +1107,7 @@ public class UIUtils {
 				}
 
 				editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
-				//createButton.setEnabled(false);
+				
 				placeSetToCreateChecker.setOuterCondition(false);
 			}
 
@@ -1198,7 +1116,7 @@ public class UIUtils {
 		private  void verifyAddress(String address)	
 		{
 			editAddress.setBackgroundResource(R.drawable.selector_edittext_yellow);
-			//////////////////////////
+			
 			placeSetToCreateChecker.setOuterCondition(false);
 
 			activity.getSPComm().searchForAddress(address, new MapsQueryAddress(address));
@@ -1285,7 +1203,6 @@ public class UIUtils {
 								try	{
 									editAddress.setText(Obj.getResults()[0].getFormatted_address());
 									editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
-									//createButton.setEnabled(true);
 									placeSetToCreateChecker.setOuterCondition(true);
 
 								} catch (Exception e)	{
@@ -1362,9 +1279,6 @@ public class UIUtils {
 				};
 			});
 
-
-			//dialog.show();
-			//placeSetToCreateChecker.check();
 			placeSetToCreateChecker = new SetToCreateChecker() 
 			{
 
@@ -1529,24 +1443,6 @@ public class UIUtils {
 		return 0;
 	}
 
-
-
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	///////// Menu: /////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-	public static int getContextWidth(Context context)
-	{
-		return ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
-	}
-
-
-	public static void setPadding(View view, int padding)
-	{
-		view.setPadding(padding, padding, padding, padding);
-	}
 
 	private static GeneralUser getUserByName(List<GeneralUser> joiners, String clickedUserName) {
 		if (joiners == null) return null;

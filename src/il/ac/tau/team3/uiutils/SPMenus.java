@@ -22,25 +22,6 @@ public final class SPMenus
 {
 
     /**
-     * @debug 
-     * 
-     */
-        
-    public static void debug(ISPMenuItem item)
-    {
-        if (! SPUtils.DEBUGGING)
-        {
-            return;
-        }
-        
-        SPUtils.debug(item.title());
-        SPUtils.debug("    index = " + item.index());
-        SPUtils.debug("    id    = " + item.id());
-    }
-    
-    
-      
-    /**
      * 
      * @author Team3
      *

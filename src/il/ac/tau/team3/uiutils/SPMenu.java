@@ -33,8 +33,7 @@ public class SPMenu
     private static final int SP_MENU_RES_ROOT  = R.layout.menu_options_main;
     
     private static final int _sItemsPerRow = 3;
-    //private static final int SP_MENU_ITEM_RES_ID = R.id.mom_items_row;
-    
+       
     
     /**
      * A safe  help method.
@@ -230,13 +229,11 @@ public class SPMenu
                     {
                         if (SPMenu.this.isSubShowing())
                         {
-                            SPUtils.debugToast("CHANGING SUB-MENU.", activity);
                             SPMenu.this.hide();
                         }
                         
                         
                         RelativeLayout subRootView   = (RelativeLayout) activity.getLayoutInflater().inflate(R.layout.popup, null);
-                        //LinearLayout linearLayout  = (LinearLayout)   rl.findViewById(R.id.tracks);
                         TableLayout    subItemsTable = (TableLayout)    subRootView.findViewById(R.id.tracks);
                         subItemsTable.removeAllViews();
                         ImageView      arrowDown     = (ImageView)      subRootView.findViewById(R.id.arrow_down);
@@ -376,81 +373,4 @@ public class SPMenu
     
     
 }
-
-
-
-//private final OnTouchListener outsideTouchListener;
-
-//this.outsideTouchListener = new OnTouchListener()
-//{            
-//  /**
-//   * @pre SPMenu.this.menuWindow.isShowing()
-//   *      The activity calling invoked onTouch(v, event).  TODO This does not look good!
-//   */
-//  public boolean onTouch(View v, MotionEvent event)
-//  {
-//      SPUtils.debugFuncStart("*** menuWindow.OnTouchListener.onTouch", v, event);
-//      // This method should invoke only if the menu isShowing(), so no check.
-//      if (MotionEvent.ACTION_OUTSIDE == event.getAction())
-//      {
-//          SPMenu.this.hide();
-//      }
-//      
-//      // TODO Figure out what should be the return value ???
-//      return false;
-//      
-//  }
-//  
-//};
-
-
-
-///**
-//* @pre    this.isShowing()
-//* @param  v 
-//*             Should be "outside" of the menu.
-//* @param  event
-//* @return
-//*/
-//public boolean onOutsideTouch(View v, MotionEvent event)
-//{
-//  return this.outsideTouchListener.onTouch(v, event);
-//}
-
-
-
-//XXX  This never got invoked !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//menuWindow.setTouchInterceptor(new OnTouchListener()
-//{                
-//  /**
-//   * @pre SPMenu.this.menuWindow.isShowing()
-//   */
-//  public boolean onTouch(View v, MotionEvent event)
-//  {
-//      SPUtils.debugFuncStart("*** menuWindow.OnTouchListener.onTouch", v, event);
-//      // This method should invoke only if the menu isShowing(), so no check.
-//      if (MotionEvent.ACTION_OUTSIDE == event.getAction())
-//      {
-//          SPMenu.this.hide();
-//      }
-//      
-//      
-//      // Let the world (map view) take care of the touch event.
-//      // (OLD: Tell the world that we took care of the touch event.)
-//      return false;
-//  }
-//
-//});
-//XXX So I tried something dirty!
-//menuWindow.setTouchInterceptor(this.outsideTouchListener);
-
-
-
-//_ALL_ the net examples have this line ???????????????????
-//menuWindow.setFocusable(true);
-
-
-
-
-
 

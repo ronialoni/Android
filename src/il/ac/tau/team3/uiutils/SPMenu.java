@@ -6,10 +6,12 @@ import il.ac.tau.team3.shareaprayer.FindPrayer;
 import il.ac.tau.team3.shareaprayer.R;
 import il.ac.tau.team3.uiutils.SPMenus.ESPMenuItem;
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
@@ -34,6 +36,22 @@ public class SPMenu
     
     private static final int _sItemsPerRow = 3;
        
+    
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////// Menu: /////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	public static int getContextWidth(Context context)
+	{
+		return ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth();
+	}
+
+
+	public static void setPadding(View view, int padding)
+	{
+		view.setPadding(padding, padding, padding, padding);
+	}
     
     /**
      * A safe  help method.
@@ -146,9 +164,9 @@ public class SPMenu
         
         itemView.setClickable(true);
         itemView.setGravity(Gravity.CENTER);
-        UIUtils.setPadding(itemView, 5);
+        setPadding(itemView, 5);
         itemView.setFadingEdgeLength(5);
-        itemView.setWidth(UIUtils.getContextWidth(activity) / Math.min(this.items.length ,_sItemsPerRow));
+        itemView.setWidth(getContextWidth(activity) / Math.min(this.items.length ,_sItemsPerRow));
         itemView.setText(item.title());
         itemView.setCompoundDrawablesWithIntrinsicBounds(0, item.resIconId(), 0, 0);
         itemView.setBackgroundResource(R.drawable.selector_menu_item);
@@ -164,7 +182,7 @@ public class SPMenu
         
         subView.setClickable(true);
         subView.setGravity(Gravity.CENTER);
-        UIUtils.setPadding(subView, 5);
+        setPadding(subView, 5);
         subView.setFadingEdgeLength(5);
         subView.setText(subItem.title());
         subView.setCompoundDrawablesWithIntrinsicBounds(subItem.resIconId(), 0, 0, 0);
@@ -189,7 +207,7 @@ public class SPMenu
         menuWindow = new PopupWindow(menuRoot, LayoutParams.FILL_PARENT,  LayoutParams.WRAP_CONTENT, false);       
        
         menuWindow.setAnimationStyle(android.R.style.Animation_Dialog);
-        menuWindow.setWidth(UIUtils.getContextWidth(activity));
+        menuWindow.setWidth(getContextWidth(activity));
         
         menuWindow.setTouchable(true);
         menuWindow.setOutsideTouchable(true);
@@ -253,7 +271,7 @@ public class SPMenu
                                 }
                             }); 
                             
-                            //ll.addView(subView, subItem.index());
+                          
                             subItemsTable.addView(subView);
                         }              
                         

@@ -55,12 +55,12 @@ public class SPUtils
     
     public static void error(String message)
     {
-        Log.e("ShareAPrayer", message);
+        Log.d("ShareAPrayer", message);
     }
     
     public static void error(String message, Throwable throwable)
     {
-        Log.e("ShareAPrayer", message, throwable);
+        Log.d("ShareAPrayer", message, throwable);
     }
     
     

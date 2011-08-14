@@ -150,7 +150,7 @@ public class MenuSettingsUtils {
             		 activity.setUser(names);
             		 statusBar.write("User details updated", R.drawable.status_bar_accept_icon, 2000);
             	 }catch (Exception e){
-            		 Log.e("MenuSettingsUtils: createEditDetailsDialog", e.getMessage());
+            		 Log.d("MenuSettingsUtils: createEditDetailsDialog", e.getMessage());
             		 statusBar.write("An Error accoured. User details weren't updated", R.drawable.status_bar_error_icon, 2000);
             	 }
             	            	

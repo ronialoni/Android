@@ -43,7 +43,7 @@ public class MenuStatusUtils {
             			fc.publishOnFacebook(formatFacebookHeader_Status(status.getText().toString()) , formatFacebookDesc_Status(user));
             			statusBar.write("Status set.", R.drawable.status_bar_accept_icon, 2000);
             		}catch(Exception e){
-            			Log.e("MenuStatusUtils", e.getMessage());
+            			Log.d("MenuStatusUtils", e.getMessage());
             			if(statusBar != null){
             				statusBar.write("Status failed to be published on facebook.", R.drawable.status_bar_accept_icon, 2000);
             			}

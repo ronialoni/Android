@@ -378,7 +378,7 @@ public class UIUtils {
 						FacebookConnector fc = activity.getFacebookConnector();
 						fc.publishOnFacebook(MenuStatusUtils.formatFacebookHeader_Status(status), MenuStatusUtils.formatFacebookDesc_Status(user));
 					}catch(Exception e){
-						Log.e("UIUtils:createChooseAccountsDialog", e.getMessage());
+						Log.d("UIUtils:createChooseAccountsDialog", e.getMessage());
 					}
 
 				}		
@@ -460,10 +460,10 @@ public class UIUtils {
 		try {
 			return activity.getSvcGetter().getService().getUser();
 		} catch (UserNotFoundException e) {
-			Log.e("UIUtils:getThisUser",e.getMessage());
+			Log.d("UIUtils:getThisUser",e.getMessage());
 			return null;
 		} catch (ServiceNotConnected e) {
-			Log.e("UIUtils:getThisUser",e.getMessage());
+			Log.d("UIUtils:getThisUser",e.getMessage());
 			return null;
 		}
 	}
@@ -1325,7 +1325,7 @@ public class UIUtils {
 		}
 		catch (NullPointerException e)	
 		{
-			Log.e("Share-A-Prayer", "Security error (Unknown user).");
+			Log.d("Share-A-Prayer", "Security error (Unknown user).");
 
 			createUnknownUserDialog(activity);
 		}

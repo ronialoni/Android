@@ -152,7 +152,7 @@ extends MapActivity
 			Log.e("FindPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		} catch (UnknownLocationException e)	{
-			Log.e("FidPrayer:determineClosestPlace",e.getMessage());
+			//Log.e("FidPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		} catch (ServiceNotConnected e) {
 			Log.e("FinndPrayer:determineClosestPlace",e.getMessage());
@@ -226,7 +226,6 @@ extends MapActivity
     	                }
     	                catch (UnknownLocationException e)
     	                {
-    	                	Log.e("FindPrayer:updateUsersOnMap",e.getMessage());
     	                    e.printStackTrace();
     	                }
     	                catch (NullPointerException e)

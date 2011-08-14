@@ -285,7 +285,7 @@ public class SPMenu
                         
                         final int menuItemWidth = SPMenu.this.menuWindow.getContentView().getMeasuredWidth() / Math.min(_sItemsPerRow,items.length);
                         final int menuHight     = SPMenu.this.menuWindow.getContentView().getMeasuredHeight();
-                        //pwin.setFocusable(true);
+                      
                         subWindow.setOutsideTouchable(true);
                         subWindow.setTouchable(true);
                                         
@@ -360,33 +360,6 @@ public class SPMenu
     {
         this.menuWindow.setOnDismissListener(listener);
         this.hide();
-    }
-    
-    
- 
-    /**
-     * @pre    this.isShowing();
-     *         this.menuWindow.getContentView().measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-     * @param  item != null;
-     * @return
-     */
-    private int getSubMenuOffsetX(ISPMenuItem item)
-    {
-        int menuItemWidth  = this.menuWindow.getContentView().getMeasuredWidth();
-        menuItemWidth     *= item.index();
-        menuItemWidth     /= ESPMenuItem.values().length;
-        return menuItemWidth;
-    }
-    
-    
-    /**
-     * @pre    this.isShowing();
-     *         this.menuWindow.getContentView().measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-     * @return
-     */
-    private int getSubMenuOffsetY()
-    {        
-        return this.menuWindow.getContentView().getMeasuredHeight();
     }
     
     

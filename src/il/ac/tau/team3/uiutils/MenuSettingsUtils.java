@@ -57,6 +57,7 @@ public class MenuSettingsUtils {
 			}
 		} catch (NullPointerException e)	{
 			// no prays for place
+			
 		}
 		
 		
@@ -81,28 +82,37 @@ public class MenuSettingsUtils {
 	}
 	public static void CreateChooseMinMaxDialog(Activity activity){
 		final CharSequence[] items = {"Show MAX prayers of all daily prays", "Show MIN prayers of all daily prays"};
+		final IStatusWriter statusBar = ((FindPrayer) activity).getStatusBar();
 
 		try {
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setTitle(_sChooseMinMaxText);
 			builder.setSingleChoiceItems(items, (getShowMax()? 0:1), new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
+			    	String minOrMax[] = {"Min","Max"};
+			    	int oldVal = (getShowMax()? 0:1);
+			    	int newVal = oldVal;
 			        if(item == 0){
 			        	setShowMax(true);
+			        	newVal = 1; 
 			        }else{
 			        	setShowMax(false);
+			        	newVal = 0; 
 			        }
 			        dialog.dismiss();
-			       
+			        if(null!= statusBar && newVal != oldVal){
+			        	statusBar.write("Show " + minOrMax[newVal] + " is set.", R.drawable.status_bar_accept_icon, 2000);
+			        	
+			         }
 			    }
 			});
 			AlertDialog alert = builder.create();
 			alert.show();
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-			Toast toast = new Toast(activity);
-			toast.setDuration(3000);
-			toast.setText("Unable to show sub-menu.");
+			if(null!= statusBar){
+				statusBar.write("An Error accoured.", R.drawable.status_bar_error_icon, 2000);
+			}
 		}
 	}
 	

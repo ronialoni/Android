@@ -19,43 +19,27 @@
 		    android:background = "@drawable/background"
             android:textColor = "#ffffff"
             />
-
-    <LinearLayout
-
-        android:id="@+id/DFS_body"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background"
-        android:orientation="vertical"
-        android:padding="5dp"
-        >
-        
-        <Button
-            android:text="Click to setup your facebook account"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minWidth="100dp"
-            android:id="@+id/DFS_setup_button"
-            android:layout_width="fill_parent"
-        ></Button>
-
-        <CheckBox
-            android:text="Share my events on Facebook"
-            android:id="@+id/DFS_share"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textColor="#bbbbbb"
-        ></CheckBox>
-        
-        <Button
-            android:text="Close"
-            android:id="@+id/DFS_Close"
-            android:minWidth="100dp"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-        ></Button>
-
-    </LinearLayout>
-    
+              
+      <LinearLayout 
+      
+	    android:id    = "@+id/DFS_body" 
+	    android:layout_width   = "fill_parent" 
+	    android:layout_height  = "match_parent"
+	    android:background = "@drawable/background"
+	    android:orientation="vertical"
+	    android:padding        = "5dp"
+	    >         
+              <Button android:text="Click to setup your facebook account" android:layout_height="wrap_content" android:layout_gravity="center" android:minWidth="100dp" android:id="@+id/DFS_setup_button" android:layout_width="fill_parent"></Button>    
+ 
+ <CheckBox 
+                android:text="Share my events on Facebook" 
+                android:id="@+id/DFS_share"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textColor = "#bbbbbb"
+                ></CheckBox>
+ <Button android:text="Close" android:id="@+id/DFS_Close" android:minWidth="100dp" android:layout_gravity = "center" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+                
+                
+                </LinearLayout>
   </LinearLayout>

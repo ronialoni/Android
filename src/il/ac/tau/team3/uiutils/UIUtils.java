@@ -290,7 +290,7 @@ public class UIUtils {
 		GeneralUser user = getThisUser(placeOverlay.getActivity());
 		
 		if (user == null) {
-			Log.d("UIUtils:createRegisterDialog", "Error: user is null");
+			
 			return;
 		} else {
 			String name = user.getName();
@@ -425,7 +425,7 @@ public class UIUtils {
 			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
 		GeneralUser user = getThisUser(placeOverlay.getActivity());
 		if (user == null) {
-			Log.d("UIUtils:createRegisterDialog", "Error: user is null");
+			e.printStackTrace();
 			return;
 		} else {
 			String name = user.getName();
@@ -908,7 +908,7 @@ public class UIUtils {
         	if (a_activity == null || user == null)
 			{
 				
-				Log.d("UIUtils::createRegisterDialog", "point == null || activity == null || user == null");
+			
 				// TODO: change to checked exception
 				throw new NullPointerException("CreatePlaceDialog: executed with NULL!!!!");
 				//return;

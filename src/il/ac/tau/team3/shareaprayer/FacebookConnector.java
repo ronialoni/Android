@@ -161,7 +161,7 @@ public class FacebookConnector {
 		fbrunner.request("me/feed", params, "POST", new RequestListener() {
 
 			public void onComplete(String response, Object state) {
-				Log.d("Share-A-Prayer", "Facebook post response: " + response);
+				
 				if(activity.getStatusBar() != null){
 				activity.getStatusBar().write("Facebook: Posted On Wall!", R.drawable.fb_icon, 2000);
 				}

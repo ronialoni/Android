@@ -126,7 +126,7 @@ extends Service
 		    			} 
 		    			catch (Exception e)
 		    			{
-		    				Log.d("bind service", e.getMessage());
+		    				e.printStackTrace();
 		    				// Do nothing
 		    			}
 						
@@ -221,7 +221,7 @@ extends Service
 			Location loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER );
 			updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));		
 		} catch (NullPointerException e)	{
-			Log.d("LocServ", "Share a prayer Service: Startup location unknown");
+			e.printStackTrace();
 		}
 	}
 	
@@ -301,7 +301,7 @@ extends Service
 		} 
 		catch (Exception e)
 		{
-			Log.d("bind service", e.getMessage());
+			e.printStackTrace();
 			// Do nothing
 		}
 	}

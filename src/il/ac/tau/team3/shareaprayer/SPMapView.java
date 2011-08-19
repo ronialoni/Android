@@ -209,7 +209,7 @@ extends MapView
 		}
         catch (NullPointerException npe)
         {
-            Log.d("SPMapView:onTouchEvent", npe.getMessage());
+            
             npe.printStackTrace();
         } 
         

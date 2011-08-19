@@ -5,7 +5,6 @@ import android.util.Log;
 public class ACommHandler<T> implements ICommHandler<T> {
 
 	public void onError(T Obj) {
-		Log.d("Share-A-Prayer", "Failed in comm");
 		
 	}
 	

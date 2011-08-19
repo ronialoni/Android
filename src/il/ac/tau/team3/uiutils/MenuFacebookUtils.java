@@ -47,7 +47,7 @@ public class MenuFacebookUtils {
 					context.getFacebookConnector().setFacebook_share(isChecked);
 					statusBar.write("facebook settings updated", R.drawable.status_bar_accept_icon, 2000);
 					}catch(Exception e){
-						Log.d("MenuFacebookUtils: Ctor", e.getMessage());
+						e.printStackTrace();
 						if(statusBar != null){
 							statusBar.write("An error accoured. Settings wasn't updated", R.drawable.status_bar_error_icon, 2000);
 						}

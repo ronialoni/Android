@@ -149,16 +149,19 @@ extends MapActivity
 			return closestPlace;
 			
 		} catch (UserNotFoundException e)	{
-			Log.d("FindPrayer:determineClosestPlace",e.getMessage());
+			Log.d("FindPrayer:determineClosestPlace","Unable to find user");
 			return null;
 		} catch (UnknownLocationException e)	{
 			//Log.e("FidPrayer:determineClosestPlace",e.getMessage());
+			Log.d("FindPrayer:determineClosestPlace","Unknown location");
 			return null;
 		} catch (ServiceNotConnected e) {
-			Log.d("FinndPrayer:determineClosestPlace",e.getMessage());
+			Log.d("FindPrayer:determineClosestPlace","service not connected");
+			//Log.d("FinndPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		} catch (NullPointerException e) {
-			Log.d("FindPrayer:determineClosestPlace",e.getMessage());
+			e.printStackTrace();
+			//Log.d("FindPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		}
 		
@@ -194,8 +197,7 @@ extends MapActivity
 						}
     	                catch (ServiceNotConnected e) 
 						{
-    	                	Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
-							e.printStackTrace();
+    	                	Log.d("FindPrayer:updateUsersOnMap","service not connected");
 							return;
 						}
     	                
@@ -205,14 +207,15 @@ extends MapActivity
     	                }
     	                catch (UserNotFoundException e) 
     	                {
-    	                	Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
-    	                	e.printStackTrace();
+    	                	Log.d("FindPrayer:updateUsersOnMap","user not found");
+    	                	//e.printStackTrace();
     	                	return;
 						}
     	                catch (NullPointerException e)
     	                {
-    	                	Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
+    	                	//Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
     	                	e.printStackTrace();
+    	                	return;
     	                	
     	                }
     	                
@@ -226,11 +229,12 @@ extends MapActivity
     	                }
     	                catch (UnknownLocationException e)
     	                {
-    	                    e.printStackTrace();
+    	                	Log.d("FindPrayer:updateUsersOnMap","Unkown location");
+    	                    //e.printStackTrace();
     	                }
     	                catch (NullPointerException e)
     	                {
-    	                	Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
+    	                	//Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
     	                    e.printStackTrace();
     	                }
                         
@@ -249,12 +253,13 @@ extends MapActivity
     	                        }
     	                        catch (UnknownLocationException e)
     	                        {
-    	                        	Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
-    	                            e.printStackTrace();
+    	                        	Log.d("FindPrayer:updateUsersOnMap","unknown location");
+    	                            //e.printStackTrace();
     	                        }
     	                        catch (NullPointerException e)
     	                        {
-    	                        	Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
+    	                        	//Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
+    	                        	e.printStackTrace();
     	                        }
     	                    }
     	                    otherUsersOverlay.changeItems(usersOverlayList);
@@ -308,7 +313,7 @@ extends MapActivity
     					            		try {
 												placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress(), synagougeMarker));
 											} catch (UnknownLocationException e) {
-												Log.d("FindPrayer:updatePlacesOnMap",e.getMessage());
+												Log.d("FindPrayer:updatePlacesOnMap","unknown location");
 												e.printStackTrace();
 											}
     					            	}
@@ -368,7 +373,8 @@ extends MapActivity
 	    					statusBar.write("refreshing...", R.drawable.action_refresh, 1000);
 	    			
     				} catch (NullPointerException e)	{
-    					Log.d("FindPrayer",e.getMessage());
+    					//Log.d("FindPrayer",e.getMessage());
+    					e.printStackTrace();
     					statusBar.write("Unable to connect to server.", R.drawable.status_bar_error_icon, 1000);
     					
     				}
@@ -517,7 +523,8 @@ extends MapActivity
 										if(statusBar != null){
 										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
-										Log.d("FindPrayer",e.getMessage());
+										//Log.d("FindPrayer",e.getMessage());
+										e.printStackTrace();
 										onError(Obj);
 									} 
 									catch (ArrayIndexOutOfBoundsException e)	
@@ -525,7 +532,8 @@ extends MapActivity
 										if(statusBar != null){
 										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
-										Log.d("FindPrayer",e.getMessage());
+										e.printStackTrace();
+										//Log.d("FindPrayer",e.getMessage());
 										onError(Obj);
 									}	
 								}
@@ -650,7 +658,7 @@ extends MapActivity
                 }
                 catch (ServiceNotConnected e)
                 {
-                    Log.d("ShareAPrayer", "Service is not connected", e);
+                    Log.d("ShareAPrayer", "Service is not connected");
                 } catch (UserNotFoundException e)	{
             		
             		String[] names;
@@ -666,7 +674,8 @@ extends MapActivity
                     	service.setNames(names);
                     	
                     } catch (NullPointerException e_)	{
-                    	Log.d("FindPrayer",e_.getMessage());
+                    	//Log.d("FindPrayer",e_.getMessage());
+                    	e.printStackTrace();
                     }
 				} 
 

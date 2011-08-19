@@ -378,7 +378,8 @@ public class UIUtils {
 						FacebookConnector fc = activity.getFacebookConnector();
 						fc.publishOnFacebook(MenuStatusUtils.formatFacebookHeader_Status(status), MenuStatusUtils.formatFacebookDesc_Status(user));
 					}catch(Exception e){
-						Log.d("UIUtils:createChooseAccountsDialog", e.getMessage());
+						e.printStackTrace();
+						//Log.d("UIUtils:createChooseAccountsDialog", e.getMessage());
 					}
 
 				}		
@@ -460,10 +461,10 @@ public class UIUtils {
 		try {
 			return activity.getSvcGetter().getService().getUser();
 		} catch (UserNotFoundException e) {
-			Log.d("UIUtils:getThisUser",e.getMessage());
+			Log.d("UIUtils:getThisUser","User not found");
 			return null;
 		} catch (ServiceNotConnected e) {
-			Log.d("UIUtils:getThisUser",e.getMessage());
+			Log.d("UIUtils:getThisUser","service not connected");
 			return null;
 		}
 	}

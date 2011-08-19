@@ -126,7 +126,8 @@ extends Service
 		    			} 
 		    			catch (Exception e)
 		    			{
-		    				Log.d("bind service", e.getMessage());
+		    				e.printStackTrace();
+		    				Log.d("bind service", "bind service error");
 		    				// Do nothing
 		    			}
 						
@@ -301,7 +302,8 @@ extends Service
 		} 
 		catch (Exception e)
 		{
-			Log.d("bind service", e.getMessage());
+			e.printStackTrace();
+			Log.d("bind service", "bind service error");
 			// Do nothing
 		}
 	}

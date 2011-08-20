@@ -188,91 +188,81 @@ extends MapActivity
     	        {    	            
     	            public void run()
     	            {
-    	            	ILocationSvc locSvc;
-    	            	GeneralUser thisUser = null;
-    	            	
-    	                try 
-    	                {
-							locSvc = svcGetter.getService();
-						}
-    	                catch (ServiceNotConnected e) 
-						{
-    	                	Log.d("FindPrayer:updateUsersOnMap","service not connected");
-							return;
-						}
-    	                
-    	                try
-    	                {
-    	                	thisUser = locSvc.getUser();
-    	                }
-    	                catch (UserNotFoundException e) 
-    	                {
-    	                	Log.d("FindPrayer:updateUsersOnMap","user not found");
-    	                	//e.printStackTrace();
-    	                	return;
-						}
-    	                catch (NullPointerException e)
-    	                {
-    	                	//Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
-    	                	e.printStackTrace();
-    	                	return;
-    	                	
-    	                }
-    	                
-    	                
-    	                try
-    	                {	
-    	                    
-    	                    List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
-    	                    userOverlayList.add(new UserOverlayItem(thisUser));
-                            userOverlay.changeItems(userOverlayList);
-    	                }
-    	                catch (UnknownLocationException e)
-    	                {
-    	                	Log.d("FindPrayer:updateUsersOnMap","Unkown location");
-    	                    //e.printStackTrace();
-    	                }
-    	                catch (NullPointerException e)
-    	                {
-    	                	//Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
-    	                    e.printStackTrace();
-    	                }
-                        
-    	                
-    	                if (null != users)
-    	                {
-    	                    List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(users.length);
-    	                    for (GeneralUser user : users)
-    	                    {
-    	                        try
-    	                        {
-    	                            if (!thisUser.getName().equals(user.getName()))
-    	                            {
-    	                                usersOverlayList.add(new UserOverlayItem(user));
-    	                            }
-    	                        }
-    	                        catch (UnknownLocationException e)
-    	                        {
-    	                        	Log.d("FindPrayer:updateUsersOnMap","unknown location");
-    	                            //e.printStackTrace();
-    	                        }
-    	                        catch (NullPointerException e)
-    	                        {
-    	                        	//Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
-    	                        	e.printStackTrace();
-    	                        }
-    	                    }
-    	                    otherUsersOverlay.changeItems(usersOverlayList);
-    	                }
-    	            }
-    	            
-    	        });
-                        
-    	    }
-                    
-    	});
+     	                try
+     	                {
+     	                    GeneralUser thisUser = svcGetter
+     	                    .getService().getUser();
+     	                    List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
+     	                    userOverlayList.add(new UserOverlayItem(
+     	                            thisUser));
+                                     userOverlay.changeItems(userOverlayList);
+     	                }
+     	                catch (UserNotFoundException e)
+     	                {
+     	                    // invalid user
+     	                    // TODO Auto-generated catch block
+     	                    //e.printStackTrace();
+     	                    Log.e("Share-A-Prayer: Request get users comm", "User not found");
+     	                }
+     	                catch (UnknownLocationException e)
+     	                {
+     	                    // TODO Auto-generated catch block
+     	                         	                    Log.e("Share-A-Prayer: Request get users comm", "Unknown location");
+     	                }
+     	                catch (ServiceNotConnected e)
+     	                {
+     	                    // service wasn't initialized yet
+     	                    // TODO Auto-generated catch block
+     	                    Log.e("Share-A-Prayer: Request get users comm", "Service not connected");
+     	                }
+     	                catch (NullPointerException npe)
+     	                {
+     	                    SPUtils.error("NullPointerException - Should have been WRAPED !!!", npe);
+     	                    npe.printStackTrace();
+     	                }
+                                 
+     	                if (null != users)
+     	                {
+     	                    List<UserOverlayItem> usersOverlayList = new ArrayList<UserOverlayItem>(
+     	                            users.length);
+     	                    for (GeneralUser user : users)
+     	                    {
+     	                        try
+     	                        {
+     	                            GeneralUser thisUser = svcGetter.getService().getUser();
+     	                            if (!thisUser.getName().equals(user.getName()))
+     	                            {
+     	                                usersOverlayList.add(new UserOverlayItem(user));
+     	                            }
+     	                        }
+     	                        catch (UserNotFoundException e)
+     	                        {
+     	                            // TODO Auto-generated catch block
+                                     e.printStackTrace();
+     	                        }
+     	                        catch (UnknownLocationException e)
+     	                        {
+     	                            // TODO Auto-generated catch block
+     	                            e.printStackTrace();
+     	                        }
+     	                        catch (ServiceNotConnected e)
+     	                        {
+     	                            // TODO Auto-generated catch block
+     	                            e.printStackTrace();
+     	                        }catch (NullPointerException e)
+     	                        {}
+     	                    }
+     	                    otherUsersOverlay.changeItems(usersOverlayList);
+     	                }
+     	            }
+     	            
+     	        });
+                         
+     	    }
+                     
+     	});
 
-    }
+     }
     
     
     private void updatePlacesOnMap(SPGeoPoint center)
@@ -420,7 +410,6 @@ extends MapActivity
 		}
         
         unbindService(svcConn);
-        //refreshTask.destroy();   - @Depricated !!!! & throws (on exit of course).
         super.onDestroy();
     }
 	
@@ -471,10 +460,10 @@ extends MapActivity
         
         
         
-        editText.setOnEditorActionListener (new EditText.OnEditorActionListener()	
-        {
-        	public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) 
-        	{
+        editText.setOnEditorActionListener (new EditText.OnEditorActionListener()	{
+
+
+        	public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
         		if ((EditorInfo.IME_ACTION_DONE == actionId) || ((event != null) && 
         				(event.getAction() == KeyEvent.ACTION_DOWN) && 
         				(event.getKeyCode() == KeyEvent.KEYCODE_ENTER)))
@@ -714,12 +703,11 @@ extends MapActivity
 			}
         });
         
+       facebookConnector = new FacebookConnector(this);
+
+       facebookConnector.setConnectOnStartup(true);
         
-        ////CHANGE: moved to onStart()
-        /// So Do it!
-        facebookConnector = new FacebookConnector(this);
-                
-     
+        
         /*
          * Registering one listener for passing all events to activity with out making it consume them.
          */
@@ -799,6 +787,19 @@ extends MapActivity
         
         this.mapView.getController().setCenter(SPUtils.toGeoPoint(center));
     }
+    
+    
+    
+    private Account[] getAccounts()
+    {
+        Account[] accounts = AccountManager.get(FindPrayer.this).getAccounts();
+        if (null == accounts)
+        {
+            accounts = new Account[0];
+        }
+        
+        return accounts;  
+    }    
     
     
     
@@ -1018,10 +1019,8 @@ extends MapActivity
     {
         if (SPMenu.isShowing(this.menu))
         {
-            //@imp I can actually just hide, but I want to show the pattern.
             this.menu.hide();
-        
-        
+               
         }
         
         

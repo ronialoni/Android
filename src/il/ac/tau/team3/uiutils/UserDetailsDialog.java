@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,6 +19,8 @@ import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
 import il.ac.tau.team3.shareaprayer.R;
+import il.ac.tau.team3.shareaprayer.ServiceNotConnected;
+import il.ac.tau.team3.shareaprayer.UserNotFoundException;
 import il.ac.tau.team3.spcomm.ACommHandler;
 
 public class UserDetailsDialog {
@@ -69,7 +72,33 @@ public class UserDetailsDialog {
         user_mail.setTextColor(Color.WHITE);
         
         ImageButton chat = (ImageButton) dialog.findViewById(R.id.DUDChat);
+        try {
+			if(activity.getSvcGetter().getService().getUser().getId().equals(user.getId())){
+				chat.setVisibility(View.INVISIBLE);
+			}
+		} catch (UserNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ServiceNotConnected e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}catch (NullPointerException e1){
+			e1.printStackTrace();
+		}
         ImageButton email = (ImageButton) dialog.findViewById(R.id.DUDEmail);
+        try {
+			if(activity.getSvcGetter().getService().getUser().getId().equals(user.getId())){
+				email.setVisibility(View.INVISIBLE);
+			}
+		} catch (UserNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ServiceNotConnected e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}catch (NullPointerException e1){
+			e1.printStackTrace();
+		}
         
 		chat.setOnClickListener(new OnClickListener() 
 		{
@@ -78,7 +107,7 @@ public class UserDetailsDialog {
 				try{
 					Uri imUri = new Uri.Builder().scheme("imto").authority("gtalk").appendPath(user.getName()).build();
 					Intent chatintent = new Intent(Intent.ACTION_SENDTO, imUri);
-					activity.startActivity(chatintent);
+					activity.startActivity(Intent.createChooser(chatintent, "Choose chat:"));
 				}
 				catch(UnsupportedOperationException e){
 					e.printStackTrace();
@@ -100,8 +129,8 @@ public class UserDetailsDialog {
 					Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 					emailIntent.setType("plain/text");
 					emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{user.getName()});
-					activity.startActivity(emailIntent);
-//					activity.startActivity(Intent.createChooser(emailIntent, "Send your email in:"));
+				//	activity.startActivity(emailIntent);
+					activity.startActivity(Intent.createChooser(emailIntent, "Send your email via:"));
 				}
 				catch(UnsupportedOperationException e){
 					e.printStackTrace();

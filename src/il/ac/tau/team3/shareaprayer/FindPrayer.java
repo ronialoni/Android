@@ -941,6 +941,7 @@ extends MapActivity
                             public void onDismiss()
                             {
                                 FindPrayer.this.finish();
+                                android.os.Process.killProcess(android.os.Process.myPid());
                             }
                         });                        
                        

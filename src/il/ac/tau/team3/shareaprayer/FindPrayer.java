@@ -149,14 +149,19 @@ extends MapActivity
 			return closestPlace;
 			
 		} catch (UserNotFoundException e)	{
+			Log.d("FindPrayer:determineClosestPlace","Unable to find user");
 			return null;
 		} catch (UnknownLocationException e)	{
+			//Log.e("FidPrayer:determineClosestPlace",e.getMessage());
+			Log.d("FindPrayer:determineClosestPlace","Unknown location");
 			return null;
 		} catch (ServiceNotConnected e) {
-			// TODO Auto-generated catch block
+			Log.d("FindPrayer:determineClosestPlace","service not connected");
+			//Log.d("FinndPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		} catch (NullPointerException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+			//Log.d("FindPrayer:determineClosestPlace",e.getMessage());
 			return null;
 		}
 		
@@ -179,11 +184,10 @@ extends MapActivity
     	{
     	    public void onRecv(final GeneralUser[] users)
     	    {
-    	    	 FindPrayer.this.runOnUiThread(new Runnable()
-     	        {    	            
-     	            public void run()
-     	            {
-     	                // TODO Auto-generated method stub
+    	        FindPrayer.this.runOnUiThread(new Runnable()
+    	        {    	            
+    	            public void run()
+    	            {
      	                try
      	                {
      	                    GeneralUser thisUser = svcGetter
@@ -197,18 +201,19 @@ extends MapActivity
      	                {
      	                    // invalid user
      	                    // TODO Auto-generated catch block
-     	                    e.printStackTrace();
+     	                    //e.printStackTrace();
+     	                    Log.e("Share-A-Prayer: Request get users comm", "User not found");
      	                }
      	                catch (UnknownLocationException e)
      	                {
      	                    // TODO Auto-generated catch block
-     	                    e.printStackTrace();
+     	                         	                    Log.e("Share-A-Prayer: Request get users comm", "Unknown location");
      	                }
      	                catch (ServiceNotConnected e)
      	                {
      	                    // service wasn't initialized yet
      	                    // TODO Auto-generated catch block
-     	                    e.printStackTrace();
+     	                    Log.e("Share-A-Prayer: Request get users comm", "Service not connected");
      	                }
      	                catch (NullPointerException npe)
      	                {
@@ -298,7 +303,7 @@ extends MapActivity
     					            		try {
 												placesOverlayList.add(new PlaceOverlayItem(place, place.getName(), place.getAddress(), synagougeMarker));
 											} catch (UnknownLocationException e) {
-												// TODO Auto-generated catch block
+												Log.d("FindPrayer:updatePlacesOnMap","unknown location");
 												e.printStackTrace();
 											}
     					            	}
@@ -358,6 +363,8 @@ extends MapActivity
 	    					statusBar.write("refreshing...", R.drawable.action_refresh, 1000);
 	    			
     				} catch (NullPointerException e)	{
+    					//Log.d("FindPrayer",e.getMessage());
+    					e.printStackTrace();
     					statusBar.write("Unable to connect to server.", R.drawable.status_bar_error_icon, 1000);
     					
     				}
@@ -505,7 +512,8 @@ extends MapActivity
 										if(statusBar != null){
 										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
-										
+										//Log.d("FindPrayer",e.getMessage());
+										e.printStackTrace();
 										onError(Obj);
 									} 
 									catch (ArrayIndexOutOfBoundsException e)	
@@ -513,7 +521,8 @@ extends MapActivity
 										if(statusBar != null){
 										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
-										
+										e.printStackTrace();
+										//Log.d("FindPrayer",e.getMessage());
 										onError(Obj);
 									}	
 								}
@@ -638,7 +647,7 @@ extends MapActivity
                 }
                 catch (ServiceNotConnected e)
                 {
-                   
+                    Log.d("ShareAPrayer", "Service is not connected");
                 } catch (UserNotFoundException e)	{
             		
             		String[] names;
@@ -654,7 +663,8 @@ extends MapActivity
                     	service.setNames(names);
                     	
                     } catch (NullPointerException e_)	{
-                    	e_.printStackTrace();
+                    	//Log.d("FindPrayer",e_.getMessage());
+                    	e.printStackTrace();
                     }
 				} 
 

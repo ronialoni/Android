@@ -168,5 +168,9 @@ public class StatusBarOverlay extends Overlay implements IStatusWriter {
 		
 		
 	}
+	
+	public void closeHandler()	{
+		h.getLooper().quit();
+	}
 
 }

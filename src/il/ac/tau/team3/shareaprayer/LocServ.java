@@ -11,14 +11,20 @@ import il.ac.tau.team3.spcomm.SPComm;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.mapsforge.android.maps.GeoPoint;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -29,6 +35,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class LocServ 
@@ -219,7 +226,18 @@ extends Service
 		}
 		
 		try	{
-			Location loc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER );
+//			Location gpsLoc = null;
+//			Location netLoc = null;
+//			if (locMgr.isProviderEnabled(LocationManager.GPS_PROVIDER))	{
+//				gpsLoc = locMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER );
+//			}
+//			if (locMgr.isProviderEnabled(LocationManager.NETWORK_PROVIDER))	{
+//				netLoc = 
+//			}
+//			Location loc = (gpsLoc.getAccuracy() > netLoc.getAccuracy()) ? gpsLoc : netLoc;
+			Criteria criteria = new Criteria();
+			String best_provider = locMgr.getBestProvider(criteria, true);
+			Location loc = locMgr.getLastKnownLocation(best_provider );
 			updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));		
 		} catch (NullPointerException e)	{
 			e.printStackTrace();
@@ -410,6 +428,43 @@ extends Service
     	locMgr.requestLocationUpdates(LocationManager.NETWORK_PROVIDER , 0, 0, networkLocationListener);
 		locMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER , 0, 0, gpsLocationListener);
 		
+		queryCurrentLocation();
+		
+		Timer t = new Timer();
+		TimerTask ttask = new TimerTask()	{
+			private int counter = 0;
+			
+			private void notifyStatus(String status)
+			  {
+			    String ns = Context.NOTIFICATION_SERVICE;
+			    NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+			    //int icon = R.drawable.notification_icon;
+			    CharSequence tickerText = status;
+			    long when = System.currentTimeMillis();
+
+			    Notification notification = new Notification(R.drawable.icon, tickerText, when);
+
+			    CharSequence contentTitle = "Share";
+			    CharSequence contentText = status;
+			    Intent notificationIntent = new Intent(LocServ.this, LocServ.class);
+			    PendingIntent contentIntent = PendingIntent.getActivity(LocServ.this, 0, notificationIntent, 0);
+
+			    notification.setLatestEventInfo(LocServ.this, contentTitle, contentText, contentIntent);
+			    mNotificationManager.notify(1, notification);
+			  }
+
+			
+			@Override
+			public void run() {
+				
+				// TODO Auto-generated method stub
+				notifyStatus("Share:" + counter);
+				counter++;
+			}
+			
+		};
+		
+		//t.schedule(ttask, 0, 1000);
 	}
 	
 	@Override

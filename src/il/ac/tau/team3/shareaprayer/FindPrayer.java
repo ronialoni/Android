@@ -348,7 +348,15 @@ extends MapActivity
 	private SPMapView mapView;
 	private EditText  editText;
 	
-	
+	public void close()	{
+		try	{
+			refreshTask.interrupt();
+			refreshTask.join();
+		} catch (InterruptedException 	e)	{
+			return;
+		}
+		
+	}
 	
     private Thread    refreshTask = new Thread()
     {
@@ -418,6 +426,9 @@ extends MapActivity
 		}
         
         unbindService(svcConn);
+        statusBar.closeHandler();
+        comm.closeHandler();
+        close();
         super.onDestroy();
     }
 	
@@ -949,7 +960,7 @@ extends MapActivity
                             public void onDismiss()
                             {
                                 FindPrayer.this.finish();
-                                android.os.Process.killProcess(android.os.Process.myPid());
+                                //android.os.Process.killProcess(android.os.Process.myPid());
                             }
                         });                        
                        

@@ -7,4 +7,8 @@ public class ServiceNotConnected extends Exception {
 	 */
 	private static final long serialVersionUID = 8080479131163090066L;
 
+	@Override
+	public String getMessage()	{
+		return "service not connected exception";
+	}
 }

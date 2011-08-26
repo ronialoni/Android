@@ -161,5 +161,9 @@ public class SPGenComm {
     	});
     }
     
+    public void close()	{
+    	comm.getLooper().quit();
+    }
+    
     
 }

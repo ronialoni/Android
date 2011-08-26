@@ -27,6 +27,10 @@ public class SPComm {
     
     private SPGenComm com = new SPGenComm();
     
+    public void closeHandler()	{
+    	com.close();
+    }
+    
     private Map<String, String> getParameters(double latitude, double longitude, int radius)
     {
         Map<String, String> parameters = new HashMap<String, String>();

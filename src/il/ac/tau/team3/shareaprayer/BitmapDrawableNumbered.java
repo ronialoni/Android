@@ -32,7 +32,7 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
 	public BitmapDrawableNumbered(Bitmap image, GeneralPlace a_place, Bitmap glow)	{
 		super(image);
 		place = a_place;
-		this.setBounds(0, 0, image.getWidth(), image.getHeight());
+		this.setBounds(-image.getWidth()/2, -image.getWidth(), image.getWidth()/2 , 0);
 		this.glow = glow;
 	}
 	

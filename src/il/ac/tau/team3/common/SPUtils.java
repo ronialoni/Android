@@ -49,24 +49,5 @@ public class SPUtils
         
         return EARTH_RADIUS_KM * c * 1000;
     }
-   
-    
-    
-    
-    public static void error(String message)
-    {
-        
-    	if (null != message)
-    		Log.d("ShareAPrayer", message);
-    }
-    
-    public static void error(String message, Throwable throwable)
-    {
-        
-    	if ((null != message) && (null == throwable))
-    		Log.d("ShareAPrayer", message, throwable);
-    }
-    
-    
     
 }

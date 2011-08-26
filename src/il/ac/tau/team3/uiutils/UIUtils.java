@@ -88,6 +88,8 @@ import android.widget.TimePicker;
  
 public class UIUtils {
 
+	
+	
 	static class UpdateUI<T> extends ACommHandler<T> {
 		FindPrayer activity;
  
@@ -121,32 +123,7 @@ public class UIUtils {
 			
 		}
 	}
-	
-	
-	
-	/////////////////////////////////////
-	////////// EditText /////////////////
-	/////////////////////////////////////
-    
-		
-//	private static EditText getViewEditText(int resId, View parent)
-//	{
-//	    return (EditText) parent.findViewById(resId);
-//	}
-//	
-//	
-//	private static EditText getSearcBar(int resId, View parent)
-//	{
-//	    EditText bar = getViewEditText(resId, parent);
-//        bar.setMaxLines(1);
-//	    bar.setHorizontalFadingEdgeEnabled(true);
-//        bar.setHorizontallyScrolling(true);
-//        //bar.setFreezesText(true);
-//        
-//        bar.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_item_new_edit_find_replace, 0);
-//        bar.setCompoundDrawablePadding(4);
-//	    return bar;
-//	}
+
 	
 	public static void initSearchBar(EditText searchBar)
 	{
@@ -421,31 +398,6 @@ public class UIUtils {
 		}
 	}
 
-	/*static void UnregisterClick(final GeneralPlace place,
-			final PlaceArrayItemizedOverlay placeOverlay, boolean praysWishes[]) {
-		GeneralUser user = getThisUser(placeOverlay.getActivity());
-		if (user == null) {
-			e.printStackTrace();
-			return;
-		} else {
-			String name = user.getName();
-			if (name == null || name == "") {
-				Log.d("UIUtils:createRegisterDialog",
-						"Error: name is null or empty.");
-				return;
-			}
-		}
-	
-		placeOverlay
-				.getActivity()
-				.getSPComm()
-				.removeJoiner(place, user, praysWishes,
-						new UpdateUI<Void>(placeOverlay
-								.getActivity()));
-
-	
-
-	}*/
 	
 	static class PrayUIObj	{
 		public TextView prayTime;
@@ -497,8 +449,11 @@ public class UIUtils {
 		TextView placeAddress = (TextView) dialog.findViewById(R.id.DPRaddress);
 		placeAddress.setText(place.getAddress());
 
-		TextView placeDates = (TextView) dialog.findViewById(R.id.DPRdates);
-		placeDates.setText(printDateFromDate(place.getEndDate(),1900));
+		TextView placeEndDate = (TextView) dialog.findViewById(R.id.DPRdatesUntil);
+		placeEndDate.setText(printDateFromDate(place.getEndDate(),1900));
+		
+		TextView placeStartDate = (TextView) dialog.findViewById(R.id.DPRdatesFrom);
+		placeStartDate.setText(printDateFromDate(place.getStartDate(),1900));
 		
 		final Map<String, PrayUIObj> JoinersUI = new HashMap<String, PrayUIObj>();
 		
@@ -641,23 +596,8 @@ public class UIUtils {
 		dialog.show();
 	}
 
-	
-//	private static class ListDialog extends ListActivity
-//	{
-//		private Map<String, StringArray> map;
-//		private Activity activity;
-//		
-//		public ListDialog(Map<String, StringArray> map, Activity activity ){
-//			super();
-//			this.map = map;
-//			this.activity = activity;
-//		}
-//
-//	}
+
 			
-	
-
-
 	static void createAlertDialog(String msg, Context context, String buttonText) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(msg);
@@ -698,9 +638,17 @@ public class UIUtils {
         private Button cancelButton;
         private SPGeoPoint location;
         private String lastEditText ="";
+        private int regularTextColor ;
+        private boolean datesWrong = false;
+        private boolean addressIncorrect = true;
         
+        private final String createPlaceInfoMsg[] = new String[]{"You must choose at least one pray.\n", "Your end date ends before the begin date."};
         
-        
+        private void SetTimeToZero(Date date){
+        	date.setHours(0);
+        	date.setMinutes(0);
+        	date.setSeconds(0);
+        }
         
         private class DatePickerClickListener implements OnClickListener	
         {        	
@@ -711,13 +659,38 @@ public class UIUtils {
         		cal = a_cal;
         		textStr = a_textStr;
         	}
-
+        	
 			public void onClick(View v) {
 				DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener()
                 {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
                     {
                     	cal.set(year, monthOfYear, dayOfMonth);
+//                    	
+//                    	Date newStartDate = new Date(startDate.get(Calendar.YEAR) - 1900,startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
+//                    	SetTimeToZero(newStartDate);
+//                    	Date newEndDate = new Date(endDate.get(Calendar.YEAR) - 1900,endDate.get(Calendar.MONTH),endDate.get(Calendar.DAY_OF_MONTH));
+//                    	SetTimeToZero(newEndDate);
+                    	
+                    	Date newDate = new Date(year-1900,monthOfYear,dayOfMonth);
+                    	Date today = new Date();
+                    	SetTimeToZero(today);
+                    	
+                  	if((long)(today.getTime()/1000) > ((long)(newDate.getTime()/1000))){
+                    		textStr.setTextColor(activity.getResources().getColor(R.color.red));
+                    		createButton.setEnabled(false);
+                  	}else{
+                  			textStr.setTextColor(regularTextColor);
+                  			if(toDate.getCurrentTextColor() != regularTextColor || fromDate.getCurrentTextColor() != regularTextColor){
+                  				createButton.setEnabled(false);
+                  			}else{
+                  				if(!addressIncorrect){
+                  					createButton.setEnabled(true);
+                  				}
+                  			}
+                  			
+                  	}
+                  	   
                     	textStr.setText(printDateFromCalendar(cal,0));
                     }
                 };
@@ -873,14 +846,18 @@ public class UIUtils {
 							 location = new SPGeoPoint(Obj.getResults()[0].getGeometry().getLocation().getLat(), 
 									 Obj.getResults()[0].getGeometry().getLocation().getLng());
 							 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
-							 
-							 createButton.setEnabled(true);
+							 addressIncorrect = false;
+							 if (!datesWrong){
+								 createButton.setEnabled(true);
+							 }
+							
 							 
 							} catch (Exception e)	{
 								if (!editAddress.getText().toString().equals(typed_address))	{
 									 return;
 								 }
 								editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
+								addressIncorrect = true;
 								createButton.setEnabled(false);
 							}
 						}
@@ -894,6 +871,7 @@ public class UIUtils {
 					 return;
 				 }
         		editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
+        		addressIncorrect = true;
 				createButton.setEnabled(false);
         	}
         	
@@ -901,6 +879,7 @@ public class UIUtils {
         
         private  void verifyAddress(String address)	{
             editAddress.setBackgroundResource(R.drawable.selector_edittext_yellow);
+            createButton.setEnabled(false);
         	activity.getSPComm().searchForAddress(address, new MapsQueryAddress(address));
         }
         
@@ -979,9 +958,13 @@ public class UIUtils {
 									try	{
 									 editAddress.setText(Obj.getResults()[0].getFormatted_address());
 									 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
-									 createButton.setEnabled(true);
+									 addressIncorrect = false;
+									 if(!datesWrong){
+										 createButton.setEnabled(true);
+									 }
 									 
 									} catch (Exception e)	{
+										addressIncorrect = true;
 										editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
 									}
 								}
@@ -1000,6 +983,8 @@ public class UIUtils {
 			
 			fromDate = (TextView) dialog.findViewById(R.id.CPDFromDatetextView);
 			toDate   = (TextView) dialog.findViewById(R.id.CPDToDatetextView);
+			
+			regularTextColor = fromDate.getCurrentTextColor();
 			fromDate.setText(printDateFromCalendar(startDate,0)); 
 	        toDate.setText(printDateFromCalendar(endDate,0)); 
 	        
@@ -1029,14 +1014,25 @@ public class UIUtils {
             {
                 public void onClick(View view)
                 {
+                	final Date finalstartDate = new Date(startDate.get(Calendar.YEAR) - 1900, startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
+                    final Date finalendDate   = new Date(endDate.get(Calendar.YEAR) - 1900, endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
+                    boolean mixedEndStartDates = false;
+                    boolean noPrays1 = false;
                     if (!prays[0] && !prays[1] && !prays[2])
                     {
-                        createAlertDialog("You must choose at least one pray", activity, "Cancel");
+                    	noPrays1 = true;
+                                        
+                    }
+                    if( finalstartDate.compareTo(finalendDate) > 0){
+                    	mixedEndStartDates = true;
+                    }
+                    if(noPrays1 || mixedEndStartDates){
+                    	String msg = (noPrays1 ? createPlaceInfoMsg[0] : "") + (mixedEndStartDates ? createPlaceInfoMsg[1] : "");
+                    	createAlertDialog(msg, activity, "Cancel");
                     }
                     else
                     {
-                        final Date finalstartDate = new Date(startDate.get(Calendar.YEAR) - 1900, startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH));
-                        final Date finalendDate   = new Date(endDate.get(Calendar.YEAR) - 1900, endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
+                        
                         CreateNewPlace_YesClick(prays, user, activity, location, finalstartDate, finalendDate, prayTimes, editAddress.getText().toString());
                         dialog.dismiss();
                     }

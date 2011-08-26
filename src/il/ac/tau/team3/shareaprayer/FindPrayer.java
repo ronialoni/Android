@@ -465,12 +465,8 @@ extends MapActivity
 				NewPlaceCall(sp);
 			}
         });
-        
-        
-        
+    
         editText.setOnEditorActionListener (new EditText.OnEditorActionListener()	{
-
-
         	public boolean onEditorAction(final TextView v, int actionId, KeyEvent event) {
         		if ((EditorInfo.IME_ACTION_DONE == actionId) || ((event != null) && 
         				(event.getAction() == KeyEvent.ACTION_DOWN) && 
@@ -481,17 +477,12 @@ extends MapActivity
         			editText.setBackgroundResource(R.drawable.selector_edittext_yellow);
         			editText.refreshDrawableState();
         			
-        			comm.searchForAddress(v.getText().toString(), new ACommHandler<MapsQueryLocation>() 
-					{
+        			comm.searchForAddress(v.getText().toString(), new ACommHandler<MapsQueryLocation>()	{
 						@Override
-						public void onRecv(final MapsQueryLocation Obj)	
-						{
-							FindPrayer.this.runOnUiThread(new Runnable() 
-							{
-								public void run() 
-								{
-									try	
-									{
+						public void onRecv(final MapsQueryLocation Obj)	{
+							FindPrayer.this.runOnUiThread(new Runnable(){
+								public void run() {
+									try	{
 										double latitude = Obj.getResults()[0].getGeometry().getLocation().getLat();
 										double longitude = Obj.getResults()[0].getGeometry().getLocation().getLng(); 
 										
@@ -499,8 +490,7 @@ extends MapActivity
 										mapView.getController().setCenter(gp);
 										mapView.getController().setZoom(mapView.getMaxZoomLevel());
 										
-										synchronized(refreshTask)	
-										{
+										synchronized(refreshTask){
 											refreshTask.notify();
 										}
 										
@@ -511,49 +501,41 @@ extends MapActivity
 										toast.show();
 										
 										statusBar.write("Search: place found!", R.drawable.status_bar_accept_icon, 2000);
-										
+									
 										editText.setBackgroundResource(R.drawable.selector_edittext_green);
 										editText.refreshDrawableState();
 									} 
-									catch (NullPointerException e)
-									{
+									catch (NullPointerException e){
 										if(statusBar != null){
 										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
-										//Log.d("FindPrayer",e.getMessage());
+									
 										e.printStackTrace();
 										onError(Obj);
 									} 
-									catch (ArrayIndexOutOfBoundsException e)	
-									{
+									catch (ArrayIndexOutOfBoundsException e){
 										if(statusBar != null){
 										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
 										e.printStackTrace();
-										//Log.d("FindPrayer",e.getMessage());
+									
 										onError(Obj);
 									}	
 								}
 							
-							});//@END: Runnable.
+							});
 						}
 						
 						
 						@Override
-						public void onError(MapsQueryLocation Obj) 
-						{
+						public void onError(MapsQueryLocation Obj) {
 							editText.setBackgroundResource(R.drawable.selector_edittext_red);	
 							editText.refreshDrawableState();
 							super.onError(Obj);
-						}
-						
-						
-						
+						}				
 					});
-					
 					return true;
 				}
-        		
         		editText.setBackgroundResource(R.drawable.selector_edittext_yellow);
 				return false;
 			}
@@ -604,22 +586,18 @@ extends MapActivity
     	locationListener = new ILocationProv() 
     	{
 	    	// Called when a new location is found by the network location provider.
-			public void LocationChanged(SPGeoPoint point) 
-			{
+			public void LocationChanged(SPGeoPoint point) {
 				mapView.getController().setCenter(SPUtils.toGeoPoint(point));
 				
-				synchronized(refreshTask)	
-				{
+				synchronized(refreshTask){
 					refreshTask.notify();
 				}
 			    	
     	    }
 
-			public void OnUserChange(GeneralUser user) 
-			{
+			public void OnUserChange(GeneralUser user){
                 registerUser(user);
-				if (! refreshTask.isAlive())	
-				{
+				if (! refreshTask.isAlive()){
 					refreshTask.start();
 				}
 			}
@@ -629,18 +607,14 @@ extends MapActivity
     	
    	
    	
-        svcConn = new ServiceConnection()
-        {
+        svcConn = new ServiceConnection(){
             
-            public void onServiceDisconnected(ComponentName className)
-            {
+            public void onServiceDisconnected(ComponentName className){
             	svcGetter.setService(null);
             }
             
-            public void onServiceConnected(ComponentName arg0, IBinder arg1)
-            {
+            public void onServiceConnected(ComponentName arg0, IBinder arg1) {
             	svcGetter.setService((ILocationSvc) arg1);
-                
             	ILocationSvc service = null;
             	
                 try
@@ -653,8 +627,7 @@ extends MapActivity
                     registerUser(user);
                  
                 }
-                catch (ServiceNotConnected e)
-                {
+                catch (ServiceNotConnected e) {
                     Log.d("ShareAPrayer", "Service is not connected");
                 } catch (UserNotFoundException e)	{
             		
@@ -681,17 +654,13 @@ extends MapActivity
            
         };
         
-        mapView.registerTapListener(new IMapTapDetect() 
-        {
-        	
+        mapView.registerTapListener(new IMapTapDetect() {
+      	
         	class TimerRefreshTask 
-            extends TimerTask
-            {                
+            extends TimerTask {                
                 @Override
-                public void run()
-                {
-                    synchronized (refreshTask)
-                    {
+                public void run() {
+                    synchronized (refreshTask) {
                         refreshTask.notify();
                     }
                 }                
@@ -712,28 +681,23 @@ extends MapActivity
         });
         
        facebookConnector = new FacebookConnector(this);
-
        facebookConnector.setConnectOnStartup(true);
-        
         
         /*
          * Registering one listener for passing all events to activity with out making it consume them.
          */
-        mapView.registerTapListener(new IMapTapDetect()
-        {
+        mapView.registerTapListener(new IMapTapDetect() {
             /**
              * Delegating to the original function for comfort.
              * Note: The method is now final, because it's dangerous!.
              *       This way if we fix this bypasses, all the code will be in the appropriate place.
              */
             @Override
-            public void onAnyEvent(MotionEvent event)
-            {
+            public void onAnyEvent(MotionEvent event)  {
                 FindPrayer.this.onTouchEvent(event);
             }
         });        
-        
-        
+ 
 	}
 	
 	public FacebookConnector getFacebookConnector() {
@@ -758,13 +722,10 @@ extends MapActivity
     private void centerMap()
     {
         ILocationSvc service;
-        try
-        {
+        try {
             service = this.svcGetter.getService();
         }
-        catch (ServiceNotConnected sne)
-        {
-            SPUtils.error("centerMap", sne);
+        catch (ServiceNotConnected sne)  {
             sne.printStackTrace();
             return;
         }
@@ -774,9 +735,7 @@ extends MapActivity
         {
             user = service.getUser();
         }
-        catch (UserNotFoundException unfe)
-        {
-            SPUtils.error("centerMap", unfe);
+        catch (UserNotFoundException unfe) {
             unfe.printStackTrace();
             return;
         }
@@ -786,9 +745,7 @@ extends MapActivity
         {
             center = user.getSpGeoPoint();
         }
-        catch (UnknownLocationException ule)
-        {
-            SPUtils.error("centerMap", ule);
+        catch (UnknownLocationException ule){
             ule.printStackTrace();
             return;
         }
@@ -828,34 +785,24 @@ extends MapActivity
     /**
      * @imp Lazy-initialization.
      */
-    private void initializeMenu()
-    {   
-       
+    private void initializeMenu(){   
         
-        if (null == this.menu)
-        {
-            this.menu = new SPMenu(ESPMenuItem.values(), new ISPOnMenuItemSelectedListener()
-            {
-                public void onMenuItemSelected(ISPMenuItem item, View view)
-                {
-                    
+        if (null == this.menu){
+            this.menu = new SPMenu(ESPMenuItem.values(), new ISPOnMenuItemSelectedListener()  {
+                public void onMenuItemSelected(ISPMenuItem item, View view) {
                     final int id = item.id();
                    
-                    if (id == SPMenus.ESPSubMenuFind.ME.id())
-                    {
+                    if (id == SPMenus.ESPSubMenuFind.ME.id()){
                         FindPrayer.this.centerMap();
                         FindPrayer.this.menu.hide();
                     }
                     
-                    else if (id == ESPMenuItem.FACEBOOK.id())
-                    {
+                    else if (id == ESPMenuItem.FACEBOOK.id()){
                     	FindPrayer.this.menu.hide();
-                        new MenuFacebookUtils(FindPrayer.this);
-                        
+                        new MenuFacebookUtils(FindPrayer.this);    
                     }
-                                        
-                    else if (id == ESPSubMenuFind.CLOSEST.id())
-                    {
+                                    
+                    else if (id == ESPSubMenuFind.CLOSEST.id()) {
                         // Taking the closest (for now) from the map's overlay.
                         ArrayList<OverlayItem> listOfOneItemIfAnyOnMap = FindPrayer.this.closestPlaceOverlay.getOverlayItems();
                         if (null != listOfOneItemIfAnyOnMap && listOfOneItemIfAnyOnMap.size() > 0)
@@ -886,8 +833,7 @@ extends MapActivity
                             }
                         });
                         
-                        // Apparently, only the sub gets closed...
-                        FindPrayer.this.menu.hide(); // TODO this is BAD, make separate methods in SPMenu.
+                        FindPrayer.this.menu.hide(); 
                     } 
                     
                     else if (id == SPMenus.ESPSubMenuSettings.PROFILE.id())
@@ -951,12 +897,9 @@ extends MapActivity
                                 FindPrayer.this.finish();
                             }
                         });                        
-                       
-                    }   
-                        
+                       }   
                     
-                    else
-                    {
+                    else  {
                         if (!item.hasSubMenu()){
                       
                             FindPrayer.this.menu.hide();

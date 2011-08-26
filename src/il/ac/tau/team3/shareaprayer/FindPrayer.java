@@ -38,6 +38,7 @@ import java.util.TimerTask;
 
 
 import org.mapsforge.android.maps.GeoPoint;
+import org.mapsforge.android.maps.ItemizedOverlay;
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.OverlayItem;
 import org.mapsforge.android.maps.PrayerArrayItemizedOverlay;
@@ -98,6 +99,7 @@ extends MapActivity
 	private SPComm comm = new SPComm();
 	private FacebookConnector facebookConnector = null;
 	
+	private boolean tracking_mode = true;
 
 	public IStatusWriter getStatusBar()	{
 		return statusBar;
@@ -197,7 +199,7 @@ extends MapActivity
 						}
     	                catch (ServiceNotConnected e) 
 						{
-    	                	Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
+    	                	Log.d("FindPrayer:updateUsersOnMap","service not connected");
 							e.printStackTrace();
 							return;
 						}
@@ -208,7 +210,7 @@ extends MapActivity
     	                }
     	                catch (UserNotFoundException e) 
     	                {
-    	                	Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
+    	                	Log.d("FindPrayer:updateUsersOnMap","user not found exception");
     	                	e.printStackTrace();
     	                	return;
 						}
@@ -252,7 +254,7 @@ extends MapActivity
     	                        }
     	                        catch (UnknownLocationException e)
     	                        {
-    	                        	Log.d("FindPrayer:updateUsersOnMap",e.getMessage());
+    	                        	Log.d("FindPrayer:updateUsersOnMap","unknown location exception");
     	                            e.printStackTrace();
     	                        }
     	                        catch (NullPointerException e)
@@ -471,9 +473,12 @@ extends MapActivity
 		UIUtils.initSearchBar(editText);
         mapView.registerTapListener(new IMapTapDetect()	
         {
-			public void onTouchEvent(SPGeoPoint sp) 
-			{
+			public void onTouchEvent(SPGeoPoint sp)  {
 				NewPlaceCall(sp);
+			}
+			
+			public void onMoveEvent(SPGeoPoint sp)	{
+				tracking_mode = false;
 			}
         });
         
@@ -577,11 +582,11 @@ extends MapActivity
         /*
          * User overlay and icon:
          */ 
-        userDefaultMarker = this.getResources().getDrawable(R.drawable.user_red_sruga);
+        userDefaultMarker = ItemizedOverlay.boundCenterBottom(this.getResources().getDrawable(R.drawable.user_red_sruga));
 		userOverlay       = new UserArrayItemizedOverlay(userDefaultMarker, this);
         mapView.getOverlays().add(userOverlay);
         
-        searchMarker = this.getResources().getDrawable(R.drawable.search_found_icon_green);
+        searchMarker = ItemizedOverlay.boundCenterBottom(this.getResources().getDrawable(R.drawable.search_found_icon_green));
         searchQueryOverlay = new PrayerArrayItemizedOverlay(searchMarker, this);
         mapView.getOverlays().add(searchQueryOverlay);
 
@@ -600,7 +605,7 @@ extends MapActivity
        
                 
         synagougeClosestMarker    = this.getResources().getDrawable(R.drawable.place_white_david);
-        glowClosestMarker    = this.getResources().getDrawable(R.drawable.place_glow);
+        glowClosestMarker    = this.getResources().getDrawable(R.drawable.place_glow_thin);
         closestPlaceOverlay = new PlaceArrayItemizedOverlay(synagougeClosestMarker, this);
         mapView.getOverlays().add(closestPlaceOverlay);
         
@@ -617,7 +622,9 @@ extends MapActivity
 	    	// Called when a new location is found by the network location provider.
 			public void LocationChanged(SPGeoPoint point) 
 			{
-				mapView.getController().setCenter(SPUtils.toGeoPoint(point));
+				if (tracking_mode)	{
+					mapView.getController().setCenter(SPUtils.toGeoPoint(point));
+				}
 				
 				synchronized(refreshTask)	
 				{
@@ -854,6 +861,7 @@ extends MapActivity
                    
                     if (id == SPMenus.ESPSubMenuFind.ME.id())
                     {
+                    	tracking_mode = true;
                         FindPrayer.this.centerMap();
                         FindPrayer.this.menu.hide();
                     }

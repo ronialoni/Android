@@ -18,6 +18,9 @@ public class ServiceConnector {
 	}
 	
 	public ILocationSvc getService() throws ServiceNotConnected	{
+		if (null == service)	{
+			throw new ServiceNotConnected();
+		}
 		return service;
 	}
 }

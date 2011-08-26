@@ -24,7 +24,7 @@ import android.text.TextPaint;
 public class StatusBarOverlay extends Overlay implements IStatusWriter {
 
 	   
-	    private String currentMessage = "Test";
+	    private String currentMessage = "";
 	    private Bitmap icon = null;
 	    private int yoffset;
 	    private int xoffset;

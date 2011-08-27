@@ -789,7 +789,7 @@ extends MapActivity
         }
         catch (ServiceNotConnected sne)
         {
-            SPUtils.error("centerMap", sne);
+           
             sne.printStackTrace();
             return;
         }
@@ -801,7 +801,7 @@ extends MapActivity
         }
         catch (UserNotFoundException unfe)
         {
-            SPUtils.error("centerMap", unfe);
+        
             unfe.printStackTrace();
             return;
         }
@@ -813,7 +813,7 @@ extends MapActivity
         }
         catch (UnknownLocationException ule)
         {
-            SPUtils.error("centerMap", ule);
+         
             ule.printStackTrace();
             return;
         }

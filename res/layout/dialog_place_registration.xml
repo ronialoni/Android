@@ -32,19 +32,55 @@
         	android:layout_width	="wrap_content" 
         	android:id				="@+id/DPRaddress"></TextView>
         
-        <TextView 
-        	android:text			="Open until:" 
-        	android:layout_height	="wrap_content" 
-        	android:layout_width	="wrap_content" 
-            android:textColor 		= "#ffffff"
-            android:typeface		= "serif"
-        	android:id				="@+id/DPRdatesTitle"></TextView>
+        <TableRow 
+        	android:id				="@+id/DPRtableRowOpenTitles" 
+        	android:layout_width	="fill_parent" 
+        	android:layout_height	="wrap_content"
+        	android:orientation		="horizontal"
+        	>
         
-        <TextView 
-        	android:text			="//TODO:  Dates of place" 
-        	android:layout_height	="wrap_content" 
-        	android:layout_width	="wrap_content" 
-        	android:id				="@+id/DPRdates"></TextView>
+	        <TextView 
+	        	android:text			="Opens From:" 
+	        	android:layout_height	="wrap_content" 
+	        	android:layout_width	="wrap_content" 
+	            android:textColor 		= "#ffffff"
+	            android:typeface		= "serif"
+	            android:layout_weight="0.5"
+	        	android:id				="@+id/DPRdatesTitleFrom"></TextView>
+	        	
+	        <TextView 
+	        	android:text			="Opens until:" 
+	        	android:layout_height	="wrap_content" 
+	        	android:layout_width	="wrap_content" 
+	            android:textColor 		= "#ffffff"
+	            android:layout_weight="0.5"
+	            android:typeface		= "serif"
+	        	android:id				="@+id/DPRdatesTitleUntil"></TextView>
+	        	
+	        </TableRow>
+        <TableRow 
+     	  	android:id				="@+id/DPRtableRowOpenValues" 
+       		android:layout_width	="fill_parent" 
+       		android:layout_height	="wrap_content"
+       		android:orientation		="horizontal"
+       	>
+	        
+	        <TextView 
+	        	android:text			="//TODO:  Dates of place" 
+	        	android:layout_height	="wrap_content"
+	        	android:layout_weight="0.5" 
+	        	android:layout_width	="wrap_content" 
+	        	android:id				="@+id/DPRdatesFrom"></TextView>
+	        	
+        	<TextView 
+	        	android:text			="//TODO:  Dates of place"
+	        	android:layout_weight="0.5" 
+	        	android:layout_height	="wrap_content" 
+	        	android:layout_width	="wrap_content" 
+	        	android:id				="@+id/DPRdatesUntil"></TextView>
+	        	
+	      </TableRow>
+	        	
         
         <TableRow 
         	android:id				="@+id/DPRtableRow12" 

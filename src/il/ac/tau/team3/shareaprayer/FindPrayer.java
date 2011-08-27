@@ -738,7 +738,7 @@ extends MapActivity
         
        facebookConnector = new FacebookConnector(this);
 
-       facebookConnector.setConnectOnStartup(true);
+       facebookConnector.connectOnStartup();
         
         
         /*

@@ -599,7 +599,7 @@ public class UIUtils {
 
 
 			
-	static void createAlertDialog(String msg, Context context, String buttonText) {
+	public static void createAlertDialog(String msg, Context context, String buttonText) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(msg);
 		builder.setCancelable(true);
@@ -611,6 +611,7 @@ public class UIUtils {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
+	
 	
 
 	

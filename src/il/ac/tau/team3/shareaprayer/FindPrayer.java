@@ -50,6 +50,7 @@ import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -779,6 +780,37 @@ extends MapActivity
         	facebookConnector.autherizeCallback(requestCode, resultCode, data);                                                  ////
         }
     }
+	
+	private void createWishToQuitDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(this.getResources().getString(R.string.AboutToQuitMsg));
+		builder.setCancelable(false);
+		builder.setNegativeButton("No",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.dismiss();
+					}
+				});
+		builder.setPositiveButton("Yes",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						FindPrayer.this.finish();
+				}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+	
+	
+	//back handler
+	@Override 
+	public boolean onKeyDown(int keyCode, KeyEvent event) { 
+	    if ((keyCode == KeyEvent.KEYCODE_BACK)) { 
+	    	this.createWishToQuitDialog();
+	    } 
+	    return super.onKeyDown(keyCode, event); 
+	} 
+
 	
     private void centerMap()
     {

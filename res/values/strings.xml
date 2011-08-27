@@ -9,8 +9,9 @@
     <string name = "Shaharit" >Shaharit</string>
     <string name = "Minha"    >Minha</string>
     <string name = "Arvit"    >Arvit</string>
-        
-    <string name = "create_place_title" >Create Place: Properties</string>
+    <string name = "AboutToQuitMsg" >You are about to exit Share-A-Prayer.\nAre you sure you wish to exit?</string>
+
+    <string name = "create_place_title" >Create Place Properties</string>
 	<string name = "NewPlaceQues">Do you want to create a public praying place?</string>  
     
     <string name = "NoPraySelected" >Please select at least one pray before creating a new place.</string>  

@@ -25,6 +25,8 @@ public class FacebookConnector {
 	public final String FACEBOOK_STARTUP_KEY = "FACEBOOK_STARTUP";   ////CHANGE: was `private`
 	private final String FACEBOOK_CONFIGURED_KEY = "FACEBOOK_CONFIGURED";
 	private final String FACEBOOK_SHARE_KEY = "FACEBOOK_SHARE";
+	private final String FACEBOOK_ACCESS_TOKEN = "access_token";
+	private final String FACEBOOK_ACCESS_EXPIRES = "access_expires";
 	
 	private boolean facebook_connectStartup = false;
 	private boolean facebook_share = false;
@@ -81,50 +83,52 @@ public class FacebookConnector {
         if (!facebook.isSessionValid()) 
         { 
 
-			facebook.authorize(activity, new String[]{"publish_stream"/*,"read_stream","offline_access"*/},0, new DialogListener() {
-        	
-			public void onCancel() {
-				// TODO Auto-generated method stub
-				
-			}
+        	facebook.authorize(activity, new String[]{"publish_stream"/*,"read_stream","offline_access"*/},0, new DialogListener() {
 
-			public void onComplete(Bundle values) {
-				// TODO Auto-generated method stub
-				String token = facebook.getAccessToken(); 
-				long token_expires = facebook.getAccessExpires(); 
-				 
-				
+        		public void onCancel() {
+        			// TODO Auto-generated method stub
 
-				if(!facebook_configured){
-					publishOnFacebook("Started using Share-A-Prayer",
-							"Welcome to Share-A-Prayer. <br>" + "This application will help to find the closest minyan for the next pray.");
-				}
-				facebookConnected = true;
-				facebook_configured = true;
-				SharedPreferences.Editor edit = settings.edit();
-				edit.putLong("access_expires", token_expires);
-				edit.putString("access_token", token); 
-				edit.putBoolean(FACEBOOK_CONFIGURED_KEY, facebook_configured);
-				edit.commit();
-				setConnectOnStartup(true);
-				
-				
-				
-				
-				
-			}
+        		}
 
-			public void onError(DialogError e) {
-				// TODO Auto-generated method stub
-				
-			}
+        		public void onComplete(Bundle values) {
+        			// TODO Auto-generated method stub
+        			String token = facebook.getAccessToken(); 
+        			long token_expires = facebook.getAccessExpires(); 
 
-			public void onFacebookError(FacebookError e) {
-				// TODO Auto-generated method stub
-				
-			}
 
-        });
+
+        			if(!facebook_configured){
+        				publishOnFacebook("Started using Share-A-Prayer",
+        						"Welcome to Share-A-Prayer. <br>" + "This application will help to find the closest minyan for the next pray.");
+        			}
+        			facebookConnected = true;
+        			facebook_configured = true;
+        			SharedPreferences.Editor edit = settings.edit();
+        			edit.putLong(FACEBOOK_ACCESS_EXPIRES, token_expires);
+        			edit.putString(FACEBOOK_ACCESS_TOKEN, token); 
+        			edit.putBoolean(FACEBOOK_CONFIGURED_KEY, facebook_configured);
+        			edit.commit();
+        			setConnectOnStartup(true);
+
+
+
+
+
+        		}
+
+        		public void onError(DialogError e) {
+        			// TODO Auto-generated method stub
+
+        		}
+
+        		public void onFacebookError(FacebookError e) {
+        			// TODO Auto-generated method stub
+
+        		}
+
+        	});
+        } else	{
+        	facebookConnected = true;
         }
 	}
 	

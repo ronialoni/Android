@@ -28,6 +28,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -388,13 +389,23 @@ extends Service
 			}
 
 			public void onProviderEnabled(String provider) {
-				// TODO Auto-generated method stub
+				if (LocationManager.GPS_PROVIDER == provider)	{
+					Location loc = locMgr.getLastKnownLocation(provider);
+					if (null != loc)	{
+						updateAllListeners(loc);
+					}
+				}
 				
 			}
 
 			public void onStatusChanged(String provider, int status,
 					Bundle extras) {
-				// TODO Auto-generated method stub
+				if ((LocationManager.GPS_PROVIDER == provider) && (status == LocationProvider.AVAILABLE))	{
+					Location loc = locMgr.getLastKnownLocation(provider);
+					if (null != loc)	{
+						updateAllListeners(loc);
+					}
+				}
 				
 			}
     	};
@@ -414,13 +425,23 @@ extends Service
 			}
 
 			public void onProviderEnabled(String provider) {
-				// TODO Auto-generated method stub
+				if (LocationManager.NETWORK_PROVIDER == provider)	{
+					Location loc = locMgr.getLastKnownLocation(provider);
+					if (null != loc)	{
+						updateAllListeners(loc);
+					}
+				}
 				
 			}
 
 			public void onStatusChanged(String provider, int status,
 					Bundle extras) {
-				// TODO Auto-generated method stub
+				if ((LocationManager.NETWORK_PROVIDER == provider) && (status == LocationProvider.AVAILABLE))	{
+					Location loc = locMgr.getLastKnownLocation(provider);
+					if (null != loc)	{
+						updateAllListeners(loc);
+					}
+				}
 				
 			}
     	};

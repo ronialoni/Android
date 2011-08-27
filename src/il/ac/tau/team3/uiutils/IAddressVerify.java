@@ -7,4 +7,5 @@ public interface IAddressVerify {
 	void geopointNotFound(String address);
 	void addressFound(SPGeoPoint geopoint, String address);
 	void addressNotFound(SPGeoPoint geopoint);
+	void validatingProcess();
 }

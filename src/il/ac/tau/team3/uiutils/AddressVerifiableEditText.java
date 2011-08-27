@@ -58,6 +58,20 @@ public class AddressVerifiableEditText extends EditText {
 		}
 	}
 	
+	protected void handlersValidating()	{
+		for (final IAddressVerify handler : handlers)	{
+			getActivity().runOnUiThread(new Runnable() {
+
+				public void run() {
+					// TODO Auto-generated method stub
+					handler.validatingProcess();
+				}
+				
+			});
+			
+		}
+	}
+	
 	@Override
 	protected void onTextChanged (CharSequence text, int start, int before, int after)	{
 		try	{ 
@@ -212,6 +226,7 @@ public class AddressVerifiableEditText extends EditText {
 	
 	protected void validatingAddress()	{
 		setBackgroundResource(R.drawable.selector_edittext_yellow);
+		handlersValidating();
 	}
 	
 	protected void validatedAddress()	{

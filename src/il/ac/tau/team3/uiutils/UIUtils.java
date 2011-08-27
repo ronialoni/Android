@@ -889,7 +889,7 @@ public class UIUtils {
 				
 			
 				// TODO: change to checked exception
-				throw new NullPointerException("CreatePlaceDialog: executed with NULL!!!!");
+				throw new NullPointerException("CreatePlaceDialog: executed with NULL");
 				//return;
 			}
         	
@@ -898,7 +898,7 @@ public class UIUtils {
 					return false;
 				}
 			} catch (UnknownLocationException e) {
-				throw new NullPointerException("CreatePlaceDialog: executed with Unknown Location!!!!");
+				throw new NullPointerException("CreatePlaceDialog: executed with Unknown Location");
 			}
         	
         	return true;
@@ -956,7 +956,9 @@ public class UIUtils {
 								public void run() {
 									// TODO Auto-generated method stub
 									try	{
-									 editAddress.setText(Obj.getResults()[0].getFormatted_address());
+									String temp = Obj.getResults()[0].getFormatted_address().replace("Al Wa'rat, ", "");
+									temp.replace("West Bank, ", "");
+									 editAddress.setText(temp);
 									 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
 									 addressIncorrect = false;
 									 if(!datesWrong){

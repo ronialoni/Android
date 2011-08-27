@@ -39,8 +39,10 @@ public class MenuStatusUtils {
             	
             	if(!(oldStatus.equals(status.getText().toString()))){
             		try{
+            			if(!(status.getText().toString().equals(""))){
             			FacebookConnector fc = activity.getFacebookConnector();
             			fc.publishOnFacebook(formatFacebookHeader_Status(status.getText().toString()) , formatFacebookDesc_Status(user));
+            			}
             			statusBar.write("Status set.", R.drawable.status_bar_accept_icon, 2000);
             		}catch(Exception e){
             			

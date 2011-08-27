@@ -825,14 +825,72 @@ public class UIUtils {
                 }                    
             }
         }
-                
+        
+        
+        
+        private class MapsQueryAddress extends ACommHandler<MapsQueryLocation>	{
+        	private String typed_address;
+        	public MapsQueryAddress(String address)	{
+        		this.typed_address = address;
+        	}
+        
+        	@Override
+			public void onRecv(final MapsQueryLocation Obj) {
+					activity.runOnUiThread(new Runnable()	{
+
+						public void run() {
+							try	{
+							 if (! editAddress.getText().toString().equals(typed_address))	
+							 {
+								 return;
+							 }
+							 location = new SPGeoPoint(Obj.getResults()[0].getGeometry().getLocation().getLat(), 
+									 Obj.getResults()[0].getGeometry().getLocation().getLng());
+							 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
+							 addressIncorrect = false;
+							 if (!datesWrong){
+								 createButton.setEnabled(true);
+							 }
+							
+							 
+							} catch (Exception e)	{
+								if (!editAddress.getText().toString().equals(typed_address))	{
+									 return;
+								 }
+								editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
+								addressIncorrect = true;
+								createButton.setEnabled(false);
+							}
+						}
+						
+					});
+			}
+        	
+        	@Override
+        	public void onError(final MapsQueryLocation Obj)	{
+        		if (!editAddress.getText().toString().equals(typed_address))	{
+					 return;
+				 }
+        		editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
+        		addressIncorrect = true;
+				createButton.setEnabled(false);
+        	}
+        	
+        }
+        
+        private  void verifyAddress(String address)	{
+            editAddress.setBackgroundResource(R.drawable.selector_edittext_yellow);
+            createButton.setEnabled(false);
+        	activity.getSPComm().searchForAddress(address, new MapsQueryAddress(address));
+        }
+        
         private boolean validateParams(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	{
         	if (a_activity == null || user == null)
 			{
 				
 			
 				// TODO: change to checked exception
-				throw new NullPointerException("CreatePlaceDialog: executed with NULL!!!!");
+				throw new NullPointerException("CreatePlaceDialog: executed with NULL");
 				//return;
 			}
         	
@@ -841,7 +899,7 @@ public class UIUtils {
 					return false;
 				}
 			} catch (UnknownLocationException e) {
-				throw new NullPointerException("CreatePlaceDialog: executed with Unknown Location!!!!");
+				throw new NullPointerException("CreatePlaceDialog: executed with Unknown Location");
 			}
         	
         	return true;
@@ -910,7 +968,44 @@ public class UIUtils {
 				
 			});
 			
+
 			location = point;
+
+			if (null != location)	{
+				activity.getSPComm().getAddressObj(location.getLatitudeInDegrees(), location.getLongitudeInDegrees(), new ACommHandler<MapsQueryLocation>() {
+					@Override
+					public void onRecv(final MapsQueryLocation Obj) {
+							activity.runOnUiThread(new Runnable()	{
+	
+								public void run() {
+									// TODO Auto-generated method stub
+									try	{
+									String temp = Obj.getResults()[0].getFormatted_address().replace("Al Wa'rat, ", "");
+									temp.replace("West Bank, ", "");
+									 editAddress.setText(temp);
+									 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
+									 addressIncorrect = false;
+									 if(!datesWrong){
+										 createButton.setEnabled(true);
+									 }
+									 
+									} catch (Exception e)	{
+										addressIncorrect = true;
+										editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
+									}
+								}
+								
+							});
+					}
+					
+					@Override
+					public void onError(MapsQueryLocation Obj) {
+						editAddress.setText("Error fetching address");
+					}
+				});
+			} else	{
+				editAddress.setText("");
+			}
 			
 			editAddress.setLongLatAddress(location);
 			

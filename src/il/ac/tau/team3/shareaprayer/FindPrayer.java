@@ -3,6 +3,7 @@ package il.ac.tau.team3.shareaprayer;
  
 
 import il.ac.tau.team3.addressQuery.MapsQueryLocation;
+import il.ac.tau.team3.addressQuery.MapsQueryLonLat;
 
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
@@ -497,10 +498,10 @@ extends MapActivity
         			editText.setBackgroundResource(R.drawable.selector_edittext_yellow);
         			editText.refreshDrawableState();
         			
-        			comm.searchForAddress(v.getText().toString(), new ACommHandler<MapsQueryLocation>() 
+        			comm.searchForAddress(v.getText().toString(), new ACommHandler<MapsQueryLonLat[]>() 
 					{
 						@Override
-						public void onRecv(final MapsQueryLocation Obj)	
+						public void onRecv(final MapsQueryLonLat[] Obj)	
 						{
 							FindPrayer.this.runOnUiThread(new Runnable() 
 							{
@@ -508,8 +509,8 @@ extends MapActivity
 								{
 									try	
 									{
-										double latitude = Obj.getResults()[0].getGeometry().getLocation().getLat();
-										double longitude = Obj.getResults()[0].getGeometry().getLocation().getLng(); 
+										double latitude = Obj[0].getLat();
+										double longitude = Obj[0].getLon(); 
 										
 										GeoPoint gp = new GeoPoint(latitude, longitude);
 										mapView.getController().setCenter(gp);
@@ -534,7 +535,7 @@ extends MapActivity
 									catch (NullPointerException e)
 									{
 										if(statusBar != null){
-										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
+										statusBar.write("Search: Place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
 										//Log.d("FindPrayer",e.getMessage());
 										e.printStackTrace();
@@ -543,7 +544,7 @@ extends MapActivity
 									catch (ArrayIndexOutOfBoundsException e)	
 									{
 										if(statusBar != null){
-										statusBar.write("Search: An error accourd. place wasn't found.", R.drawable.status_bar_error_icon, 2000);
+										statusBar.write("Search: Place wasn't found.", R.drawable.status_bar_error_icon, 2000);
 										}
 										e.printStackTrace();
 										//Log.d("FindPrayer",e.getMessage());
@@ -556,11 +557,17 @@ extends MapActivity
 						
 						
 						@Override
-						public void onError(MapsQueryLocation Obj) 
+						public void onError(MapsQueryLonLat[] Obj) 
 						{
-							editText.setBackgroundResource(R.drawable.selector_edittext_red);	
-							editText.refreshDrawableState();
-							super.onError(Obj);
+							FindPrayer.this.runOnUiThread(new Runnable() {
+								public void run() 
+								{
+									FindPrayer.this.editText.setBackgroundResource(R.drawable.selector_edittext_red);	
+									FindPrayer.this.editText.refreshDrawableState();
+									//super.onError(Obj);
+
+								}
+							});
 						}
 						
 						

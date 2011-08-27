@@ -1,11 +1,13 @@
 package il.ac.tau.team3.spcomm;
 
 import il.ac.tau.team3.addressQuery.MapsQueryLocation;
+import il.ac.tau.team3.addressQuery.MapsQueryLonLat;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.PlaceAndUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -113,19 +115,28 @@ public class SPComm {
     
     
     
-    public void searchForAddress(String address, ICommHandler<MapsQueryLocation> callback)	{
+    public void searchForAddress(String address, ICommHandler<MapsQueryLonLat[]> callback)	{
     	Map<String, String> parameters = new HashMap<String, String>();
-    	parameters.put("address", address);
-    	parameters.put("sensor", "false");
-    	final String URL = "http://maps.googleapis.com/maps/api/geocode/json"; 
-    	com.requestGet(parameters, MapsQueryLocation.class, URL, callback);
+    	parameters.put("format", "json");
+    	parameters.put("accept-language", "en");
+    	parameters.put("addressdetails", "0");
+    	parameters.put("q", /*URLEncoder.encode(address)*/ address);
+    	
+    	final String URL = "http://nominatim.openstreetmap.org/search"; 
+    	com.requestGet(parameters, MapsQueryLonLat[].class, URL, callback);
+    	
+    	
     }
     
     public void getAddressObj(double latitude, double longitude, ICommHandler<MapsQueryLocation> callback)	{
     	Map<String, String> parameters = new HashMap<String, String>();
-    	parameters.put("latlng", String.valueOf(latitude)+","+String.valueOf(longitude));
-    	parameters.put("sensor", "false");
-    	final String URL = "http://maps.googleapis.com/maps/api/geocode/json"; 
+    	parameters.put("format", "json");
+    	parameters.put("accept-language", "en");
+    	parameters.put("addressdetails", "0");
+    	parameters.put("lat", new Double(latitude).toString());
+    	parameters.put("lon", new Double(longitude).toString());
+    	    	
+    	final String URL = "http://nominatim.openstreetmap.org/reverse"; 
     	com.requestGet(parameters, MapsQueryLocation.class, URL, callback);
     }
 

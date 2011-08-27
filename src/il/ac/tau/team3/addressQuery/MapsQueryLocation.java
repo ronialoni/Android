@@ -14,28 +14,19 @@ public class MapsQueryLocation implements Serializable {
 	private static final long serialVersionUID = 533627910597277058L;
 	
 	
-	private String status;
-	private Results[] results;
+	private String display_name;
+
+
+	public void setDisplay_name(String display_name) {
+		this.display_name = display_name;
+	}
+
+
+	public String getDisplay_name() {
+		return display_name;
+	}
 	
 	
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public MapsQueryLocation()	{
-	}
-
-	public void setResults(Results[] results) {
-		this.results = results;
-	}
-
-	public Results[] getResults() {
-		return results;
-	}
 	
 	
 };

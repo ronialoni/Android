@@ -41,7 +41,8 @@
         
         <!-- SEARCH BAR -->
         
-        <EditText android:id = "@+id/CPDeditText1" 
+        <il.ac.tau.team3.uiutils.AddressVerifiableEditText 
+        	android:id = "@+id/CPDeditText1" 
             android:layout_width  = "match_parent"
             android:layout_height = "wrap_content"
             android:hint = "Address"

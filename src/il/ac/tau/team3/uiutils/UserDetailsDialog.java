@@ -158,9 +158,7 @@ public class UserDetailsDialog {
 					public void run() {
 						// TODO Auto-generated method stub
 						try {
-							user_address.setText(Obj
-									.getResults()[0]
-									              .getFormatted_address());
+							user_address.setText(Obj.getDisplay_name());
 						} catch (Exception e) {
 							user_address
 							.setText("Error getting address");

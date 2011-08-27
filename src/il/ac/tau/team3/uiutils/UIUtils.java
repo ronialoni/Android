@@ -12,6 +12,7 @@ import java.util.Map;
 import org.mapsforge.android.maps.MapView.TextField;
 
 import il.ac.tau.team3.addressQuery.MapsQueryLocation;
+import il.ac.tau.team3.addressQuery.MapsQueryLonLat;
 import il.ac.tau.team3.common.GeneralPlace;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.Pray;
@@ -681,7 +682,7 @@ public class UIUtils {
 	private static class CreatePlaceDialog	
 	{		
 		private Dialog dialog;
-		private EditText editAddress;
+		private AddressVerifiableEditText editAddress;
 		private Calendar startDate = new GregorianCalendar(); 
 		private Calendar endDate = new GregorianCalendar(); 
 		private TextView fromDate;
@@ -851,59 +852,7 @@ public class UIUtils {
                 }                    
             }
         }
-        
-        
-        
-        private class MapsQueryAddress extends ACommHandler<MapsQueryLocation>	{
-        	private String typed_address;
-        	public MapsQueryAddress(String address)	{
-        		this.typed_address = address;
-        	}
-        
-        	@Override
-			public void onRecv(final MapsQueryLocation Obj) {
-					activity.runOnUiThread(new Runnable()	{
-
-						public void run() {
-							try	{
-							 if (! editAddress.getText().toString().equals(typed_address))	
-							 {
-								 return;
-							 }
-							 location = new SPGeoPoint(Obj.getResults()[0].getGeometry().getLocation().getLat(), 
-									 Obj.getResults()[0].getGeometry().getLocation().getLng());
-							 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
-							 
-							 createButton.setEnabled(true);
-							 
-							} catch (Exception e)	{
-								if (!editAddress.getText().toString().equals(typed_address))	{
-									 return;
-								 }
-								editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
-								createButton.setEnabled(false);
-							}
-						}
-						
-					});
-			}
-        	
-        	@Override
-        	public void onError(final MapsQueryLocation Obj)	{
-        		if (!editAddress.getText().toString().equals(typed_address))	{
-					 return;
-				 }
-        		editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
-				createButton.setEnabled(false);
-        	}
-        	
-        }
-        
-        private  void verifyAddress(String address)	{
-            editAddress.setBackgroundResource(R.drawable.selector_edittext_yellow);
-        	activity.getSPComm().searchForAddress(address, new MapsQueryAddress(address));
-        }
-        
+                
         private boolean validateParams(final SPGeoPoint point, final FindPrayer a_activity, final GeneralUser user)	{
         	if (a_activity == null || user == null)
 			{
@@ -947,57 +896,40 @@ public class UIUtils {
 			
 			createButton.setEnabled(false);
 			
-			editAddress = (EditText) dialog.findViewById(R.id.CPDeditText1);
-			initSearchBar(editAddress);
-			
-			
-			editAddress.setBackgroundResource(R.drawable.selector_edittext_yellow);
-			
-			location = point;
-			
-			editAddress.setOnKeyListener(new OnKeyListener()	{
+			editAddress = (AddressVerifiableEditText) dialog.findViewById(R.id.CPDeditText1);
+			editAddress.setActivity(a_activity);
+			editAddress.setComm(a_activity.getSPComm());
+			editAddress.addHandler(new IAddressVerify() {
 
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					if (lastEditText.equals(editAddress.getText().toString()))	{
-						return false;
-					}
-					lastEditText = editAddress.getText().toString();
-					verifyAddress(editAddress.getText().toString());
-					return false;
+
+				public void addressFound(SPGeoPoint geopoint, String address) {
+					createButton.setEnabled(true);
+					
+				}
+
+				public void addressNotFound(SPGeoPoint geopoint) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				public void geopointFound(SPGeoPoint geopoint, String address) {
+					location = geopoint;
+					createButton.setEnabled(true);
+					
+				}
+
+				public void geopointNotFound(String address) {
+					createButton.setEnabled(false);
+					
 				}
 				
 			});
 			
-			if (null != location)	{
-				activity.getSPComm().getAddressObj(location.getLatitudeInDegrees(), location.getLongitudeInDegrees(), new ACommHandler<MapsQueryLocation>() {
-					@Override
-					public void onRecv(final MapsQueryLocation Obj) {
-							activity.runOnUiThread(new Runnable()	{
-	
-								public void run() {
-									// TODO Auto-generated method stub
-									try	{
-									 editAddress.setText(Obj.getResults()[0].getFormatted_address());
-									 editAddress.setBackgroundResource(R.drawable.selector_edittext_green);
-									 createButton.setEnabled(true);
-									 
-									} catch (Exception e)	{
-										editAddress.setBackgroundResource(R.drawable.selector_edittext_red);
-									}
-								}
-								
-							});
-					}
-					
-					@Override
-					public void onError(MapsQueryLocation Obj) {
-						editAddress.setText("Error fetching address");
-					}
-				});
-			} else	{
-				editAddress.setText("");
-			}
+			location = point;
 			
+			editAddress.setLongLatAddress(location);
+			
+						
 			fromDate = (TextView) dialog.findViewById(R.id.CPDFromDatetextView);
 			toDate   = (TextView) dialog.findViewById(R.id.CPDToDatetextView);
 			fromDate.setText(printDateFromCalendar(startDate,0)); 

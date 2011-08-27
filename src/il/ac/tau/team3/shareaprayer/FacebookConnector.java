@@ -65,6 +65,22 @@ public class FacebookConnector {
 	}
 	
 	public void connect()	{
+		
+		 
+        String access_token = settings.getString("access_token", null);  
+        Long expires = settings.getLong("access_expires", -1); 
+
+
+        if (access_token != null && expires != -1) 
+        { 
+            facebook.setAccessToken(access_token); 
+            facebook.setAccessExpires(expires); 
+        } 
+
+
+        if (!facebook.isSessionValid()) 
+        { 
+
 			facebook.authorize(activity, new String[]{"publish_stream"/*,"read_stream","offline_access"*/},0, new DialogListener() {
         	
 			public void onCancel() {
@@ -74,6 +90,11 @@ public class FacebookConnector {
 
 			public void onComplete(Bundle values) {
 				// TODO Auto-generated method stub
+				String token = facebook.getAccessToken(); 
+				long token_expires = facebook.getAccessExpires(); 
+				 
+				
+
 				if(!facebook_configured){
 					publishOnFacebook("Started using Share-A-Prayer",
 							"Welcome to Share-A-Prayer. <br>" + "This application will help to find the closest minyan for the next pray.");
@@ -81,6 +102,8 @@ public class FacebookConnector {
 				facebookConnected = true;
 				facebook_configured = true;
 				SharedPreferences.Editor edit = settings.edit();
+				edit.putLong("access_expires", token_expires);
+				edit.putString("access_token", token); 
 				edit.putBoolean(FACEBOOK_CONFIGURED_KEY, facebook_configured);
 				edit.commit();
 				setConnectOnStartup(true);
@@ -102,7 +125,7 @@ public class FacebookConnector {
 			}
 
         });
-
+        }
 	}
 	
 	public void logout()	{

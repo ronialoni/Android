@@ -6,6 +6,7 @@ import java.util.List;
 import il.ac.tau.team3.addressQuery.MapsQueryLocation;
 import il.ac.tau.team3.addressQuery.MapsQueryLonLat;
 import il.ac.tau.team3.common.SPGeoPoint;
+import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.shareaprayer.R;
 import il.ac.tau.team3.spcomm.ACommHandler;
 import il.ac.tau.team3.spcomm.SPComm;
@@ -147,6 +148,10 @@ public class AddressVerifiableEditText extends EditText {
 						 
 						 if ((null != lastVerifiedText) && (lastVerifiedText.equals(typed_address)))	{
 							 return;
+						 }
+						 
+						 if (1 != Obj.length)	{
+							 throw new UnknownLocationException();
 						 }
 						 
 						 lastVerifiedText = typed_address;

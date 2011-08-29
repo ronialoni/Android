@@ -263,11 +263,6 @@ extends Service
 			} else	{
 				throw new NullPointerException();
 			}
-			if (settings.contains("UserKey"))	{
-				id = settings.getLong("UserKey", -1);
-			} else	{
-				throw new NullPointerException();
-			}
 			
 			if (settings.contains("UserAccount"))	{
 				account = settings.getString("UserAccount", "");

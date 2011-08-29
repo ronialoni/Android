@@ -15,17 +15,16 @@ import android.util.Log;
 
 public class SPComm {
 
-    private static final String GET_FOR_OBJECT_USERS  = "users";
-    private static final String GET_FOR_OBJECT_PLACES = "places";
-    private static final String GET_USER_BY_ACCOUNT = "getuserbymail";
-    private static final String GET_PLACES_OF_OWNER = "placesbyowner";  
-    private static final String GET_PLACES_OF_JOINER = "placesbyjoiner";
-    private static final String POST_FOR_OBJECT_NEW_PLACE  = "updateplacebylocation";
-    private static final String POST_FOR_OBJECT_ADD_JOINER = "addjoiner";
-    private static final String POST_FOR_OBJECT_REMOVE_JOINER = "removejoiner";
+    private static final String GET_FOR_OBJECT_USERS  = "getallusers";
+    private static final String GET_FOR_OBJECT_PLACES = "getallplaces";
+    private static final String GET_USER_BY_ID = "getuserbyid";
+    private static final String GET_PLACES_OF_OWNER = "getplacesbyowner";  
+    private static final String GET_PLACES_OF_JOINER = "getplacesbyjoiner";
+    private static final String POST_FOR_OBJECT_UPDATE_PLACE  = "updateplace";
+    private static final String POST_FOR_OBJECT_UPDATE_JOINER_STATUS = "updatejoinerstatus";
     private static final String POST_FOR_OBJECT_DELETE_PLACE = "deleteplace";
-    private static final String POST_FOR_OBJECT_UPDATE_USER_BY_NAME = "updateuserbyname";
-    
+    private static final String POST_FOR_OBJECT_UPDATE_USER = "updateuser";
+     
     
     private SPGenComm com = new SPGenComm();
     
@@ -47,73 +46,16 @@ public class SPComm {
     public void requestGetPlaces(double latitude, double longitude, int radius, ICommHandler<GeneralPlace[]> callback)
     {
         Map<String, String> parameters = getParameters(latitude, longitude, radius);
-        
-        
+    
         String request = GET_FOR_OBJECT_PLACES;
         
-        //requestGet(parameters, responseType, request);
         com.requestGet(parameters, GeneralPlace[].class, request, callback);
         
 
     }
     
     
-    public void requestGetUsers(double latitude, double longitude, int radius, ICommHandler<GeneralUser[]> callback)
-    {
-        Map<String, String> parameters = getParameters(latitude, longitude, radius);
-        
-        
-        String request = GET_FOR_OBJECT_USERS;
-        
-        //requestGet(parameters, responseType, request);
-        com.requestGet(parameters, GeneralUser[].class, request, callback);
-        
-
-    }
-    
-    public void requestGetUserByAccount(String account, ICommHandler<Long> callback)
-    {
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("account" , String.valueOf(account));
-        
-        
-        String request = GET_USER_BY_ACCOUNT;
-        
-        //requestGet(parameters, responseType, request);
-        com.requestGet(parameters, Long.class, request, callback);
-        
-
-    }
-    
-    public void requestPostRegister(GeneralPlace to ,GeneralUser user, boolean[] praysWishes, ICommHandler<Integer> callback)
-    {
-    	PlaceAndUser pau = new PlaceAndUser(user, to,praysWishes);
-        com.requestPost(pau, Integer.class, POST_FOR_OBJECT_ADD_JOINER, callback);
-    }
-    
-    public void requestPostNewPlace(GeneralPlace place, ICommHandler<Long> callback)
-    {
-    	
-    	com.requestPost(place, Long.class, POST_FOR_OBJECT_NEW_PLACE, callback);
-        
-        
-    }
-    
-    /*public void removeJoiner(GeneralPlace place, GeneralUser joiner,boolean[] praysWishes, ICommHandler<Void> callback)	{
-    	PlaceAndUser pau = new PlaceAndUser(joiner, place,praysWishes);
-    	
-    	com.requestPost(pau, Void.class, POST_FOR_OBJECT_REMOVE_JOINER, callback);
-    }*/
-    
-    public void deletePlace(GeneralPlace place, ICommHandler<Long> callback)	{
-    	com.requestPost(place, Long.class, POST_FOR_OBJECT_DELETE_PLACE, callback);
-    }
-    
-    public void updateUserByName(GeneralUser user, ICommHandler<Long> callback){
-    	com.requestPost(user, Long.class, POST_FOR_OBJECT_UPDATE_USER_BY_NAME, callback);
-	 }
-    
-    
+   
     
     public void searchForAddress(String address, ICommHandler<MapsQueryLonLat[]> callback)	{
     	Map<String, String> parameters = new HashMap<String, String>();
@@ -126,6 +68,57 @@ public class SPComm {
     	com.requestGet(parameters, MapsQueryLonLat[].class, URL, callback);
     	
     	
+    }
+    
+    public void requestGetUserById(long id, ICommHandler<GeneralUser> callback)
+    {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("id" , String.valueOf(id));
+        
+        
+        String request = GET_USER_BY_ID;
+        
+        //requestGet(parameters, responseType, request);
+        com.requestGet(parameters, GeneralUser.class, request, callback);
+        
+
+    }
+    
+    public void requestGetUsers(double latitude, double longitude, int radius, ICommHandler<GeneralUser[]> callback)
+    {
+        Map<String, String> parameters = getParameters(latitude, longitude, radius);
+       
+        String request = GET_FOR_OBJECT_USERS;
+        
+        com.requestGet(parameters, GeneralUser[].class, request, callback);
+        
+
+    }
+    
+    public void requestPostRegister(GeneralPlace to ,GeneralUser user, boolean[] praysWishes, ICommHandler<Integer> callback)
+    {
+    	PlaceAndUser pau = new PlaceAndUser(user, to,praysWishes);
+        com.requestPost(pau, Integer.class, POST_FOR_OBJECT_UPDATE_JOINER_STATUS, callback);
+    }
+    
+    public void requestPostNewPlace(GeneralPlace place, ICommHandler<Long> callback)
+    {
+    	
+    	com.requestPost(place, Long.class, POST_FOR_OBJECT_UPDATE_PLACE, callback);
+        
+        
+    }
+  
+    
+   
+    
+    public void updateUserByName(GeneralUser user, ICommHandler<Long> callback){
+    	com.requestPost(user, Long.class, POST_FOR_OBJECT_UPDATE_USER, callback);
+	 }
+    
+    
+    public void deletePlace(GeneralPlace place, ICommHandler<Long> callback)	{
+    	com.requestPost(place, Long.class, POST_FOR_OBJECT_DELETE_PLACE, callback);
     }
     
     public void getAddressObj(double latitude, double longitude, ICommHandler<MapsQueryLocation> callback)	{

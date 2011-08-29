@@ -223,6 +223,7 @@ extends MapActivity
     	                	
     	                }
     	                
+    	                boolean drewThisUser = false;
     	                
     	                try
     	                {	
@@ -230,9 +231,11 @@ extends MapActivity
     	                    List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
     	                    userOverlayList.add(new UserOverlayItem(thisUser));
                             userOverlay.changeItems(userOverlayList);
+                            drewThisUser = true;
     	                }
     	                catch (UnknownLocationException e)
     	                {
+    	                	
     	                    e.printStackTrace();
     	                }
     	                catch (NullPointerException e)
@@ -252,6 +255,11 @@ extends MapActivity
     	                            if (!thisUser.getName().equals(user.getName()))
     	                            {
     	                                usersOverlayList.add(new UserOverlayItem(user));
+    	                            } else if (!drewThisUser)	{
+    	                            	List<UserOverlayItem> userOverlayList = new ArrayList<UserOverlayItem>();
+    	        	                    userOverlayList.add(new UserOverlayItem(user));
+    	                                userOverlay.changeItems(userOverlayList);
+    	                                drewThisUser = true;
     	                            }
     	                        }
     	                        catch (UnknownLocationException e)
@@ -454,7 +462,24 @@ extends MapActivity
          try {
 			mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
 		} catch (UnknownLocationException e) {
-			// TODO Auto-generated catch block
+			comm.requestGetUserById(user.getId(), new ACommHandler<GeneralUser>(){
+				public void onRecv(final GeneralUser Obj)	{
+					FindPrayer.this.runOnUiThread(new Runnable(){
+
+						public void run() {
+							try {
+								mapView.getController().setCenter(SPUtils.toGeoPoint(Obj.getSpGeoPoint()));
+							} catch (UnknownLocationException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
+					});
+					
+				}
+			});
+
 			e.printStackTrace();
 		} 
       
@@ -697,7 +722,6 @@ extends MapActivity
                     	service.setNames(names);
                     	
                     } catch (NullPointerException e_)	{
-                    	//Log.d("FindPrayer",e_.getMessage());
                     	e.printStackTrace();
                     }
 				} 
@@ -801,17 +825,7 @@ extends MapActivity
 		alert.show();
 	}
 	
-	
-	//back handler
-	@Override 
-	public boolean onKeyDown(int keyCode, KeyEvent event) { 
-	    if ((keyCode == KeyEvent.KEYCODE_BACK)) { 
-	    	this.createWishToQuitDialog();
-	    } 
-	    return super.onKeyDown(keyCode, event); 
-	} 
-
-	
+		
     private void centerMap()
     {
         ILocationSvc service;
@@ -880,6 +894,7 @@ extends MapActivity
      * @imp   Lazy-initialization done via initializeMenu().
      */
     private SPMenu menu = null;
+   
     
     
     /**
@@ -909,7 +924,7 @@ extends MapActivity
                     {
                     	FindPrayer.this.menu.hide();
                         new MenuFacebookUtils(FindPrayer.this);
-                        
+                    
                     }
                                         
                     else if (id == ESPSubMenuFind.CLOSEST.id())
@@ -924,6 +939,7 @@ extends MapActivity
                         {
                             Toast.makeText(FindPrayer.this, "Sorry, there seem to be no places open for prayers.\nPlese consider creating one.", Toast.LENGTH_LONG).show();
                         }
+                        
                         FindPrayer.this.menu.hide();
                     }   
                     
@@ -946,6 +962,7 @@ extends MapActivity
                         
                         // Apparently, only the sub gets closed...
                         FindPrayer.this.menu.hide(); // TODO this is BAD, make separate methods in SPMenu.
+                        
                     } 
                     
                     else if (id == SPMenus.ESPSubMenuSettings.PROFILE.id())
@@ -959,6 +976,7 @@ extends MapActivity
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						
                         FindPrayer.this.menu.hide();
                     }
                     
@@ -994,6 +1012,7 @@ extends MapActivity
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						
 						 FindPrayer.this.menu.hide();
                     }                           
                     
@@ -1010,7 +1029,7 @@ extends MapActivity
                                 //android.os.Process.killProcess(android.os.Process.myPid());
                             }
                         });                        
-                       
+
                     }   
                         
                     
@@ -1019,6 +1038,7 @@ extends MapActivity
                         if (!item.hasSubMenu()){
                       
                             FindPrayer.this.menu.hide();
+   
                         }
                     }              
                   
@@ -1093,7 +1113,8 @@ extends MapActivity
         
         else
         {
-            super.onBackPressed(); 
+        	this.createWishToQuitDialog();
+            //super.onBackPressed(); 
         }
     }
     

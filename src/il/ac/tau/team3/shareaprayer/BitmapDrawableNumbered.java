@@ -58,6 +58,7 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
     public void draw(Canvas arg)    {
     	
     		int  numToDisplay= getNumber();
+    		String strToDisplay = numToDisplay < 10 ? new Integer(numToDisplay).toString() : "M"; 
     		pBmp.setColorFilter(determineColor(numToDisplay));
             
     		int x = this.getBounds().left;
@@ -73,10 +74,10 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
                     p.setStrokeWidth(2);
                     //p.setARGB(255, 255, 0, 0);
                     p.setTypeface(Typeface.DEFAULT);
-                    p.setTextSize(16);
+                    p.setTextSize(getBounds().height()/3);
             
             p.setAntiAlias(true);
-            arg.drawText((new Integer(numToDisplay)).toString() , 
+            arg.drawText(strToDisplay , 
                             getBounds().left + getBitmap().getWidth()/2 - 5, 
                             getBounds().top + getBitmap().getHeight()/2 + 5 , p);
     }

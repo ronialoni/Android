@@ -60,13 +60,16 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -448,6 +451,14 @@ extends MapActivity
 	protected void onStart ()	
 	{
 		super.onStart();
+		
+		Display d = ((WindowManager)getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		int width = d.getWidth();
+		int height = d.getHeight();
+		
+		statusBar = new StatusBarOverlay(this, mapView.getPaddingTop() + height/40, width / 100, height/32);
+        mapView.getOverlays().add(statusBar);
+		
 		bindService(new Intent(LocServ.ACTION_SERVICE), svcConn, BIND_AUTO_CREATE);
         
         Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
@@ -622,11 +633,6 @@ extends MapActivity
         searchMarker = ItemizedOverlay.boundCenterBottom(this.getResources().getDrawable(R.drawable.search_found_icon_green));
         searchQueryOverlay = new PrayerArrayItemizedOverlay(searchMarker, this);
         mapView.getOverlays().add(searchQueryOverlay);
-
-        
-        
-        statusBar = new StatusBarOverlay(this, mapView.getPaddingTop() + 24, mapView.getWidth() / 100, 16);
-        mapView.getOverlays().add(statusBar);
         
         /*
          * Synagouge overlay

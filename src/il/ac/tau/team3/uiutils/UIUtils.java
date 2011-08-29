@@ -158,7 +158,7 @@ public class UIUtils {
           dialog.setTitle(activity.getString(R.string.WelcomeMsg));
           Button exitButton = (Button) dialog.findViewById(R.id.dsa_button_exit);
           Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
-          
+                    
           exitButton.setOnClickListener(new OnClickListener()
           {                
               public void onClick(View v)
@@ -188,7 +188,8 @@ public class UIUtils {
          final EditText editTextLastName = (EditText)dialog.findViewById(R.id.startup_name_last);
          dialog.setTitle(activity.getString(R.string.WelcomeMsg));
          Button exitButton = (Button) dialog.findViewById(R.id.startup_button_exit);
-         Button startButton = (Button) dialog.findViewById(R.id.startup_button_start);
+         final Button startButton = (Button) dialog.findViewById(R.id.startup_button_start);
+         startButton.setEnabled(false);
          final int accountId[] = new int[1];
          final String names[] = new String[3];
          
@@ -241,6 +242,7 @@ public class UIUtils {
              public void onCheckedChanged(RadioGroup group, int checkedId)
              {
                  accountId[0] = checkedId;
+                 startButton.setEnabled(true);
              }
 			
          });

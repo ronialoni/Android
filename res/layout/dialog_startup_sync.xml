@@ -19,7 +19,7 @@
         android:textSize      = "20sp"
         android:textStyle     = "bold"
         android:typeface      = "serif"
-        android:text          = "Wellcome"
+        android:text          = "  Welcome"
         android:drawableLeft  = "@drawable/icon"
         />    
      
@@ -33,7 +33,7 @@
         android:textSize      = "15sp"
         android:textStyle     = "bold"
         android:typeface      = "serif"
-        android:text          = "Your Name"
+        android:text          = "Enter Your Name:"
         />
     
     <TableRow 

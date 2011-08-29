@@ -357,8 +357,6 @@ extends MapActivity
 	private ILocationProv locationListener;
 	private StatusBarOverlay statusBar; 
 	
-	
-	
 		
 	private SPMapView mapView;
 	private EditText  editText;

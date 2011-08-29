@@ -110,7 +110,12 @@ extends Service
 		public void setNames(final String[] names) {
 
 			final GeneralUser tempuser = new GeneralUser(names[2], curr_loc == null ? new SPGeoPoint() : curr_loc, "" , names[0], names[1]);
-        	
+			try{
+        	if(!tempuser.getName().contains("@")){
+        		return;
+        	}}catch(NullPointerException e){
+    			return;
+    		}
 			comm.updateUserByName(tempuser, new ICommHandler<Long>() {
 
 				public void onRecv(Long Obj) {
@@ -148,6 +153,7 @@ extends Service
 					}
 					
 				}
+				
 
 				public void onTimeout(Long Obj) {
 					scheduleUpdateUser(names);
@@ -203,7 +209,11 @@ extends Service
 	}
 	
 	private void updateUserInServer()	{
-		if (null == user)	{
+		try{
+		if (null == user || !user.getName().contains("@"))	{
+			return;
+		}
+		}catch(NullPointerException e){
 			return;
 		}
 		

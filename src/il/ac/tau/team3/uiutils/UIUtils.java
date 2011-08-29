@@ -1030,7 +1030,7 @@ public class UIUtils {
 			@Override
 			protected void postSuccessStatus(FindPrayer activity, Long Obg)	{
 				if(activity.getStatusBar()!=null){
-					activity.getStatusBar().write("Place was created successfully!", R.drawable.status_bar_accept_icon, 2000);
+					activity.getStatusBar().write("Place was created!", R.drawable.status_bar_accept_icon, 2000);
 				}
 			}
 			

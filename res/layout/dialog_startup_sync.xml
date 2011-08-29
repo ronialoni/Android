@@ -20,7 +20,7 @@
         android:textStyle     = "bold"
         android:typeface      = "serif"
         android:text          = "  Welcome"
-        android:drawableLeft  = "@drawable/icon"
+        android:drawableLeft  = "@drawable/icon48"
         />    
      
      
@@ -63,6 +63,7 @@
 	        android:textColor     = "#000000"
 	        android:textSize      = "15sp"
 	        android:text          = ""
+	        android:singleLine="true"
 	        />        
     </TableRow>
     
@@ -90,6 +91,7 @@
             android:textColor     = "#000000"
             android:textSize      = "15sp"
             android:text          = ""
+            android:singleLine="true"
             />        
     </TableRow>
     

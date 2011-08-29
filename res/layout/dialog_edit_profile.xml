@@ -54,6 +54,7 @@
 	        android:textColor     = "#000000"
 	        android:textSize      = "15sp"
 	        android:text          = ""
+	        android:singleLine="true"
 	        />        
     </TableRow>
     
@@ -81,6 +82,7 @@
             android:textColor     = "#000000"
             android:textSize      = "15sp"
             android:text          = ""
+            android:singleLine="true"
             />        
     </TableRow>
     

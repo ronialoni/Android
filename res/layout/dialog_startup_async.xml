@@ -22,7 +22,7 @@
         android:textStyle     = "bold"
         android:typeface      = "serif"
         android:text          = "Sorry"
-        android:drawableLeft  = "@drawable/icon"
+        android:drawableLeft  = "@drawable/icon48"
         /> 
     
     

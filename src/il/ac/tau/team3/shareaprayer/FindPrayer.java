@@ -498,33 +498,40 @@ extends MapActivity
         
 	}
         
-	private void registerUser(GeneralUser user)	{
+	private void registerUser(final GeneralUser user)	{
 		
          refreshTask.start();
-         try {
-			mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
-		} catch (UnknownLocationException e) {
-			comm.requestGetUserById(user.getId(), new ACommHandler<GeneralUser>(){
-				public void onRecv(final GeneralUser Obj)	{
-					FindPrayer.this.runOnUiThread(new Runnable(){
 
-						public void run() {
-							try {
-								mapView.getController().setCenter(SPUtils.toGeoPoint(Obj.getSpGeoPoint()));
-							} catch (UnknownLocationException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-						
-					});
-					
-				}
-			});
+         FindPrayer.this.runOnUiThread(new Runnable(){
 
-			e.printStackTrace();
-		} 
-      
+        	 public void run() {
+        		 try {
+        			 mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
+        		 } catch (UnknownLocationException e) {
+        			 comm.requestGetUserById(user.getId(), new ACommHandler<GeneralUser>(){
+        				 public void onRecv(final GeneralUser Obj)	{
+        					 FindPrayer.this.runOnUiThread(new Runnable(){
+
+        						 public void run() {
+        							 try {
+        								 mapView.getController().setCenter(SPUtils.toGeoPoint(Obj.getSpGeoPoint()));
+        							 } catch (UnknownLocationException e) {
+        								 // TODO Auto-generated catch block
+        								 e.printStackTrace();
+        							 }
+        						 }
+
+        					 });
+
+        				 }
+
+        			 });
+        		 }
+
+        	 }
+
+         });
+        	 
          synchronized(refreshTask){
          	refreshTask.notify();
          };

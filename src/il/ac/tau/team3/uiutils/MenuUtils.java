@@ -81,6 +81,8 @@ public class MenuUtils {
 		user.setFirstName(newFirstName);
 		user.setLastName(newLastName);
 		SPComm comm = new SPComm();
+		
+		
 		comm.updateUserByName(user, new ICommHandler<Long>(){
 
 			public void onRecv(Long Obj) {

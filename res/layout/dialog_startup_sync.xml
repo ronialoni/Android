@@ -34,6 +34,8 @@
         android:textStyle     = "bold"
         android:typeface      = "serif"
         android:text          = "Enter Your Name:"
+        android:paddingTop="10dip"
+        android:paddingBottom="10dip"
         />
     
     <TableRow 

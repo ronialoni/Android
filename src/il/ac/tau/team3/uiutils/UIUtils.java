@@ -156,6 +156,7 @@ public class UIUtils {
 		final Dialog dialog = new Dialog(activity);
 		  dialog.setContentView(R.layout.dialog_startup_async);
           dialog.setTitle(activity.getString(R.string.WelcomeMsg));
+          dialog.setCancelable(false);
           Button exitButton = (Button) dialog.findViewById(R.id.dsa_button_exit);
           Button syncButton = (Button) dialog.findViewById(R.id.dsa_button_sync);
                     

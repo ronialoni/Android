@@ -377,10 +377,12 @@ extends MapActivity
 	
     private Thread    refreshTask = new Thread()
     {
-
+    	private int checkLocationCounter = 0;
+    	
     	@Override
     	public void run()
     	{
+    		
     		while (! isInterrupted())
     		{
     			try
@@ -394,17 +396,19 @@ extends MapActivity
 	    					updateUsersOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
 	    					updatePlacesOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
 	    					statusBar.write("refreshing...", R.drawable.action_refresh, 1000);
-	    					try {
-								android.location.Location loc = getSvcGetter().getService().getRecentLocationFix();
-								Calendar cal = Calendar.getInstance();
-								cal.add(Calendar.SECOND, -125);
-								if ((null == loc) || (loc.getTime() < (cal.getTimeInMillis())))	{
-									statusBar.write("lost location fix", R.drawable.antenna_image, 2000);
+	    					if (checkLocationCounter++ % 30 == 0)	{
+		    					try {
+									android.location.Location loc = getSvcGetter().getService().getRecentLocationFix();
+									Calendar cal = Calendar.getInstance();
+									cal.add(Calendar.SECOND, -125);
+									if ((null == loc) || (loc.getTime() < (cal.getTimeInMillis())))	{
+										statusBar.write("lost location fix", R.drawable.antenna_image, 2000);
+									}
+								} catch (ServiceNotConnected e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
-							} catch (ServiceNotConnected e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+	    					}
 	    					
 	    			
     				} catch (NullPointerException e)	{

@@ -13,6 +13,8 @@
             
     <TextView android:id      = "@+id/dsa_head"
         android:gravity       = "center_vertical"
+        android:drawablePadding="10pt"
+        android:paddingBottom="15dip"
         android:layout_width  = "fill_parent"
         android:layout_height = "wrap_content"
         android:textColor     = "#ffffff"
@@ -30,12 +32,12 @@
         android:gravity       = "center"
         android:layout_width  = "fill_parent"
         android:layout_height = "wrap_content"
+         android:textSize      = "16sp"
+
+		android:paddingBottom="30dip"
+
+        android:text          = "Share-A-Prayer requires you to define a mail account in your Android device.\nPlease return after you added an account."
         
-
-
-
-        android:text          = "Share-A-Prayer requires you to sync an account to your Android device. Please return after you synced your mail. Share-A-Prayer"
-        android:drawableLeft  = "@drawable/icon"
         />
     
         
@@ -53,7 +55,7 @@
             android:layout_width  = "fill_parent"
             android:layout_height = "wrap_content" 
             android:layout_weight = "1"
-            android:text          = "Sync" 
+            android:text          = "Add Account" 
             />
         
         <Button android:id        = "@+id/dsa_button_exit" 

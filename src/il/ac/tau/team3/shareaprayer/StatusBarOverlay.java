@@ -56,7 +56,7 @@ public class StatusBarOverlay extends Overlay implements IStatusWriter {
 	        		String s = msg.getData().getString(MESSAGE_KEY);
 	        		int iconRes = msg.getData().getInt(ICON_KEY);
 	        		synchronized(currentMessage)	{
-	        			currentMessage = s;
+	        			
 	        			if (iconRes != 0)	{
 	        				Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), iconRes);
 	        				Matrix matrix  = new Matrix();
@@ -66,15 +66,17 @@ public class StatusBarOverlay extends Overlay implements IStatusWriter {
 	        		        tp.setTypeface(Typeface.MONOSPACE);
 	        		        tp.setTextSize(textSz);
 	        		        Rect rect = new Rect();
-	        		        tp.getTextBounds(currentMessage, 0, currentMessage.length(), rect);
+	        		        tp.getTextBounds(s, 0, s.length(), rect);
 	        		        int pixelTextSize = rect.height() + 4;
 	        				float scaleWidth = ((float) pixelTextSize) / width;
 	        		        float scaleHeight = ((float) pixelTextSize) / height;
 	        				matrix.postScale(scaleWidth, scaleHeight);
 	        				icon = Bitmap.createBitmap(bmp, 0, 0,
 	        						width, height, matrix, true); 
+	        				currentMessage = s;
 	        				
 	        			}
+	        			
 	        			
 	        		}
 	        		StatusBarOverlay.this.requestRedraw();

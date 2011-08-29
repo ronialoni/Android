@@ -85,7 +85,7 @@ extends Service
 		}
 
 		public GeneralUser getUser() throws UserNotFoundException {
-			if (null == user)	{
+			if ((null == user) || (null == user.getName()) || (!user.getName().contains("@")))	{
 				throw new UserNotFoundException();
 			}
 			return user;

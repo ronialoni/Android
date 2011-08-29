@@ -1,6 +1,7 @@
 package il.ac.tau.team3.shareaprayer;
 
 import android.accounts.Account;
+import android.location.Location;
 import il.ac.tau.team3.common.GeneralUser;
 import il.ac.tau.team3.common.SPGeoPoint;
 
@@ -19,4 +20,6 @@ public interface ILocationSvc {
 	public void setStatus(String status) throws UserNotFoundException;
 
 	public GeneralUser getUser() throws UserNotFoundException;
+	
+	public Location getRecentLocationFix();
 }

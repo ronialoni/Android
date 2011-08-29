@@ -5,7 +5,8 @@
     <string name = "app_name" >Share-A-Prayer</string>
     
     <string name = "WelcomeMsg" >Welcome to Share-A-Prayer!</string>
-    
+    <string name = "NoLocationProviderMsg" >The application didn\'t recognize any valid location.\nPlease enable your GPS or network connection.</string>
+    <string name = "NoInternetConnectionMsg" >The application didn\'t recognize any valid network provider.\nPlease enable your Wi-Fi or 3G connection.</string>
     <string name = "Shaharit" >Shaharit</string>
     <string name = "Minha"    >Minha</string>
     <string name = "Arvit"    >Arvit</string>

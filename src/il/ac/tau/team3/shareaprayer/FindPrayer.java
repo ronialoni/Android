@@ -32,6 +32,7 @@ import il.ac.tau.team3.uiutils.UIUtils;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -58,6 +59,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
@@ -390,6 +394,18 @@ extends MapActivity
 	    					updateUsersOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
 	    					updatePlacesOnMap(SPUtils.toSPGeoPoint(mapView.getMapCenter()));
 	    					statusBar.write("refreshing...", R.drawable.action_refresh, 1000);
+	    					try {
+								android.location.Location loc = getSvcGetter().getService().getRecentLocationFix();
+								Calendar cal = Calendar.getInstance();
+								cal.add(Calendar.SECOND, -125);
+								if ((null == loc) || (loc.getTime() < (cal.getTimeInMillis())))	{
+									statusBar.write("lost location fix", R.drawable.antenna_image, 2000);
+								}
+							} catch (ServiceNotConnected e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+	    					
 	    			
     				} catch (NullPointerException e)	{
     					//Log.d("FindPrayer",e.getMessage());
@@ -461,6 +477,19 @@ extends MapActivity
         
         Toast toast = Toast.makeText(getApplicationContext(), "Long tap on map to create a new place", Toast.LENGTH_LONG);
         toast.show();
+        
+        LocationManager locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if(!locMgr.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locMgr.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+        	UIUtils.createAlertDialog(this.getResources().getString(R.string.NoLocationProviderMsg), this, "OK");
+        }
+        
+        ConnectivityManager connectivityManager  
+        = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE); 
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo(); 
+
+        if(null == activeNetworkInfo){
+        	UIUtils.createAlertDialog(this.getResources().getString(R.string.NoInternetConnectionMsg), this, "OK");
+        }
 		
         
 	}

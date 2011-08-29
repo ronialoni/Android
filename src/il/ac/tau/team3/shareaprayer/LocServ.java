@@ -76,6 +76,10 @@ extends Service
 			return curr_loc;
 		}
 		
+		public Location getRecentLocationFix()	{
+			return queryCurrentLocation();
+		}
+		
 		public void RegisterListner(ILocationProv a_prov)	{
 			locationProvs.add(a_prov);
 		}
@@ -220,10 +224,10 @@ extends Service
 	}
 
 
-	private void queryCurrentLocation()	
+	private Location queryCurrentLocation()	
 	{
 		if (null == user)	{
-			return;
+			return null;
 		}
 		
 		try	{
@@ -239,10 +243,13 @@ extends Service
 			Criteria criteria = new Criteria();
 			String best_provider = locMgr.getBestProvider(criteria, true);
 			Location loc = locMgr.getLastKnownLocation(best_provider );
-			updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));		
+			updateUserLocation(new GeoPoint(loc.getLatitude(), loc.getLongitude()));
+			return loc;
 		} catch (NullPointerException e)	{
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 	
 	private GeneralUser loadUserFromStorage()	{
@@ -351,30 +358,19 @@ extends Service
 		super.onCreate();
 		
 		locMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		
 		IntentFilter iFilter = new IntentFilter();
 		iFilter.addAction(LocationManager.GPS_PROVIDER);
 		iFilter.addAction(LocationManager.NETWORK_PROVIDER);
-		
 		settings = getSharedPreferences("ShareAPrayer", 0);
-		
 		user = loadUserFromStorage();
-		
 		updateThread = new HandlerThread("send thread");
-        	
-        
-		updateThread.start();
-        
+ 		updateThread.start();
         updateHandler = new Handler(updateThread.getLooper());
-		
 		
 		gpsLocationListener = new LocationListener() 
     	{
 	    	// Called when a new location is found by the network location provider.
-    		public void onLocationChanged(Location loc) 
-    	    { 	
-    			
-
+    		public void onLocationChanged(Location loc){ 	
     			LocServ.this.updateAllListeners(loc);
     	    }
 
@@ -384,7 +380,7 @@ extends Service
 			}
 
 			public void onProviderEnabled(String provider) {
-				if (LocationManager.GPS_PROVIDER == provider)	{
+				if (LocationManager.GPS_PROVIDER.equals(provider))	{
 					Location loc = locMgr.getLastKnownLocation(provider);
 					if (null != loc)	{
 						updateAllListeners(loc);
@@ -395,7 +391,7 @@ extends Service
 
 			public void onStatusChanged(String provider, int status,
 					Bundle extras) {
-				if ((LocationManager.GPS_PROVIDER == provider) && (status == LocationProvider.AVAILABLE))	{
+				if ((LocationManager.GPS_PROVIDER.equals(provider)) && (status == LocationProvider.AVAILABLE))	{
 					Location loc = locMgr.getLastKnownLocation(provider);
 					if (null != loc)	{
 						updateAllListeners(loc);
@@ -416,11 +412,12 @@ extends Service
 
 			public void onProviderDisabled(String provider) {
 				// TODO Auto-generated method stub
+			
 				
 			}
 
 			public void onProviderEnabled(String provider) {
-				if (LocationManager.NETWORK_PROVIDER == provider)	{
+				if (LocationManager.NETWORK_PROVIDER.equals(provider))	{
 					Location loc = locMgr.getLastKnownLocation(provider);
 					if (null != loc)	{
 						updateAllListeners(loc);
@@ -431,7 +428,7 @@ extends Service
 
 			public void onStatusChanged(String provider, int status,
 					Bundle extras) {
-				if ((LocationManager.NETWORK_PROVIDER == provider) && (status == LocationProvider.AVAILABLE))	{
+				if ((LocationManager.NETWORK_PROVIDER.equals(provider)) && (status == LocationProvider.AVAILABLE))	{
 					Location loc = locMgr.getLastKnownLocation(provider);
 					if (null != loc)	{
 						updateAllListeners(loc);

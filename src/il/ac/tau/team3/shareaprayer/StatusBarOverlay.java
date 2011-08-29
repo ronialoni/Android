@@ -163,7 +163,7 @@ public class StatusBarOverlay extends Overlay implements IStatusWriter {
 				added_offset += icon.getWidth() + 4;
 			}
     		canvas.drawText(currentMessage , 
-            xoffset+added_offset,yoffset , pFront);
+            xoffset+added_offset,yoffset+yoffset/2 , pFront);
 		}
 		
 		

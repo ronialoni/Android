@@ -11,9 +11,11 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.text.TextPaint;
 
 
 public class BitmapDrawableNumbered  extends BitmapDrawable 
@@ -77,8 +79,13 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
                     p.setTextSize(getBounds().height()/3);
             
             p.setAntiAlias(true);
-            arg.drawText(strToDisplay , 
-                            getBounds().left + getBitmap().getWidth()/2 - 5, 
-                            getBounds().top + getBitmap().getHeight()/2 + 5 , p);
+            
+            TextPaint tp = new TextPaint(p);
+	        Rect rect = new Rect();
+	        tp.getTextBounds(strToDisplay, 0, strToDisplay.length(), rect);
+            
+	        arg.drawText(strToDisplay , 
+                            getBounds().left + getBitmap().getWidth()/2 - rect.width()/2, 
+                            getBounds().top + getBitmap().getHeight()/2 + rect.height()/2 , p);
     }
 }

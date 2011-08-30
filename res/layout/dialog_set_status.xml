@@ -35,6 +35,8 @@
 	        android:textColor     = "#000000"
 	        android:textSize      = "15dp"
 	        android:text          = ""
+	        android:maxLines="3"
+	        android:maxLength="140"
 	        />   
 	             
 

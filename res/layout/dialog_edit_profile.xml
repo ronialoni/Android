@@ -19,7 +19,7 @@
         android:textStyle     = "bold"
         android:drawableRight="@drawable/user_red_sruga" 
         android:typeface      = "serif"
-        android:text          = "  Your details :"
+        android:text          = "  My Profile"
        
         android:gravity="center|center_vertical"/>    
      
@@ -55,6 +55,7 @@
 	        android:textSize      = "15sp"
 	        android:text          = ""
 	        android:singleLine="true"
+	        android:maxLength="15"
 	        />        
     </TableRow>
     
@@ -83,6 +84,7 @@
             android:textSize      = "15sp"
             android:text          = ""
             android:singleLine="true"
+            android:maxLength="15"
             />        
     </TableRow>
     

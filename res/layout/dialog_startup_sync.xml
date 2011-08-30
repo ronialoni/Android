@@ -64,6 +64,7 @@
 	        android:textSize      = "15sp"
 	        android:text          = ""
 	        android:singleLine="true"
+	        android:maxLength="15"
 	        />        
     </TableRow>
     
@@ -92,6 +93,7 @@
             android:textSize      = "15sp"
             android:text          = ""
             android:singleLine="true"
+            android:maxLength="15"
             />        
     </TableRow>
     

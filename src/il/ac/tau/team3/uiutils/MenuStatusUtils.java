@@ -28,6 +28,7 @@ public class MenuStatusUtils {
 		 final EditText status = (EditText)dialog.findViewById(R.id.dss_status);
 		 final String oldStatus = user.getStatus();
          status.setText(oldStatus);
+         
          Button okButton = (Button) dialog.findViewById(R.id.dss_button_ok);
          
          

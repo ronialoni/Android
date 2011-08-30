@@ -29,15 +29,12 @@ public class MenuFacebookUtils {
 			Button close = (Button)dialog.findViewById(R.id.DFS_Close);
 			CheckBox cb = (CheckBox)dialog.findViewById(R.id.DFS_share);
 
-			if (!context.getFacebookConnector().isFacebook_configured())	{
-				cb.setEnabled(true);
-			}
 
 			if (context.getFacebookConnector().isFacebook_configured())	{
 				setup.setEnabled(false);
 			}
 
-			cb.setChecked(context.getFacebookConnector().isFacebook_share());
+			cb.setChecked(context.getFacebookConnector().isFacebook_share() && context.getFacebookConnector().isFacebook_configured());
 
 			cb.setOnCheckedChangeListener(new OnCheckedChangeListener()	{
 
@@ -45,13 +42,14 @@ public class MenuFacebookUtils {
 						boolean isChecked) {
 					try{
 						if(setup.isEnabled()){
-							context.getFacebookConnector().connect();				
+							context.getFacebookConnector().connect();
+						}
 							
 
-						}else{
-							context.getFacebookConnector().setFacebook_share(isChecked);
-							statusBar.write("facebook settings updated", R.drawable.status_bar_accept_icon, 2000);
-						}
+						
+						context.getFacebookConnector().setFacebook_share(isChecked);
+						statusBar.write("facebook settings updated", R.drawable.status_bar_accept_icon, 2000);
+						
 						
 					}catch(Exception e){
 						e.printStackTrace();

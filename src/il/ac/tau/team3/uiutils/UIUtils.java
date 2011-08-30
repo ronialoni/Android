@@ -21,6 +21,7 @@ import il.ac.tau.team3.common.SPUtils;
 import il.ac.tau.team3.common.UnknownLocationException;
 import il.ac.tau.team3.shareaprayer.FacebookConnector;
 import il.ac.tau.team3.shareaprayer.FindPrayer;
+import il.ac.tau.team3.shareaprayer.InvalidUserPropertiesException;
 import il.ac.tau.team3.shareaprayer.PlaceArrayItemizedOverlay;
 import il.ac.tau.team3.shareaprayer.R;
 import il.ac.tau.team3.shareaprayer.R.drawable;
@@ -1007,7 +1008,16 @@ public class UIUtils {
 	static void CreateNewPlace_YesClick(boolean prays[], GeneralUser user, FindPrayer activity, SPGeoPoint point, Date startDate, Date endDate , Calendar[] prayTimes, String address)
 	{
 		String placeName = (user.getFullName()==null || user.getFullName()=="" ? user.getName() : user.getFullName()) + "'s Place";
-		GeneralPlace newMinyan = new GeneralPlace(user, placeName, address, point, startDate,endDate);
+		GeneralPlace newMinyan;
+		try	{
+			newMinyan = new GeneralPlace(user, placeName, address, point, startDate,endDate);
+		} catch (InvalidUserPropertiesException e)	{
+			if(activity.getStatusBar()!=null){
+				activity.getStatusBar().write("Failed to create a new place.", R.drawable.status_bar_error_icon, 2000);
+			}
+			return;
+		}
+		
 		Calendar c = new GregorianCalendar();
 		List<GeneralUser> j = new ArrayList<GeneralUser>();
 		j.add(user);

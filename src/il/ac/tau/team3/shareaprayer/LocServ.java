@@ -109,13 +109,17 @@ extends Service
 
 		public void setNames(final String[] names) {
 
-			final GeneralUser tempuser = new GeneralUser(names[2], curr_loc == null ? new SPGeoPoint() : curr_loc, "" , names[0], names[1]);
+			final GeneralUser tempuser; 
 			try{
-        	if(!tempuser.getName().contains("@")){
-        		return;
-        	}}catch(NullPointerException e){
-    			return;
-    		}
+				tempuser = new GeneralUser(names[2], curr_loc == null ? new SPGeoPoint() : curr_loc, "" , names[0], names[1]);
+				if(!tempuser.getName().contains("@")){
+					return;
+				}
+			}catch(NullPointerException e){
+				return;
+			}catch (InvalidUserPropertiesException e)	{
+				return;
+			}
 			comm.updateUserByName(tempuser, new ICommHandler<Long>() {
 
 				public void onRecv(Long Obj) {
@@ -303,8 +307,12 @@ extends Service
 			} else	{
 				throw new NullPointerException();
 			}
-			user = new GeneralUser(account, null, status, firstName, lastName);
-			user.setId(id);
+			try	{
+				user = new GeneralUser(account, null, status, firstName, lastName);
+				user.setId(id);
+			} catch (InvalidUserPropertiesException e)	{
+				return null;
+			}
 		} catch (NullPointerException e)	{
 			user = null;
 		}

@@ -66,6 +66,26 @@ public class FacebookConnector {
 		}
 	}
 	
+	private void facebookSessionValid()	{
+			String token = facebook.getAccessToken(); 
+			long token_expires = facebook.getAccessExpires(); 
+
+
+
+			if(!facebook_configured){
+				publishOnFacebook("Started using Share-A-Prayer",
+						"Welcome to Share-A-Prayer. <br>" + "This application will help to find the closest minyan for the next pray.");
+			}
+			facebookConnected = true;
+			facebook_configured = true;
+			SharedPreferences.Editor edit = settings.edit();
+			edit.putLong(FACEBOOK_ACCESS_EXPIRES, token_expires);
+			edit.putString(FACEBOOK_ACCESS_TOKEN, token); 
+			edit.putBoolean(FACEBOOK_CONFIGURED_KEY, facebook_configured);
+			edit.commit();
+			setConnectOnStartup(true);
+	}
+	
 	public void connect()	{
 		
 		 
@@ -91,29 +111,8 @@ public class FacebookConnector {
         		}
 
         		public void onComplete(Bundle values) {
-        			// TODO Auto-generated method stub
-        			String token = facebook.getAccessToken(); 
-        			long token_expires = facebook.getAccessExpires(); 
-
-
-
-        			if(!facebook_configured){
-        				publishOnFacebook("Started using Share-A-Prayer",
-        						"Welcome to Share-A-Prayer. <br>" + "This application will help to find the closest minyan for the next pray.");
-        			}
-        			facebookConnected = true;
-        			facebook_configured = true;
-        			SharedPreferences.Editor edit = settings.edit();
-        			edit.putLong(FACEBOOK_ACCESS_EXPIRES, token_expires);
-        			edit.putString(FACEBOOK_ACCESS_TOKEN, token); 
-        			edit.putBoolean(FACEBOOK_CONFIGURED_KEY, facebook_configured);
-        			edit.commit();
-        			setConnectOnStartup(true);
-
-
-
-
-
+        			// TODO Auto-generated method stub     
+        			facebookSessionValid();
         		}
 
         		public void onError(DialogError e) {
@@ -127,6 +126,8 @@ public class FacebookConnector {
         		}
 
         	});
+        	
+        	
         } else	{
         	facebookConnected = true;
         }

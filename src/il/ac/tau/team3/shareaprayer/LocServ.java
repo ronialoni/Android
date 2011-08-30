@@ -111,7 +111,7 @@ extends Service
 
 			final GeneralUser tempuser; 
 			try{
-				tempuser = new GeneralUser(names[2], curr_loc == null ? new SPGeoPoint() : curr_loc, "" , names[0], names[1]);
+				tempuser = new GeneralUser(names[2], getLocation() == null ? new SPGeoPoint() : curr_loc, "" , names[0], names[1]);
 				if(!tempuser.getName().contains("@")){
 					return;
 				}
@@ -203,11 +203,12 @@ extends Service
 	}
 	
 	private void updateUserLocation(GeoPoint loc)	{
+		curr_loc = SPUtils.toSPGeoPoint(loc);
+		
 		if ((null == loc) || (null == user))	{
 			return;
 		}
 		
-		curr_loc = SPUtils.toSPGeoPoint(loc);
     	user.setSpGeoPoint(curr_loc);
 
     	updateUserInServer();

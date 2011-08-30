@@ -500,7 +500,11 @@ extends MapActivity
         
 	private void registerUser(final GeneralUser user)	{
 		
-         refreshTask.start();
+		synchronized(refreshTask)	{
+	        if (!refreshTask.isAlive())	{ 
+	        	refreshTask.start();
+	        }
+		}
 
          FindPrayer.this.runOnUiThread(new Runnable(){
 
@@ -697,26 +701,36 @@ extends MapActivity
     	locationListener = new ILocationProv() 
     	{
 	    	// Called when a new location is found by the network location provider.
-			public void LocationChanged(SPGeoPoint point) 
+			public void LocationChanged(final SPGeoPoint point) 
 			{
-				if (tracking_mode)	{
-					mapView.getController().setCenter(SPUtils.toGeoPoint(point));
-				}
-				
-				synchronized(refreshTask)	
-				{
-					refreshTask.notify();
-				}
+				FindPrayer.this.runOnUiThread(new Runnable(){
+
+					public void run() {
+						if (tracking_mode)	{
+							mapView.getController().setCenter(SPUtils.toGeoPoint(point));
+						}
+
+						synchronized(refreshTask)	
+						{
+							refreshTask.notify();
+						}
+					}
+				});
 			    	
     	    }
 
-			public void OnUserChange(GeneralUser user) 
+			public void OnUserChange(final GeneralUser user) 
 			{
-                registerUser(user);
-				if (! refreshTask.isAlive())	
-				{
-					refreshTask.start();
-				}
+				FindPrayer.this.runOnUiThread(new Runnable(){
+
+					public void run() {
+		                registerUser(user);
+						if (! refreshTask.isAlive())	
+						{
+							refreshTask.start();
+						}
+					}
+				});
 			}
     	};
     	
@@ -763,7 +777,7 @@ extends MapActivity
                     
                     try	{
                     	names = UIUtils.HandleFirstTimeDialog(accounts.toArray(new Account[0]), FindPrayer.this);
-                    	service.setNames(names);
+                    	//service.setNames(names);
                     	
                     } catch (NullPointerException e_)	{
                     	e.printStackTrace();

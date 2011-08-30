@@ -290,13 +290,13 @@ public class UIUtils {
 				new UpdateUI<Integer>(placeOverlay.getActivity()) {
 			protected void postSuccessStatus(FindPrayer activity, Integer Obg)	{
 				if(activity.getStatusBar()!=null){
-					activity.getStatusBar().write("Accepted your changes to " + place.getName(),R.drawable.status_bar_accept_icon, 2000);
+					activity.getStatusBar().write("Accepted your changes" ,R.drawable.status_bar_accept_icon, 2000);
 				}
 			}
 
 			protected void postSuccessFailed(FindPrayer activity, Integer Obg)	{
 				if(activity.getStatusBar()!=null){
-					activity.getStatusBar().write("Couldn't update your registrations in " + place.getName(),R.drawable.status_bar_error_icon, 2000);
+					activity.getStatusBar().write("Couldn't update your changes",R.drawable.status_bar_error_icon, 2000);
 				}
 			}
 		}

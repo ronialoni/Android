@@ -499,46 +499,87 @@ extends MapActivity
 	}
         
 	private void registerUser(final GeneralUser user)	{
-		
+
 		synchronized(refreshTask)	{
-	        if (!refreshTask.isAlive())	{ 
-	        	refreshTask.start();
-	        }
+			if (!refreshTask.isAlive())	{ 
+				refreshTask.start();
+			}
 		}
 
-         FindPrayer.this.runOnUiThread(new Runnable(){
+		FindPrayer.this.runOnUiThread(new Runnable(){
 
-        	 public void run() {
-        		 try {
-        			 mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
-        		 } catch (UnknownLocationException e) {
-        			 comm.requestGetUserById(user.getId(), new ACommHandler<GeneralUser>(){
-        				 public void onRecv(final GeneralUser Obj)	{
-        					 FindPrayer.this.runOnUiThread(new Runnable(){
+			public void run() {
+				try {
+					try {
+						user.setSpGeoPoint(svcGetter.getService().getLocation());
+					} catch (ServiceNotConnected e) {
 
-        						 public void run() {
-        							 try {
-        								 mapView.getController().setCenter(SPUtils.toGeoPoint(Obj.getSpGeoPoint()));
-        							 } catch (UnknownLocationException e) {
-        								 // TODO Auto-generated catch block
-        								 e.printStackTrace();
-        							 }
-        						 }
+					}
+					if ((0 == user.getSpGeoPoint().getLatitudeE6()) && (0 == user.getSpGeoPoint().getLongtitudeE6())){
+						throw new UnknownLocationException();
+					}
 
-        					 });
+					mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
 
-        				 }
 
-        			 });
-        		 }
+				} catch (UnknownLocationException e) {
+					comm.requestGetUserById(user.getId(), new ACommHandler<GeneralUser>(){
+						public void onRecv(final GeneralUser Obj)	{
+							FindPrayer.this.runOnUiThread(new Runnable(){
 
-        	 }
+								public void run() {
+									try {
+										if (!((0 == Obj.getSpGeoPoint().getLatitudeE6()) && (0 == Obj.getSpGeoPoint().getLongtitudeE6()))){
+											mapView.getController().setCenter(SPUtils.toGeoPoint(Obj.getSpGeoPoint()));
+										} else	{
+											final Timer timer = new Timer();
+											TimerTask timerTask = new TimerTask()	{
+												@Override
+												public void run() {
+													try {
+														user.setSpGeoPoint(svcGetter.getService().getLocation());
+														if ((0 == user.getSpGeoPoint().getLatitudeE6()) && (0 == user.getSpGeoPoint().getLongtitudeE6())){
+															throw new UnknownLocationException();
+														}
+														FindPrayer.this.runOnUiThread(new Runnable()	{
 
-         });
-        	 
-         synchronized(refreshTask){
-         	refreshTask.notify();
-         };
+															public void run() {
+																try {
+																	mapView.getController().setCenter(SPUtils.toGeoPoint(user.getSpGeoPoint()));
+																} catch (UnknownLocationException e) {
+																}
+															}
+														});
+														this.cancel();
+														timer.cancel();
+
+													} catch (ServiceNotConnected e) {
+														return;
+													} catch (UnknownLocationException e) {
+														return;
+													}
+
+												}														
+											};
+
+											timer.schedule(timerTask, 1000, 1000);		
+
+
+										}
+									} catch (UnknownLocationException e) {
+										e.printStackTrace();
+									}
+								}
+							});
+						}
+					});
+				}
+			}
+		});
+
+		synchronized(refreshTask){
+			refreshTask.notify();
+		};
 	}
     	
 	

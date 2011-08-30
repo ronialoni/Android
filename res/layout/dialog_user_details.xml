@@ -26,6 +26,7 @@
 		    	android:typeface  = "serif"
 		    	android:textSize = "30dp"
 		    	android:background = "@drawable/background"
+		    	android:singleLine="true"
 		    	></TextView>
             
             <LinearLayout 
@@ -45,7 +46,7 @@
 		    	android:layout_width="fill_parent"
 		    	android:gravity="center"
 		    	android:drawableLeft="@drawable/status_icon" 
-		    	android:minLines = "3"
+		    	android:maxLines = "3"
 		    	android:typeface = "serif"
 		    	android:paddingTop = "20dp"
 		    	android:paddingBottom = "10dp"

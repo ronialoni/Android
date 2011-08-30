@@ -28,38 +28,42 @@ public class MenuFacebookUtils {
 			final Button setup = (Button)dialog.findViewById(R.id.DFS_setup_button);
 			Button close = (Button)dialog.findViewById(R.id.DFS_Close);
 			CheckBox cb = (CheckBox)dialog.findViewById(R.id.DFS_share);
-			
+
 			if (!context.getFacebookConnector().isFacebook_configured())	{
 				cb.setEnabled(true);
 			}
-			
+
 			if (context.getFacebookConnector().isFacebook_configured())	{
 				setup.setEnabled(false);
 			}
-			
+
 			cb.setChecked(context.getFacebookConnector().isFacebook_share());
-			
+
 			cb.setOnCheckedChangeListener(new OnCheckedChangeListener()	{
 
 				public void onCheckedChanged(CompoundButton buttonView,
 						boolean isChecked) {
 					try{
-					if(setup.isEnabled()){
-						context.getFacebookConnector().connect();				
-						dialog.dismiss();
+						if(setup.isEnabled()){
+							context.getFacebookConnector().connect();				
+							
+
+						}else{
+							context.getFacebookConnector().setFacebook_share(isChecked);
+							statusBar.write("facebook settings updated", R.drawable.status_bar_accept_icon, 2000);
+						}
 						
-					}
-					context.getFacebookConnector().setFacebook_share(isChecked);
-					statusBar.write("facebook settings updated", R.drawable.status_bar_accept_icon, 2000);
 					}catch(Exception e){
 						e.printStackTrace();
 						if(statusBar != null){
 							statusBar.write("An error accoured. Settings wasn't updated", R.drawable.status_bar_error_icon, 2000);
 						}
+						
 					}
-					
+					dialog.dismiss();
+
 				}
-				
+
 			});
 
 			setup.setOnClickListener(new OnClickListener() {
@@ -69,14 +73,14 @@ public class MenuFacebookUtils {
 					dialog.dismiss();
 				}
 			});
-			
+
 			close.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
 					dialog.dismiss();
 				}
 			});
-			
+
 			dialog.show();
 		} catch (NullPointerException e) {
 			e.printStackTrace();

@@ -76,7 +76,7 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
                     p.setStrokeWidth(2);
                     //p.setARGB(255, 255, 0, 0);
                     p.setTypeface(Typeface.DEFAULT);
-                    p.setTextSize(getBounds().height()/3);
+                    p.setTextSize((int)(getBounds().height()/2.5));
             
             p.setAntiAlias(true);
             
@@ -85,7 +85,7 @@ public class BitmapDrawableNumbered  extends BitmapDrawable
 	        tp.getTextBounds(strToDisplay, 0, strToDisplay.length(), rect);
             
 	        arg.drawText(strToDisplay , 
-                            getBounds().left + getBitmap().getWidth()/2 - rect.width()/2, 
+                            getBounds().left + getBitmap().getWidth()/2 - rect.width()/2 - 2, 
                             getBounds().top + getBitmap().getHeight()/2 + rect.height()/2 , p);
     }
 }

@@ -23,7 +23,7 @@ public class MapsQueryLocation implements Serializable {
 
 
 	public String getDisplay_name() {
-		return display_name.replace("Al Wa'rat, ", "").replace("West Bank, ", "");
+		return display_name.replace("Al Wa'rat, ", "").replace("West Bank, ", "").replace("Haret 'l Noor, ", "");
 	}
 	
 	

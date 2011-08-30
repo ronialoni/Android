@@ -15,7 +15,9 @@ import il.ac.tau.team3.spcomm.SPComm;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.os.Build;
 
 public class PlacesDetailsUI {
 	public enum Actions	{
@@ -82,21 +84,29 @@ public class PlacesDetailsUI {
 	public void run(final GeneralPlace[] places) {
 		// TODO Auto-generated method stub
 		progress.dismiss();
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setTitle(message);
 		String[] names = new String[places.length];
 		if(places.length == 0){
 			names = new String[1];
 			names[0]= "No places listed yet.";
+			builder.setItems(names, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					dialog.dismiss();
+				}
+			});
+			
 		}else{
 			for (int i = 0; i < places.length; names[i]=places[i].toString(), i++);
+			builder.setItems(names, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					UIUtils.createRegisterDialog(places[item], publicPlaces);
+					
+				}
+			});
 		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-		builder.setTitle(message);
+		
 
-		builder.setItems(names, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				UIUtils.createRegisterDialog(places[item], publicPlaces);
-			}
-		});
 		AlertDialog alert = builder.create();
 		alert.show();
 

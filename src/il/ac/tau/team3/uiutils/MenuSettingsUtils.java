@@ -89,15 +89,15 @@ public class MenuSettingsUtils {
 			builder.setTitle(_sChooseMinMaxText);
 			builder.setSingleChoiceItems(items, (getShowMax()? 0:1), new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
-			    	String minOrMax[] = {"Min","Max"};
+			    	String minOrMax[] = {"Max","Min"};
 			    	int oldVal = (getShowMax()? 0:1);
 			    	int newVal = oldVal;
 			        if(item == 0){
 			        	setShowMax(true);
-			        	newVal = 1; 
+			        	newVal = 0; 
 			        }else{
 			        	setShowMax(false);
-			        	newVal = 0; 
+			        	newVal = 1; 
 			        }
 			        dialog.dismiss();
 			        if(null!= statusBar && newVal != oldVal){

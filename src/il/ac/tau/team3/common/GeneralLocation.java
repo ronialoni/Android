@@ -1,5 +1,7 @@
 package il.ac.tau.team3.common;
 
+import il.ac.tau.team3.shareaprayer.InvalidUserPropertiesException;
+
 import java.io.Serializable;
 
 public class GeneralLocation implements Serializable{
@@ -27,7 +29,11 @@ public class GeneralLocation implements Serializable{
 	}
 
 
-	public GeneralLocation(SPGeoPoint spGeoPoint, String name) {
+	public GeneralLocation(SPGeoPoint spGeoPoint, String name) throws InvalidUserPropertiesException {
+		if (null == name){
+			throw new InvalidUserPropertiesException();
+		}
+		
 		this.spGeoPoint = spGeoPoint;
 		this.name = name;
 	}
@@ -43,7 +49,10 @@ public class GeneralLocation implements Serializable{
 	public String getName() {
 		return name == null ? "" : name;
 	}
-	public void setName(String name) {
+	public void setName(String name) throws InvalidUserPropertiesException {
+		if (null == name)	{
+			throw new InvalidUserPropertiesException();
+		}
 		this.name = name;
 	}
 }

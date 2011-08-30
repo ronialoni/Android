@@ -2,6 +2,8 @@ package il.ac.tau.team3.common;
 
 //import il.ac.tau.team3.datastore.PlaceLocation;
 
+import il.ac.tau.team3.shareaprayer.InvalidUserPropertiesException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +44,7 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
                 this.endDate = new Date();
         }
 
-        public GeneralPlace(String name, String address , SPGeoPoint spGeoPoint){
+        public GeneralPlace(String name, String address , SPGeoPoint spGeoPoint) throws InvalidUserPropertiesException{
                 super(spGeoPoint,name);
                 this.address = address;
                 initializePraysOfTheDay();
@@ -50,7 +52,7 @@ public class GeneralPlace extends GeneralLocation implements Serializable{
                 this.endDate = new Date();
         }
 
-        public GeneralPlace(GeneralUser owner, String name, String address , SPGeoPoint spGeoPoint, Date startDate,Date endDate){
+        public GeneralPlace(GeneralUser owner, String name, String address , SPGeoPoint spGeoPoint, Date startDate,Date endDate) throws InvalidUserPropertiesException{
                 super(spGeoPoint,name);
                 this.address = address;
                 initializePraysOfTheDay();

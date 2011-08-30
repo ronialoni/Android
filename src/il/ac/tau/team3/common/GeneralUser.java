@@ -1,6 +1,8 @@
 
 package il.ac.tau.team3.common;
 
+import il.ac.tau.team3.shareaprayer.InvalidUserPropertiesException;
+
 import java.io.Serializable;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -20,13 +22,13 @@ public class GeneralUser extends GeneralLocation implements Serializable {
 			super();
 		}
 		
-		public GeneralUser(String name, SPGeoPoint spGeoPoint, String status) {
+		public GeneralUser(String name, SPGeoPoint spGeoPoint, String status) throws InvalidUserPropertiesException {
 			super(spGeoPoint,name);
 			
 			this.status = status;
 		}
 		
-		public GeneralUser(String name, SPGeoPoint spGeoPoint, String status, String firstName, String lastName) {
+		public GeneralUser(String name, SPGeoPoint spGeoPoint, String status, String firstName, String lastName) throws InvalidUserPropertiesException {
 			super(spGeoPoint,name);
 			this.firstName = firstName;
 			this.lastName = lastName;

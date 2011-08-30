@@ -122,9 +122,12 @@ public class MenuSettingsUtils {
 		final String account = user.getName();
 		 dialog.setContentView(R.layout.dialog_edit_profile);
 		 final EditText editTextFirstName = (EditText)dialog.findViewById(R.id.dep_name_first);
-		 editTextFirstName.setText(user.getFirstName());
+		 final String firstnameOld = user.getFirstName();
+		 editTextFirstName.setText(firstnameOld);
+		 
          final EditText editTextLastName = (EditText)dialog.findViewById(R.id.dep_name_last);
-         editTextLastName.setText(user.getLastName());
+         final String lastnameOld = user.getLastName();
+         editTextLastName.setText(lastnameOld);
          final TextView accountView = (TextView)dialog.findViewById(R.id.dep_accounts_email);
          accountView.setText(account);
          Button okButton = (Button) dialog.findViewById(R.id.dep_button_ok);
@@ -141,7 +144,7 @@ public class MenuSettingsUtils {
             			 editTextLastName.getText() == null || editTextLastName.getText().toString() == null ||
             			 editTextLastName.getText().toString().equals("") ){
             		 UIUtils.createAlertDialog("Please enter your first and last name", activity, "OK");
-            	 }else{
+            	 }else if (!(firstnameOld.equals(editTextFirstName.getText().toString()) && lastnameOld.equals(editTextLastName.getText().toString()))){
             	 names[0] = editTextFirstName.getText().toString();
             	 names[1] = editTextLastName.getText().toString();
             	 names[2] = account;
@@ -154,8 +157,8 @@ public class MenuSettingsUtils {
             		 statusBar.write("An Error accoured. User details weren't updated", R.drawable.status_bar_error_icon, 2000);
             	 }
             	            	
-            	 dialog.dismiss();
             	 }
+            	 dialog.dismiss();
              }
          });
          

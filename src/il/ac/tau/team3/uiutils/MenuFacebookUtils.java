@@ -25,7 +25,7 @@ public class MenuFacebookUtils {
 			dialog.setContentView(R.layout.dialog_facebook_settings);
 			dialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 
-			Button setup = (Button)dialog.findViewById(R.id.DFS_setup_button);
+			final Button setup = (Button)dialog.findViewById(R.id.DFS_setup_button);
 			Button close = (Button)dialog.findViewById(R.id.DFS_Close);
 			CheckBox cb = (CheckBox)dialog.findViewById(R.id.DFS_share);
 			
@@ -44,6 +44,11 @@ public class MenuFacebookUtils {
 				public void onCheckedChanged(CompoundButton buttonView,
 						boolean isChecked) {
 					try{
+					if(setup.isEnabled()){
+						context.getFacebookConnector().connect();				
+						dialog.dismiss();
+						
+					}
 					context.getFacebookConnector().setFacebook_share(isChecked);
 					statusBar.write("facebook settings updated", R.drawable.status_bar_accept_icon, 2000);
 					}catch(Exception e){
